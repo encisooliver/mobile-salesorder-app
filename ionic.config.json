@@ -1,0 +1,8 @@
+{
+  "name": "easyfis-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "8c4ae272"
+}
