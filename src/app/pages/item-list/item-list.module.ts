@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { ItemListPageRoutingModule } from './item-list-routing.module';
 
 import { ItemListPage } from './item-list.page';
+import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
+import { AppSettings } from 'src/app/settings/app-settings';
+import { TrnPurchaseRequestItemService } from 'src/app/services/trn-purchase-request-item/trn-purchase-request-item.service';
 
 @NgModule({
   imports: [
@@ -15,6 +18,7 @@ import { ItemListPage } from './item-list.page';
     IonicModule,
     ItemListPageRoutingModule
   ],
-  declarations: [ItemListPage]
+  declarations: [ItemListPage],
+  providers: [AppSettings, MstArticleItemService, TrnPurchaseRequestItemService]
 })
-export class ItemListPageModule {}
+export class ItemListPageModule { }

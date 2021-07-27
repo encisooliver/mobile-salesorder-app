@@ -1,0 +1,27 @@
+export class MstArticleCustomerModel {
+    Id: number = 0;
+    ArticleId: number = 0;
+    ArticleCode: string = "";
+    ArticleManualCode: number = 0;
+    ArticleParticulars: string = "";
+    Customer: string = "";
+    Address: string = "";
+    TIN: string = "";
+    DiscountId: number = 0;
+    BusinessStyle: string = "";
+    PWDorSCDNo: string = "";
+    ContactPerson: string = "";
+    ContactNumber: string = "";
+    Category: string = "";
+    ReceivableAccountId: number = 0;
+    ReceivableAccountManualCode: string = "";
+    ReceivableAccountName: string = "";
+    TermId: number = 0;
+    CreditLimit: number = 0;
+    IsLocked: boolean = false;
+    CreatedByUserFullname: string = "";
+    CreatedDateTime: string = "";
+    UpdatedByUserFullname: string = "";
+    UpdatedDateTime: string = "";
+    ZipCode: string = "";
+}
