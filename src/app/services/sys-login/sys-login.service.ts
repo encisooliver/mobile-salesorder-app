@@ -5,24 +5,24 @@ import { Subject } from 'rxjs';
 import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
 import { SysLoginModel } from './../../models/sys-login-model';
-
+import { SysStorageService } from './../sys-storage/sys-storage.service';
 @Injectable({
   providedIn: 'root'
 })
 export class SysLoginService {
-  private _storage: Storage | null = null;
+  private storage: Storage | null = null;
   constructor(
     private appSettings: AppSettings,
     private httpClient: HttpClient,
-    private storage: Storage
-  ) { 
+    private sysStorageService: SysStorageService,
+  ) {
     this.init();
   }
 
   async init() {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
-    const storage = await this.storage.create();
-    this._storage = storage;
+    // const storage = await this.storage.create();
+    // this.storage = storage;
   }
 
   public defaultAPIURLHost: string = this.appSettings.APIURLHost;
@@ -42,14 +42,14 @@ export class SysLoginService {
         response => {
           let results = response;
 
-          this._storage.set('access_token', results["AccessToken"]);
-          this._storage.set('expires_in', results["ExpiresIn"]);
-          this._storage.set('username', results["UserName"]);
-          this._storage.set('fullname', results["FullName"]);
-          this._storage.set('companyId', results["CompanyId"]);
-          this._storage.set('company', results["Company"]);
-          this._storage.set('branchId', results["BranchId"]);
-          this._storage.set('branch', results["Branch"]);
+          this.sysStorageService.set('access_token', results["AccessToken"]);
+          this.sysStorageService.set('expires_in', results["ExpiresIn"]);
+          this.sysStorageService.set('username', results["UserName"]);
+          this.sysStorageService.set('fullname', results["FullName"]);
+          this.sysStorageService.set('companyId', results["CompanyId"]);
+          this.sysStorageService.set('company', results["Company"]);
+          this.sysStorageService.set('branchId', results["BranchId"]);
+          this.sysStorageService.set('branch', results["Branch"]);
 
           observer.next([true, ""]);
           observer.complete();

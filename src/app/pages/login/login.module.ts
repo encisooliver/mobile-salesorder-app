@@ -10,6 +10,7 @@ import { LoginPage } from './login.page';
 import { HttpClientModule } from '@angular/common/http';
 import { AppSettings } from 'src/app/settings/app-settings';
 import { SysLoginService } from 'src/app/services/sys-login/sys-login.service';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { SysLoginService } from 'src/app/services/sys-login/sys-login.service';
     HttpClientModule,
   ],
   declarations: [LoginPage],
-  providers: [AppSettings, SysLoginService]
+  providers: [AppSettings, SysLoginService, SysStorageService]
   
 })
 export class LoginPageModule {}

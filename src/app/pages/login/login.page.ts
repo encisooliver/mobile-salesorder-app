@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SysLoginModel } from 'src/app/models/sys-login-model';
-import { SysLoginService } from './../../services/sys-login/sys-login.service'
+import { SysLoginService } from './../../services/sys-login/sys-login.service';
+import { Storage } from '@ionic/storage-angular';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -9,8 +10,10 @@ import { SysLoginService } from './../../services/sys-login/sys-login.service'
 })
 export class LoginPage implements OnInit {
 
-  constructor(private router: Router,
-    private sysLoginService: SysLoginService
+  constructor(
+    private router: Router,
+    private sysLoginService: SysLoginService,
+    private storage: Storage,
   ) { }
   sysLoginModel: SysLoginModel = {
     Username: '',
@@ -18,6 +21,14 @@ export class LoginPage implements OnInit {
   };
 
   ngOnInit() {
+    this.storage.get("access_token").then(
+      result => {
+        let token = result
+        if (token) {
+          this.router.navigate(['/dashboard'])
+        }
+      }
+    )
   }
 
   login(): void {
