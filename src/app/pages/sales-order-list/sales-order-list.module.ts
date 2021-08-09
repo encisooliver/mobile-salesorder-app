@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { SalesOrderListPageRoutingModule } from './sales-order-list-routing.module';
 
 import { SalesOrderListPage } from './sales-order-list.page';
+import { AppSettings } from 'src/app/settings/app-settings';
+import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
+
 
 @NgModule({
   imports: [
@@ -15,6 +18,7 @@ import { SalesOrderListPage } from './sales-order-list.page';
     IonicModule,
     SalesOrderListPageRoutingModule
   ],
-  declarations: [SalesOrderListPage]
+  declarations: [SalesOrderListPage],
+  providers: [AppSettings, TrnSalesOrderService]
 })
 export class SalesOrderListPageModule {}

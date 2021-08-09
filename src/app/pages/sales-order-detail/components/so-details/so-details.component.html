@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>SO</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isShown">
+    <ion-item>
+      <ion-label>Currency:</ion-label>
+      <ion-select [(ngModel)]="sOModel.CurrencyId" [compareWith]="compareFn" multiple="false">
+        <ion-select-option *ngFor="let c of currencies;" value="{{c.Id}}">{{c.ExchangeCurrency}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Exchange Rate:</ion-label>
+      <ion-input [(ngModel)]="sOModel.ExchangeRate"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Branch:</ion-label>
+      <ion-input [(ngModel)]="sOModel.BranchName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>SO No.:</ion-label>
+      <ion-input [(ngModel)]="sOModel.SONumber"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>SO Date:</ion-label>
+      <ion-datetime value="firstDate" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="soDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Customer:</ion-label>
+      <ion-input [(ngModel)]="sOModel.CustomerName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Term:</ion-label>
+      <ion-select [(ngModel)]="sOModel.TermId" [compareWith]="compareFn1">
+        <ion-select-option *ngFor="let t of terms;" value="t.Id">{{t.Term}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Date Needed:</ion-label>
+      <ion-datetime value="firstDate" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="neededDate">
+      </ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Status:</ion-label>
+      <ion-select [(ngModel)]="sOModel.Status" [compareWith]="compareFn2">
+        <ion-select-option *ngFor="let s of status;" value="s.Code">{{s.Code}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Sold by:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Approved by:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Checked by:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prepared by:</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+  </div>
+</ion-content>

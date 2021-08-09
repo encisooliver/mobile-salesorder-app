@@ -1,9 +1,21 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>sales-order-detail</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
+<ion-tabs>
+  <ion-tab-bar slot="sales-order">
+    <ion-tab-button tab="so">
+      <ion-icon name="reorder-three-outline"></ion-icon>
+      <ion-label>Detail</ion-label>
 
-</ion-content>
+    </ion-tab-button>
+
+    <ion-tab-button tab="so-items">
+      <ion-icon name="cart-outline"></ion-icon>
+      <ion-label>Items</ion-label>
+      <ion-badge>6</ion-badge>
+    </ion-tab-button>
+
+    <ion-tab-button tab="so-attachment">
+      <ion-icon name="attach-outline"></ion-icon>
+      <ion-label>Attachment</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
