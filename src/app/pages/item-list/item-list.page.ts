@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
 import { TrnPurchaseRequestItemService } from 'src/app/services/trn-purchase-request-item/trn-purchase-request-item.service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-item-list',
@@ -9,10 +10,33 @@ import { TrnPurchaseRequestItemService } from 'src/app/services/trn-purchase-req
 })
 export class ItemListPage implements OnInit {
 
+  token: string = "";
+  branchId: number = 0;
   constructor(
     private mstArticleItemService: MstArticleItemService,
-    private trnPurchaseRequestItemService: TrnPurchaseRequestItemService
-  ) { }
+    private trnPurchaseRequestItemService: TrnPurchaseRequestItemService,
+    private storage: Storage
+  ) {
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        console.log(token);
+        if (token) {
+          this.token = token;
+        }
+      }
+    )
+
+    this.storage.get("branchId").then(
+      result => {
+        let branchId = result;
+        console.log(branchId);
+        if (branchId) {
+          this.branchId = branchId;
+        }
+      }
+    )
+  }
 
   public articleItemListPageIndex: number = 15;
   public itemListSkip: number = 0;
@@ -22,7 +46,7 @@ export class ItemListPage implements OnInit {
 
 
   public isButtonAddArticleItemDisabled: boolean = false;
-  public articleItemList: any[] = [];
+  public items: any[] = [];
   public getArticleItemList(): void {
 
     let column = this.searchItemColumn;
@@ -30,97 +54,35 @@ export class ItemListPage implements OnInit {
     let take = this.itemListTake;
     let keywords = this.searchItemKeywords;
 
-    this.mstArticleItemService.getPaginatedArticleItemList(column, skip, take, keywords).subscribe(
+    this.mstArticleItemService.getPaginatedArticleItemList(this.token, this.branchId, column, skip, take, keywords).subscribe(
       data => {
 
         setTimeout(() => {
-          if (data.length > 0) {
-            for (let i = 0; i <= data.length - 1; i++) {
-              this.articleItemList.push({
+          if (data["length"] > 0) {
+            for (let i = 0; i <= data["length"] - 1; i++) {
+              this.items.push({
                 Id: data[i].Id,
                 ArticleId: data[i].ArticleId,
-                ArticleCode: data[i].ArticleCode,
-                ArticleManualCode: data[i].ArticleManualCode,
-                ArticleParticulars: data[i].ArticleParticulars,
-                Article: data[i].Article,
-                SKUCode: data[i].SKUCode,
-                BarCode: data[i].BarCode,
-                Description: data[i].Description,
-                UnitId: data[i].UnitId,
-                UnitCode: data[i].UnitCode,
-                UnitManualCode: data[i].UnitManualCode,
-                UnitName: data[i].UnitName,
-                Category: data[i].Category,
-                IsInventory: data[i].IsInventory,
-                ArticleAccountGroupId: data[i].ArticleAccountGroupId,
-                ArticleAccountGroupCode: data[i].ArticleAccountGroupCode,
-                ArticleAccountGroupManualCode: data[i].ArticleAccountGroupManualCode,
-                ArticleAccountGroupName: data[i].ArticleAccountGroupName,
-                AssetAccountId: data[i].AssetAccountId,
-                AssetAccountCode: data[i].AssetAccountCode,
-                AssetAccountManualCode: data[i].AssetAccountManualCode,
-                AssetAccountName: data[i].AssetAccountName,
-                SalesAccountId: data[i].SalesAccountId,
-                SalesAccountCode: data[i].SalesAccountCode,
-                SalesAccountManualCode: data[i].SalesAccountManualCode,
-                SalesAccountName: data[i].SalesAccountName,
-                CostAccountId: data[i].CostAccountId,
-                CostAccountCode: data[i].CostAccountCode,
-                CostAccountManualCode: data[i].CostAccountManualCode,
-                CostAccountName: data[i].CostAccountName,
-                ExpenseAccountId: data[i].ExpenseAccountId,
-                ExpenseAccountCode: data[i].ExpenseAccountCode,
-                ExpenseAccountManualCode: data[i].ExpenseAccountManualCode,
-                ExpenseAccountName: data[i].ExpenseAccountName,
-                Price: data[i].Price,
-                RRVATId: data[i].RRVATId,
-                RRVATTaxCode: data[i].RRVATTaxCode,
-                RRVATTaxManualCode: data[i].RRVATTaxManualCode,
-                RRVATTaxDescription: data[i].RRVATTaxDescription,
-                SIVATId: data[i].SIVATId,
-                SIVATTaxCode: data[i].SIVATTaxCode,
-                SIVATTaxManualCode: data[i].SIVATTaxManualCode,
-                SIVATTaxDescription: data[i].SIVATTaxDescription,
-                WTAXId: data[i].WTAXId,
-                WTAXTaxCode: data[i].WTAXTaxCode,
-                WTAXTaxManualCode: data[i].WTAXTaxManualCode,
-                WTAXTaxDescription: data[i].WTAXTaxDescription,
-                Kitting: data[i].Kitting,
-                ProductionCost: data[i].ProductionCost,
-                IsLocked: data[i].IsLocked
+                ArticleItem: data[i].ArticleItem,
+                BranchId: data[i].BranchId,
+                Branch: data[i].Branch,
+                InventoryCode: data[i].InventoryCode,
+                Quantity: data[i].Quantity,
+                Cost: data[i].Cost
               });
             }
-
-            // this.articleItemList = data;
           }
         }, 500);
 
-        console.log(this.articleItemList);
-
-      }
-    );
-  }
-
-  // Sales Order
-  public getPurchaseRequestItemListBySupplier() {
-    let PRId: number = 0;
-    
-
-    this.trnPurchaseRequestItemService.getPurchaseRequestItemListByPurchaseRequest(PRId).subscribe(
-      data => {
-
-        setTimeout(() => {
-          if (data.length > 0) {
-            this.articleItemList= data;
-          }
-        }, 500);
+        console.log(this.items);
 
       }
     );
   }
 
   ngOnInit() {
-    this.getArticleItemList();
+    setTimeout(() => {
+      this.getArticleItemList();
+    }, 500);
   }
-
 }
