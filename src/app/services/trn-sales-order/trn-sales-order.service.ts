@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
 import { TrnSalesOrderModel } from './../../models/trn-sales-order.model';
 import { Storage } from '@ionic/storage-angular';
+import { stringify } from '@angular/compiler/src/util';
 @Injectable({
   providedIn: 'root'
 })
@@ -223,12 +224,14 @@ export class TrnSalesOrderService {
     return new Observable<any[]>((observer) => {
       let currencyExchangeListObservableArray = [];
 
+
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
         response => {
           let results = response;
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
+              console.log(results[i].Id + "Sample");
               currencyExchangeListObservableArray.push({
                 Id: results[i].Id,
                 CurrencyId: results[i].CurrencyId,
@@ -238,7 +241,7 @@ export class TrnSalesOrderService {
                 ExchangeCurrency: results[i].ExchangeCurrency.Currency,
                 ExchangeCurrencyManualCode: results[i].ExchangeCurrency.ManualCode,
                 ExchangeDate: results[i].ExchangeDate,
-                ExchangeRate: results[i].ExchangeRate
+                ExchangeRate: results[i].ExchangeRate,
               });
             }
           }

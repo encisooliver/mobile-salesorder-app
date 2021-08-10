@@ -3,13 +3,13 @@
     <ion-title>SO</ion-title>
   </ion-toolbar>
 </ion-header>
-
+<!-- [compareWith]="compareFn" -->
 <ion-content>
   <div *ngIf="isShown">
     <ion-item>
       <ion-label>Currency:</ion-label>
-      <ion-select [(ngModel)]="sOModel.CurrencyId" [compareWith]="compareFn" multiple="false">
-        <ion-select-option *ngFor="let c of currencies;" value="{{c.Id}}">{{c.ExchangeCurrency}}</ion-select-option>
+      <ion-select [(ngModel)]="sOModel.CurrencyId">
+        <ion-select-option *ngFor="let c of currencies;" [value]="c.ExchangeCurrencyId">{{c.ExchangeCurrency}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -34,8 +34,8 @@
     </ion-item>
     <ion-item>
       <ion-label>Term:</ion-label>
-      <ion-select [(ngModel)]="sOModel.TermId" [compareWith]="compareFn1">
-        <ion-select-option *ngFor="let t of terms;" value="t.Id">{{t.Term}}</ion-select-option>
+      <ion-select [(ngModel)]="sOModel.TermId">
+        <ion-select-option *ngFor="let t of terms;" [value]="t.Id">{{t.Term}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -45,8 +45,8 @@
     </ion-item>
     <ion-item>
       <ion-label>Status:</ion-label>
-      <ion-select [(ngModel)]="sOModel.Status" [compareWith]="compareFn2">
-        <ion-select-option *ngFor="let s of status;" value="s.Code">{{s.Code}}</ion-select-option>
+      <ion-select [(ngModel)]="sOModel.Status">
+        <ion-select-option *ngFor="let s of status;" [value]="s.Code">{{s.Code}}</ion-select-option>
       </ion-select>
     </ion-item>
 

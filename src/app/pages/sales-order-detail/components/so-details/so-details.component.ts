@@ -4,11 +4,13 @@ import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
 
+
 @Component({
   selector: 'app-so-details',
   templateUrl: './so-details.component.html',
   styleUrls: ['./so-details.component.scss'],
 })
+
 export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
   constructor(
@@ -16,6 +18,7 @@ export class SoDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private storage: Storage,
     private trnSalesOrderService: TrnSalesOrderService,
+    
   ) {
     this.storage.get("sales_id").then(
       result => {
@@ -28,7 +31,7 @@ export class SoDetailsComponent implements OnInit {
       }
     )
   }
-
+  
 
   sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   public id: number = 0;
@@ -45,6 +48,7 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getCurrencyExchange().subscribe(
       data => {
         this.currencies = data;
+        console.log("Currency");
         console.log(data);
         this.getTerms();
       }
@@ -54,7 +58,7 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getTermList().subscribe(
       data => {
         this.terms = data;
-        console.log(data);
+        console.log("Sample Log" +data);
         this.getStatus();
       }
     );
@@ -122,16 +126,17 @@ export class SoDetailsComponent implements OnInit {
 
 
   compareFn(e1: any, e2: any): boolean {
-    console.log("com", e1, e2)
-    return e1.id === e2.id;
-  }
-  compareFn1(e1: any, e2: any): boolean {
     console.log("com", e1.id, e2.id)
-    return e1.id === e2.id;
+    return e1 && e2 ? e1.id === e2.id : e1 === e2; 
+  }
+
+  compareFn1(e1: TrnSalesOrderModel, e2: TrnSalesOrderModel): boolean {
+    console.log("com", e1.Id, e2.Id)
+    return e2.Id == e1.Id;
   }
   compareFn2(e1: any, e2: any): boolean {
     console.log("com", e1.id, e2.id)
-    return e1.id === e2.id;
+        return e1 && e2 ? e1.id === e2.id : e1 === e2; 
   }
   ngOnInit() {
     setTimeout(() => {
