@@ -5,45 +5,48 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label>Start</ion-label>
-    <ion-datetime value="firstDate" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="firstDate"
-      (ionChange)="dateChange()"></ion-datetime>
-  </ion-item>
-  <ion-item>
-    <ion-label>End</ion-label>
-    <ion-datetime value="lastDate" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="lastDate"
-      (ionChange)="dateChange()"></ion-datetime>
-  </ion-item>
-  <ion-card *ngFor="let so of soList; let i = index" class="ion-margin">
-    <ion-card-header (click)="editSO(so.Id)">
-
-      <ion-card-subtitle>
-        {{so.SONumber}}
-      </ion-card-subtitle>
-      <ion-row>
-        <ion-label style="padding: 5px;">
-          {{so.SODate}}
-        </ion-label>
-
-        <ion-label style="padding: 5px;">
-          {{so.CustomerName}}
-        </ion-label>
-        <ion-label style="padding: 5px;">
-          {{so.ExchangeCurrency}}
-        </ion-label>
-        <ion-label style="padding: 5px;">
-          {{so.Amount}}
-        </ion-label>
-        <ion-label style="padding: 5px;">
-          {{so.Status}}
-        </ion-label>
-      </ion-row>
-    </ion-card-header >
-  </ion-card>
+  <div *ngIf="isContentShow">
+    <ion-item>
+      <ion-label>Start</ion-label>
+      <ion-datetime display-format="YYYY/MM/DD" id="dat" [(ngModel)]="firstDay"
+        (ionChange)="dateChange()"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>End</ion-label>
+      <ion-datetime display-format="YYYY/MM/DD" id="dat" [(ngModel)]="lastDay"
+        (ionChange)="dateChange()"></ion-datetime>
+    </ion-item>
+    <ion-card *ngFor="let so of soList; let i = index" class="ion-margin">
+      <ion-card-header (click)="editSO(so.Id)">
+  
+        <ion-card-subtitle>
+          {{so.SONumber}}
+        </ion-card-subtitle>
+        <ion-row>
+          <ion-label style="padding: 5px;">
+            {{so.SODate}}
+          </ion-label>
+  
+          <ion-label style="padding: 5px;">
+            {{so.CustomerName}}
+          </ion-label>
+          <ion-label style="padding: 5px;">
+            {{so.ExchangeCurrency}}
+          </ion-label>
+          <ion-label style="padding: 5px;">
+            {{so.Amount}}
+          </ion-label>
+          <ion-label style="padding: 5px;">
+            {{so.Status}}
+          </ion-label>
+        </ion-row>
+      </ion-card-header >
+    </ion-card>
+  </div>
+  
  
 </ion-content>
-<ion-fab vertical="center" horizontal="end">
+<ion-fab vertical="bottom" horizontal="end">
   <ion-fab-button (click)="addSO()">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>

@@ -30,8 +30,8 @@ export class SalesOrderListPage implements OnInit {
   }
 
   date = new Date();
-  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
-  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
+  firstDay: string = "";
+  lastDay: string = "";
 
   soList: any[] = [];
   isContentShow: boolean = false;
@@ -44,28 +44,31 @@ export class SalesOrderListPage implements OnInit {
         if (data.length > 0) {
           this.soList = data;
         }
+        setTimeout(() => {
+          this.isContentShow = true;
+        }, 500);
       }
     );
   }
 
   addSO(): void {
-    this.router.navigate(['dashboard/sales-order-detail']);
 
-    // this.trnSalesOrderService.addSalesOrder().subscribe(
-    //   data => {
+    this.trnSalesOrderService.addSalesOrder().subscribe(
+      data => {
 
-    //     if (data[0] == true) {
-    //       this.toastService.success('Sales order was successfully added!');
-    //       console.log( data[1]);
-    //       setTimeout(() => {
-    //         this.router.navigate(['/sales-order-detail' + data[1]]);
-    //       }, 500);
-    //     } else {
-    //       // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-    //     }
+        if (data[0] == true) {
+          this.toastService.success('Sales order was successfully added!');
+          console.log(data[1]);
+          setTimeout(() => {
+            this.storage.set("sales_id", data[1]);
+            this.router.navigate(['dashboard/sales-order-detail']);
+          }, 500);
+        } else {
+          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+        }
 
-    //   }
-    // );
+      }
+    );
   }
 
   editSO(id) {
@@ -80,7 +83,13 @@ export class SalesOrderListPage implements OnInit {
 
 
   ngOnInit() {
+    let _startDate =new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
+    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
+
     setTimeout(() => {
+      this.firstDay = new Date(_startDate).toISOString();
+      this.lastDay = new Date(_endDay).toISOString();
+      console.log(this.firstDay, this.lastDay);
       this.getSODateFilter();
     }, 500);
   }
