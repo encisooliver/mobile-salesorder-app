@@ -284,6 +284,38 @@ export class TrnSalesOrderService {
     });
   }
 
+  // /
+  public getActiveUserList(): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let userListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstUserAPI/list/active", this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              userListObservableArray.push({
+                Id: results[i].Id,
+                Username: results[i].Username,
+                Fullname: results[i].Fullname,
+                CompanyId: results[i].CompanyId,
+                CompanyName: results[i].Company,
+                BranchId: results[i].BranchId,
+                BranchName: results[i].Branch,
+                IsActive: results[i].IsActive,
+                IsLocked: results[i].IsLocked
+              });
+            }
+          }
+
+          observer.next(userListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+  
   public getCodeTableListByCategory(category: string): Observable<any[]> {
     return new Observable<any[]>((observer) => {
       let codeTableListObservableArray =[];
