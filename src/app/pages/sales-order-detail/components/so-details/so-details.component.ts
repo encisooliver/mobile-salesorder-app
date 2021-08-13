@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
+import { SalesOrderListPage } from 'src/app/pages/sales-order-list/sales-order-list.page';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
-
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-so-details',
@@ -18,6 +19,7 @@ export class SoDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private storage: Storage,
     private trnSalesOrderService: TrnSalesOrderService,
+    private toastService: ToastService,
     
   ) {
     this.storage.get("sales_id").then(
@@ -42,8 +44,33 @@ export class SoDetailsComponent implements OnInit {
   currencies: any = [];
   terms: any = [];
   status: any = [];
+  activeUsers: any = [];
+  CustomerUsers: any = [];
   soDate: String = "";
   neededDate: String = "";
+
+  getCustomerUsers() {
+    this.trnSalesOrderService.getLockedArticleCustomerList().subscribe(
+      data => {
+        this.CustomerUsers = data;
+        console.log("Customer ID");
+        console.log(this.sOModel.CustomerId);
+        console.log("Customer Users");
+        console.log(data);
+        this.getActiveuser();
+      }
+    );
+  }
+  getActiveuser() {
+    this.trnSalesOrderService.getActiveUserList().subscribe(
+      data => {
+        this.activeUsers = data;
+        console.log("Active Users");
+        console.log(data);
+        this.getCurrency();
+      }
+    );
+  }
   getCurrency() {
     this.trnSalesOrderService.getCurrencyExchange().subscribe(
       data => {
@@ -63,10 +90,12 @@ export class SoDetailsComponent implements OnInit {
       }
     );
   }
+  
   getStatus() {
     this.trnSalesOrderService.getCodeTableListByCategory("SALES ORDER STATUS").subscribe(
       data => {
         this.status = data;
+        console.log("getStatus");
         console.log(data);
         this.getSO();
       }
@@ -124,6 +153,28 @@ export class SoDetailsComponent implements OnInit {
     );
   }
 
+  editedSO(): void {
+    console.log("POST MODEL API this.sOModeL");
+    console.log(this.sOModel);
+    this.trnSalesOrderService.saveSalesOrder(this.sOModel).subscribe(
+      data => {
+
+        if (data[0] == true) {
+          this.toastService.success('Sales order was successfully updated!');
+          console.log("SO MOdel   ");
+          console.log(this.sOModel);
+          // this.router.navigate(['dashboard/sales-order-list']);
+          // this.router.navigate(['dashboard/sales-order-list']);
+          setTimeout(() => {
+            this.storage.set("sales_id", data[1]);
+            // this.router.navigate(['dashboard/sales-order-detail']);
+          }, 500);
+        } else {
+          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+        }
+      }
+    );
+  }
 
   compareFn(e1: any, e2: any): boolean {
     console.log("com", e1.id, e2.id)
@@ -140,7 +191,8 @@ export class SoDetailsComponent implements OnInit {
   }
   ngOnInit() {
     setTimeout(() => {
-      this.getCurrency();
+      this.getCustomerUsers();
+      
     }, 500);
   }
 
