@@ -1,6 +1,7 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>SO</ion-title>
+    <ion-title>Sales Order</ion-title>
+    <ion-button slot="end"size="small" color="success" (click)="editedSO()">Save</ion-button>
   </ion-toolbar>
 </ion-header>
 <!-- [compareWith]="compareFn" -->
@@ -30,7 +31,9 @@
     </ion-item>
     <ion-item>
       <ion-label>Customer:</ion-label>
-      <ion-input [(ngModel)]="sOModel.CustomerName"></ion-input>
+      <ion-select [(ngModel)]="sOModel.CustomerId">
+        <ion-select-option *ngFor="let cs of CustomerUsers;" [value]="cs.ArticleId">{{cs.Customer}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Term:</ion-label>
@@ -49,22 +52,29 @@
         <ion-select-option *ngFor="let s of status;" [value]="s.Code">{{s.Code}}</ion-select-option>
       </ion-select>
     </ion-item>
-
     <ion-item>
       <ion-label>Sold by:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="sOModel.SoldByUserId">
+        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Approved by:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="sOModel.ApprovedByUserId">
+        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Checked by:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="sOModel.CheckedByUserId">
+        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Prepared by:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="sOModel.PreparedByUserId">
+        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
+      </ion-select>
     </ion-item>
   </div>
 </ion-content>

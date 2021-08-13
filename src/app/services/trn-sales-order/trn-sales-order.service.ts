@@ -210,6 +210,8 @@ export class TrnSalesOrderService {
               UpdatedByUserFullname: results["UpdatedByUser"].Fullname,
               UpdatedDateTime: results["UpdatedDateTime"]
             }
+            console.log("trnSalesOrderModel FROM API");
+            console.log(trnSalesOrderModel);
           }
 
           observer.next(trnSalesOrderModel);
@@ -284,7 +286,7 @@ export class TrnSalesOrderService {
     });
   }
 
-  // /
+//sold by services
   public getActiveUserList(): Observable<any[]> {
     return new Observable<any[]>((observer) => {
       let userListObservableArray = [];
@@ -306,10 +308,56 @@ export class TrnSalesOrderService {
                 IsActive: results[i].IsActive,
                 IsLocked: results[i].IsLocked
               });
+              console.log("API getActiveUserList");
+              console.log(userListObservableArray);
             }
           }
 
           observer.next(userListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+  //Customers List Active User
+  public getLockedArticleCustomerList(): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let customerList = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleCustomerAPI/list/locked", this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+             customerList.push({
+                Id: results[i].Id,
+                ArticleId: results[i].ArticleId,
+                ArticleCode: results[i].Article.ArticleCode,
+                ArticleManualCode: results[i].ArticleManualCode,
+                ArticleParticulars: results[i].ArticleParticulars,
+                Article: results[i].Article.Article,
+                Customer: results[i].Customer,
+                Address: results[i].Address,
+                ContactPerson: results[i].ContactPerson,
+                ContactNumber: results[i].ContactNumber,
+                Category: results[i].Category,
+                ReceivableAccountId: results[i].ReceivableAccountId,
+                ReceivableAccountManualCode: results[i].ReceivableAccount.ManualCode,
+                ReceivableAccountName: results[i].ReceivableAccount.Account,
+                TermId: results[i].TermId,
+                TermName: results[i].Term.Term,
+                CreditLimit: results[i].CreditLimit,
+                IsLocked: results[i].IsLocked,
+                CreatedByUserFullname: results[i].CreatedByUser.Fullname,
+                CreatedDateTime: results[i].CreatedDateTime,
+                UpdatedByUserFullname: results[i].UpdatedByUser.Fullname,
+                UpdatedDateTime: results[i].UpdatedDateTime
+              });
+            }
+          }
+
+          observer.next(customerList);
           observer.complete();
         }
       );
@@ -372,6 +420,10 @@ export class TrnSalesOrderService {
       );
     });
   }
+  // public async EditEmployeeDetail() {
+  //   let currentEmployee = this.listEmployeeCollectionView.currentItem;
+  //   this.router.navigate(['/software/employee-detail/' + currentEmployee.Id]);
+  // }
 
   public lockSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {

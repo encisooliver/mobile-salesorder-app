@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sales Order</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-card>
+  <ion-card-header>
+    <ion-row>
+    </ion-row>
+    <ion-card-content>
+      <ion-text-center>Are you sure you want to delete this?</ion-text-center>
+    </ion-card-content>
+    <ion-row>
+    </ion-row>
+  </ion-card-header >
+</ion-card>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center>
+        <ion-button  expand="block" color="danger"  (click)="deleteSO(model_title)">Delete</ion-button>
+        <ion-button expand="block" (click)="closeModel()">Close</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-header> 
+  <ion-toolbar color="success"> 
+  <ion-title>
+  Ionic Alert Example
+  </ion-title> 
+  </ion-toolbar> 
+ </ion-header> 
+ <ion-content padding="" color="light"> 
+  <button color="primary"> 
+  <ion-button (click)="showAlert()">Basic Alert</ion-button> 
+  </button>
+  </ion-content> 
