@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SysLoginModel } from 'src/app/models/sys-login-model';
 import { SysLoginService } from './../../services/sys-login/sys-login.service';
 import { Storage } from '@ionic/storage-angular';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -14,6 +15,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private sysLoginService: SysLoginService,
     private storage: Storage,
+    private sysStorageService: SysStorageService,
   ) { }
   sysLoginModel: SysLoginModel = {
     Username: '',
@@ -45,6 +47,25 @@ export class LoginPage implements OnInit {
           // this.disabled = false;
         }
 
+      }
+    );
+  }
+
+  async asyncLogin() {
+    // this.disabled = true;
+    (await this.sysLoginService.asyncLogin(this.sysLoginModel)).subscribe(
+      data => {
+        console.log(data);
+        let results = data;
+        this.sysStorageService.set('access_token', results["AccessToken"]);
+        this.sysStorageService.set('expires_in', results["ExpiresIn"]);
+        this.sysStorageService.set('username', results["UserName"]);
+        this.sysStorageService.set('fullname', results["FullName"]);
+        this.sysStorageService.set('companyId', results["CompanyId"]);
+        this.sysStorageService.set('company', results["Company"]);
+        this.sysStorageService.set('branchId', results["BranchId"]);
+        this.sysStorageService.set('branch', results["Branch"]);
+        this.router.navigate(['/dashboard']);
       }
     );
   }
