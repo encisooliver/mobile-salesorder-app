@@ -12,21 +12,24 @@ import { AppSettings } from 'src/app/settings/app-settings';
 import { SoDetailsComponent } from './components/so-details/so-details.component';
 import { SoAttachmentComponent } from './components/so-attachment/so-attachment.component';
 import { SoItemsComponent } from './components/so-items/so-items.component';
+import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
+import { SoInventoryItemListComponent } from './components/so-inventory-item-list/so-inventory-item-list.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SalesOrderDetailPageRoutingModule
+    SalesOrderDetailPageRoutingModule,
+    
   ],
   declarations: [
     SalesOrderDetailPage,
     SoDetailsComponent,
     SoAttachmentComponent,
     SoItemsComponent,
-    
+    SoInventoryItemListComponent
   ],
-  providers: [AppSettings, TrnSalesOrderService]
+  providers: [AppSettings, TrnSalesOrderService, MstArticleItemService]
 })
 export class SalesOrderDetailPageModule {}
