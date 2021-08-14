@@ -61,4 +61,11 @@ export class SysLoginService {
       );
     });
   }
+
+  public async asyncLogin(sysLoginModel: SysLoginModel) {
+    let url = this.defaultAPIURLHost + '/api/SysUserAuthenticationAPI/authenticate';
+    let body = JSON.stringify(sysLoginModel);
+    let options = this.options;
+    return await this.httpClient.post(url, body, options);
+  }
 }
