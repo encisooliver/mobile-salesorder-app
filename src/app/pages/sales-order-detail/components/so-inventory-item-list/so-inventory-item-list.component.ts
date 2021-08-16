@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
 import { Storage } from '@ionic/storage-angular';
+import { SoItemDetailPage } from '../so-item-detail/so-item-detail.page';
 
 @Component({
   selector: 'app-so-inventory-item-list',
@@ -78,6 +79,25 @@ export class SoInventoryItemListComponent implements OnInit {
 
       }
     );
+  }
+  async openModal(sOModel) {
+    
+    const modal = await this.modalCtrl.create({
+
+      component: SoItemDetailPage,
+      componentProps: {
+      }
+    });
+
+    // modal.onDidDismiss().then((id) => {
+    //   if (id !== null) {
+    //     // this.modelData = modelData.data;
+    //     console.log(id.data.name);
+    //     this.getSODateFilter();
+    //   }
+    // });
+
+    return await modal.present();
   }
   async close() {
     await this.modalCtrl.dismiss({ status: 200 });
