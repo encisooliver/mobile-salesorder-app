@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
 import { Storage } from '@ionic/storage-angular';
-import { SoItemDetailPage } from '../so-item-detail/so-item-detail.page';
+import { SoItemDetailComponent } from '../so-item-detail/so-item-detail.component';
+import { TrnPurchaseOrderItemModel } from 'src/app/models/trn-purchase-order-item.model';
+import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 
 @Component({
   selector: 'app-so-inventory-item-list',
@@ -45,6 +47,7 @@ export class SoInventoryItemListComponent implements OnInit {
   public searchItemKeywords: string = "";
   public searchItemColumn: string = "All"
 
+  PRId: number = 0;
 
   public isButtonAddArticleItemDisabled: boolean = false;
   public items: any[] = [];
@@ -80,12 +83,35 @@ export class SoInventoryItemListComponent implements OnInit {
       }
     );
   }
-  async openModal(sOModel) {
-    
+  async openModal(item) {
+
+    let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
+      trnSalesOrderItemModel.Id = 0;
+      // trnSalesOrderItemModel.SOId = this.dialogData.SOId;
+      trnSalesOrderItemModel.ItemId = item.ArticleId;
+      trnSalesOrderItemModel.ItemManualCode = item.ArticleItemManualCode;
+      trnSalesOrderItemModel.ItemSKUCode = item.ArticleItemSKUCode;
+      trnSalesOrderItemModel.ItemBarCode = item.ArticleItemBarCode;
+      trnSalesOrderItemModel.ItemDescription = item.ArticleItemDescription;
+      trnSalesOrderItemModel.UnitId = item.ArticleItemUnitId;
+      trnSalesOrderItemModel.ItemInventoryId = item.Id;
+      trnSalesOrderItemModel.ItemInventoryCode = item.InventoryCode;
+      trnSalesOrderItemModel.Particulars = "";
+      trnSalesOrderItemModel.Quantity = 1;
+      trnSalesOrderItemModel.Price = item.ArticleItemPrice;
+      // trnSalesOrderItemModel.DiscountId = this.dialogData.DiscountID;
+      trnSalesOrderItemModel.DiscountRate = 0;
+      trnSalesOrderItemModel.DiscountAmount = 0;
+      trnSalesOrderItemModel.NetPrice = item.ArticleItemPrice;
+      trnSalesOrderItemModel.Amount = item.ArticleItemPrice;
+      trnSalesOrderItemModel.VATId = item.ArticleItemSIVATId;
+      trnSalesOrderItemModel.WTAXId = item.ArticleItemWTAXId;
+
     const modal = await this.modalCtrl.create({
 
-      component: SoItemDetailPage,
+      component: SoItemDetailComponent,
       componentProps: {
+        itemData: item
       }
     });
 

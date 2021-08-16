@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -14,6 +14,8 @@ import { SoAttachmentComponent } from './components/so-attachment/so-attachment.
 import { SoItemsComponent } from './components/so-items/so-items.component';
 import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
 import { SoInventoryItemListComponent } from './components/so-inventory-item-list/so-inventory-item-list.component';
+import { SoItemDetailComponent } from './components/so-item-detail/so-item-detail.component';
+import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
 
 @NgModule({
   imports: [
@@ -28,8 +30,15 @@ import { SoInventoryItemListComponent } from './components/so-inventory-item-lis
     SoDetailsComponent,
     SoAttachmentComponent,
     SoItemsComponent,
-    SoInventoryItemListComponent
+    SoInventoryItemListComponent,
+    SoItemDetailComponent
   ],
-  providers: [AppSettings, TrnSalesOrderService, MstArticleItemService]
+  providers: [
+    AppSettings, 
+    TrnSalesOrderService, 
+    MstArticleItemService,
+    TrnSalesOrderItemService,
+    DecimalPipe
+  ]
 })
 export class SalesOrderDetailPageModule {}

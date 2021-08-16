@@ -176,4 +176,201 @@ export class TrnSalesOrderItemService {
       );
     });
   }
+
+  public getArticleItemUnitList(articleId: number): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let articleItemUnitListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemUnitAPI/list/" + articleId, this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              articleItemUnitListObservableArray.push({
+                Id: results[i].Id,
+                ArticleId: results[i].ArticleId,
+                ArticleItemManualCode: results[i].ArticleItem.Article.ManualCode,
+                ArticleItemSKUCode: results[i].ArticleItem.SKUCode,
+                ArticleItemBarCode: results[i].ArticleItem.BarCode,
+                ArticleItemDescription: results[i].ArticleItem.Description,
+                UnitId: results[i].UnitId,
+                UnitName: results[i].Unit.Unit,
+                Multiplier: results[i].Multiplier
+              });
+            }
+          }
+
+          observer.next(articleItemUnitListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  public getDiscountList(): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let discountListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstDiscountAPI/list", this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              discountListObservableArray.push({
+                Id: results[i].Id,
+                DiscountCode: results[i].DiscountCode,
+                ManualCode: results[i].ManualCode,
+                Discount: results[i].Discount,
+                DiscountRate: results[i].DiscountRate,
+                AccountId: results[i].AccountId,
+                AccountManualCode: results[i].Account.ManualCode,
+                AccountName: results[i].Account.Account,
+                CreatedByUserFullname: results[i].CreatedByUser.Fullname,
+                CreatedDateTime: results[i].CreatedDateTime,
+                UpdatedByUserFullname: results[i].UpdatedByUser.Fullname,
+                UpdatedDateTime: results[i].UpdatedDateTime
+              });
+            }
+          }
+
+          observer.next(discountListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+  public getTaxList(): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let taxListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstTaxAPI/list", this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              taxListObservableArray.push({
+                Id: results[i].Id,
+                TaxCode: results[i].TaxCode,
+                ManualCode: results[i].ManualCode,
+                TaxDescription: results[i].TaxDescription,
+                TaxRate: results[i].TaxRate,
+                AccountId: results[i].AccountId,
+                AccountManualCode: results[i].Account.ManualCode,
+                AccountName: results[i].Account.Account,
+                CreatedByUserFullname: results[i].CreatedByUser.Fullname,
+                CreatedDateTime: results[i].CreatedDateTime,
+                UpdatedByUserFullname: results[i].UpdatedByUser.Fullname,
+                UpdatedDateTime: results[i].UpdatedDateTime,
+                ATC: results[i].ATC
+              });
+            }
+          }
+
+          observer.next(taxListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  
+  public getCompanyDetail(id: number): Observable<any> {
+    return new Observable<any>((observer) => {
+      let mstCompanyModel: any;
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstCompanyAPI/detail/" + id, this.options).subscribe(
+        response => {
+          let results = response;
+
+          if (results != null) {
+            mstCompanyModel = {
+              Id: results["Id"],
+              CompanyCode: results["CompanyCode"],
+              ManualCode: results["ManualCode"],
+              Company: results["Company"],
+              Address: results["Address"],
+              TIN: results["TIN"],
+              BusinessStyle: results["BusinessStyle"],
+              SeriesRangeFrom: results["SeriesRangeFrom"],
+              SeriesRangeTo: results["SeriesRangeTo"],
+              IsExempt: results["IsExempt"],
+              ImageURL: results["ImageURL"],
+              CurrencyId: results["CurrencyId"],
+              CurrencyName: results["Currency"].Currency,
+              ForexGainAccountId: results["ForexGainAccountId"],
+              ForexGainAccountManualCode: results["ForexGainAccount"].ManualCode,
+              ForexGainAccountName: results["ForexGainAccount"].Account,
+              ForexLossAccountId: results["ForexLossAccountId"],
+              ForexLossAccountManualCode: results["ForexLossAccount"].ManualCode,
+              ForexLossAccountName: results["ForexLossAccount"].Account,
+              CostMethod: results["CostMethod"], 
+              IncomeAccountId: results["IncomeAccountId"],
+              IncomeAccountManualCode: results["IncomeAccount"].ManualCode,
+              IncomeAccountName: results["IncomeAccount"].Account,
+              DefaultRRVATId: results["DefaultRRVATId"],
+              DefaultRRVATManualCode : results["DefaultRRVAT"].ManualCode,
+              DefaultRRVATDescription:  results["DefaultRRVAT"].TaxDescription,
+              DefaultRRVATRate: results["DefaultRRVAT"].TaxRate,
+              DefaultRRWTaxId: results["DefaultRRWTaxId"],
+              DefaultRRWTaxManualCode: results["DefaultRRWTax"].ManualCode,
+              DefaultRRWTaxDescription: results["DefaultRRWTax"].TaxDescription,
+              DefaultRRWTaxRate: results["DefaultRRWTax"].TaxRate,
+              DefaultSIVATId: results["DefaultSIVATId"],
+              DefaultSIVATManualCode: results["DefaultSIVAT"].ManualCode,
+              DefaultSIVATDescription: results["DefaultSIVAT"].TaxDescription,
+              DefaultSIVATRate: results["DefaultSIVAT"].TaxRate,
+              DefaultSIWTaxId: results["DefaultSIWTaxId"],
+              DefaultSIWTaxManualCode: results["DefaultSIWTax"].ManualCode,
+              DefaultSIWTaxDescription: results["DefaultSIWTax"].TaxDescription,
+              DefaultSIWTaxRate: results["DefaultSIWTax"].TaxRate,
+              DefaultCVVATId: results["DefaultCVVATId"],
+              DefaultCVVATManualCode: results["DefaultCVVAT"].ManualCode,
+              DefaultCVVATDescription: results["DefaultCVVAT"].TaxDescription,
+              DefaultCVVATRate: results["DefaultCVVAT"].TaxRate,
+              DefaultCVWTaxId: results["DefaultCVWTaxId"],
+              DefaultCVWTaxManualCode: results["DefaultCVWTax"].ManualCode,
+              DefaultCVWTaxDescription: results["DefaultCVWTax"].TaxDescription,
+              DefaultCVWTaxRate: results["DefaultCVWTax"].TaxRate,
+              DefaultCIVATId: results["DefaultCIVATId"],
+              DefaultCIVATManualCode: results["DefaultCIVAT"].ManualCode,
+              DefaultCIVATDescription: results["DefaultCIVAT"].TaxDescription,
+              DefaultCIVATRate: results["DefaultCIVAT"].TaxRate,
+              DefaultCIWTaxId: results["DefaultCIWTaxId"],
+              DefaultCIWTaxManualCode: results["DefaultCIWTax"].ManualCode,
+              DefaultCIWTaxDescription: results["DefaultCIWTax"].TaxDescription,
+              DefaultCIWTaxRate: results["DefaultCIWTax"].TaxRate,
+              SalesInvoiceCheckedByUserId: results["SalesInvoiceCheckedByUserId"],
+              SalesInvoiceCheckedByUserFullname: results["SalesInvoiceCheckedByUser"].Fullname,
+              SalesInvoiceApprovedByUserId: results["SalesInvoiceApprovedByUserId"],
+              SalesInvoiceApprovedByUserFullname: results["SalesInvoiceApprovedByUser"].Fullname,
+              IsLocked: results["IsLocked"],
+              CreatedByUserFullname: results["CreatedByUser"].Fullname,
+              CreatedDateTime: results["CreatedDateTime"],
+              UpdatedByUserFullname: results["UpdatedByUser"].Fullname,
+              UpdatedDateTime: results["UpdatedDateTime"],
+              NatureOfIncome: results["NatureOfIncome"],
+              InvoiceReceiptName: results["InvoiceReceiptName"],
+              InvoiceReceiptPhrase: results["InvoiceReceiptPhrase"],
+              CollectionReceiptName: results["CollectionReceiptName"],
+              CollectionReceiptPhrase: results["CollectionReceiptPhrase"],
+              AcknowledgementReceiptNo: results["AcknowledgementReceiptNo"],
+              DateIssued: results["DateIssued"],
+              ZipCode: results["ZipCode"],
+              DefaultArticleAccountGroupForItem: results["DefaultArticleAccountGroupForItem"],
+              DefaultAccountPayableForSupplier: results["DefaultAccountPayableForSupplier"],
+              DefaultAccountReceivableForCustomer: results["DefaultAccountReceivableForCustomer"],
+              DefaultDepreciateAccountId: results["DefaultDepreciateAccountId"],
+              DefaultDepreciateArticleId: results["DefaultDepreciateArticleId"]
+            }
+          }
+
+          observer.next(mstCompanyModel);
+          observer.complete();
+        }
+      );
+    });
+  }
 }

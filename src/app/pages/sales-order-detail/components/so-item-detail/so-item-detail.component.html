@@ -14,88 +14,88 @@
 <ion-content>  
     <div>
     <ion-item>
-      <ion-label position="floating">Item Code:</ion-label>
-      <ion-input></ion-input>
-    </ion-item>    
-    <ion-item>
-      <ion-label position="floating">Manual Item:</ion-label>
-      <ion-input></ion-input>
-    </ion-item>
-    <ion-item>
       <ion-label position="floating">SKU Code:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemSKUCode"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Bar Code:</ion-label>
-      <ion-input></ion-input>
+      <ion-input  [(ngModel)]="trnSalesOrderItemModel.ItemBarCode"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Description:</ion-label>
-      <ion-input></ion-input>
+      <ion-input  [(ngModel)]="trnSalesOrderItemModel.ItemDescription"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Unit:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.UnitId">
+        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount:</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.DiscountId">
+        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Inventory Code:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemInventoryCode"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Particulars</ion-label>
-      <ion-textarea></ion-textarea>
+      <ion-textarea [(ngModel)]="trnSalesOrderItemModel.Particulars"></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Quantity:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemQuantity"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Price:</ion-label>
-      <ion-input></ion-input>
+      <ion-input  [(ngModel)]="salesOrderItemPrice"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount Rate:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemDiscountRate"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount Amount:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemDiscountAmount"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Net Price:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemNetPrice"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Amount:</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemAmount"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.VATId">
+        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT RATE</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemVATRate"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT Amount</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemVATAmount"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax</ion-label>
-      <ion-input></ion-input>
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.WTAXId">
+        <ion-select-option *ngFor="let unit of listTaxObservableArray;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax Rate</ion-label>
-      <ion-input></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemWTAXRate"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax Amount</ion-label>
-      <ion-input></ion-input>
+      <ion-input  [(ngModel)]="salesOrderItemWTAXAmount"></ion-input>
     </ion-item>
   </div>
 </ion-content> 
