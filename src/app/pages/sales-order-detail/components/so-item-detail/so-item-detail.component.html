@@ -34,7 +34,7 @@
     <ion-item>
       <ion-label position="floating">Discount:</ion-label>
       <ion-select [(ngModel)]="trnSalesOrderItemModel.DiscountId">
-        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+        <ion-select-option *ngFor="let discount of listDiscount;" [value]="discount.Id">{{discount.Discount}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -72,7 +72,7 @@
     <ion-item>
       <ion-label position="floating">VAT</ion-label>
       <ion-select [(ngModel)]="trnSalesOrderItemModel.VATId">
-        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+        <ion-select-option *ngFor="let tax of listTax;" [value]="tax.Id">{{tax.TaxDescription}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -86,7 +86,7 @@
     <ion-item>
       <ion-label position="floating">Withholding Tax</ion-label>
       <ion-select [(ngModel)]="trnSalesOrderItemModel.WTAXId">
-        <ion-select-option *ngFor="let unit of listTaxObservableArray;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+        <ion-select-option *ngFor="let tax of listTax;" [value]="tax.Id">{{tax.TaxDescription}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>

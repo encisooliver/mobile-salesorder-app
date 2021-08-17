@@ -14,13 +14,15 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 
 export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
+  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private storage: Storage,
     private trnSalesOrderService: TrnSalesOrderService,
     private toastService: ToastService,
-    
+
   ) {
     this.storage.get("sales_id").then(
       result => {
@@ -33,10 +35,8 @@ export class SoDetailsComponent implements OnInit {
       }
     )
   }
-  
 
-  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-  public id: number = 0;
+  id: number = 0;
   so: string = "";
   items: string = "";
   attachment: string = "";
@@ -85,12 +85,12 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getTermList().subscribe(
       data => {
         this.terms = data;
-        console.log("Sample Log" +data);
+        console.log("Sample Log" + data);
         this.getStatus();
       }
     );
   }
-  
+
   getStatus() {
     this.trnSalesOrderService.getCodeTableListByCategory("SALES ORDER STATUS").subscribe(
       data => {
@@ -146,6 +146,7 @@ export class SoDetailsComponent implements OnInit {
             this.sOModel.UpdatedDateTime = data.UpdatedDateTime;
             this.isShown = true;
             console.log(this.sOModel);
+            this.storage.set("sales_order", JSON.stringify(this.sOModel));
           }
         }, 500);
 
@@ -178,7 +179,7 @@ export class SoDetailsComponent implements OnInit {
 
   compareFn(e1: any, e2: any): boolean {
     console.log("com", e1.id, e2.id)
-    return e1 && e2 ? e1.id === e2.id : e1 === e2; 
+    return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 
   compareFn1(e1: TrnSalesOrderModel, e2: TrnSalesOrderModel): boolean {
@@ -187,12 +188,12 @@ export class SoDetailsComponent implements OnInit {
   }
   compareFn2(e1: any, e2: any): boolean {
     console.log("com", e1.id, e2.id)
-        return e1 && e2 ? e1.id === e2.id : e1 === e2; 
+    return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
   ngOnInit() {
     setTimeout(() => {
       this.getCustomerUsers();
-      
+
     }, 500);
   }
 

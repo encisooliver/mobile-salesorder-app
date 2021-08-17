@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage-angular';
 import { SoItemDetailComponent } from '../so-item-detail/so-item-detail.component';
 import { TrnPurchaseOrderItemModel } from 'src/app/models/trn-purchase-order-item.model';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
+import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 
 @Component({
   selector: 'app-so-inventory-item-list',
@@ -15,6 +16,8 @@ export class SoInventoryItemListComponent implements OnInit {
 
   token: string = "";
   branchId: number = 0;
+  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+
   constructor(
     private mstArticleItemService: MstArticleItemService,
     private storage: Storage,
@@ -39,19 +42,29 @@ export class SoInventoryItemListComponent implements OnInit {
         }
       }
     )
+
+    this.storage.get("sales_order").then(
+      result => {
+        let sales_order = result;
+        console.log(JSON.parse(sales_order));
+        if (sales_order) {
+          this.sOModel = sales_order;
+        }
+      }
+    )
   }
 
-  public articleItemListPageIndex: number = 15;
-  public itemListSkip: number = 0;
-  public itemListTake: number = 15;
-  public searchItemKeywords: string = "";
-  public searchItemColumn: string = "All"
+  articleItemListPageIndex: number = 15;
+  itemListSkip: number = 0;
+  itemListTake: number = 15;
+  searchItemKeywords: string = "";
+  searchItemColumn: string = "All"
 
   PRId: number = 0;
 
-  public isButtonAddArticleItemDisabled: boolean = false;
-  public items: any[] = [];
-  public getArticleItemList(): void {
+  isButtonAddArticleItemDisabled: boolean = false;
+  items: any[] = [];
+  getArticleItemList(): void {
 
     let column = this.searchItemColumn;
     let skip = this.itemListSkip;
@@ -84,44 +97,44 @@ export class SoInventoryItemListComponent implements OnInit {
     );
   }
   async openModal(item) {
-
+    console.log(item);
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
-      trnSalesOrderItemModel.Id = 0;
-      // trnSalesOrderItemModel.SOId = this.dialogData.SOId;
-      trnSalesOrderItemModel.ItemId = item.ArticleId;
-      trnSalesOrderItemModel.ItemManualCode = item.ArticleItemManualCode;
-      trnSalesOrderItemModel.ItemSKUCode = item.ArticleItemSKUCode;
-      trnSalesOrderItemModel.ItemBarCode = item.ArticleItemBarCode;
-      trnSalesOrderItemModel.ItemDescription = item.ArticleItemDescription;
-      trnSalesOrderItemModel.UnitId = item.ArticleItemUnitId;
-      trnSalesOrderItemModel.ItemInventoryId = item.Id;
-      trnSalesOrderItemModel.ItemInventoryCode = item.InventoryCode;
-      trnSalesOrderItemModel.Particulars = "";
-      trnSalesOrderItemModel.Quantity = 1;
-      trnSalesOrderItemModel.Price = item.ArticleItemPrice;
-      // trnSalesOrderItemModel.DiscountId = this.dialogData.DiscountID;
-      trnSalesOrderItemModel.DiscountRate = 0;
-      trnSalesOrderItemModel.DiscountAmount = 0;
-      trnSalesOrderItemModel.NetPrice = item.ArticleItemPrice;
-      trnSalesOrderItemModel.Amount = item.ArticleItemPrice;
-      trnSalesOrderItemModel.VATId = item.ArticleItemSIVATId;
-      trnSalesOrderItemModel.WTAXId = item.ArticleItemWTAXId;
-
+    trnSalesOrderItemModel.Id = 0;
+    trnSalesOrderItemModel.SOId = this.sOModel.Id;
+    trnSalesOrderItemModel.ItemId = item.ArticleId;
+    trnSalesOrderItemModel.ItemManualCode = item.ArticleItem.Article.ManualCode;
+    trnSalesOrderItemModel.ItemSKUCode =  item.ArticleItem.SKUCode;
+    trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.Article.BarCode;
+    trnSalesOrderItemModel.ItemDescription = item.ArticleItem.Description;
+    trnSalesOrderItemModel.UnitId =item.ArticleItem.UnitId;
+    trnSalesOrderItemModel.ItemInventoryId = null;
+    trnSalesOrderItemModel.ItemInventoryCode = "";
+    trnSalesOrderItemModel.Particulars = "";
+    trnSalesOrderItemModel.Quantity = 1;
+    trnSalesOrderItemModel.Price = item.ArticleItem.Price;
+    trnSalesOrderItemModel.DiscountId = this.sOModel.DiscountId;
+    trnSalesOrderItemModel.DiscountRate = 0;
+    trnSalesOrderItemModel.DiscountAmount = 0;
+    trnSalesOrderItemModel.NetPrice = item.ArticleItem.Price;
+    trnSalesOrderItemModel.Amount = item.ArticleItem.Price;
+    trnSalesOrderItemModel.VATId = item.ArticleItem.SIVATId;
+    trnSalesOrderItemModel.WTAXId = item.ArticleItem.WTAXId;
+    console.log(trnSalesOrderItemModel);
     const modal = await this.modalCtrl.create({
 
       component: SoItemDetailComponent,
       componentProps: {
-        itemData: item
+        itemData: trnSalesOrderItemModel
       }
     });
 
-    // modal.onDidDismiss().then((id) => {
-    //   if (id !== null) {
-    //     // this.modelData = modelData.data;
-    //     console.log(id.data.name);
-    //     this.getSODateFilter();
-    //   }
-    // });
+    modal.onDidDismiss().then((id) => {
+      if (id !== null) {
+        // this.modelData = modelData.data;
+        console.log(id.data.name);
+        // this.getSODateFilter();
+      }
+    });
 
     return await modal.present();
   }

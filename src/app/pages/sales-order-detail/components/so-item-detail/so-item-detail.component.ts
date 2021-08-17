@@ -3,6 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
+import { Storage } from '@ionic/storage-angular';
+import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 
 @Component({
   selector: 'app-so-item-detail',
@@ -12,78 +14,110 @@ import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/
 export class SoItemDetailComponent implements OnInit {
 
   @Input() itemData: any;
-
+  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  token;
+  companyId;
   constructor(
     private modalController: ModalController,
     private decimalPipe: DecimalPipe,
-    private trnSalesOrderItemService: TrnSalesOrderItemService
-  ) { }
-  public trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
+    private trnSalesOrderItemService: TrnSalesOrderItemService,
+    private storage: Storage,
 
-  
-  public salesOrderItemQuantity: string = "0.00";
-  public salesOrderItemPrice: string = "0.00";
-  public salesOrderItemDiscountRate: string = "0.00";
-  public salesOrderItemDiscountAmount: string = "0.00";
-  public salesOrderItemNetPrice: string = "0.00";
-  public salesOrderItemAmount: string = "0.00";
-  public salesOrderItemVATRate: string = "0.00";
-  public salesOrderItemVATAmount: string = "0.00";
-  public salesOrderItemWTAXRate: string = "0.00";
-  public salesOrderItemWTAXAmount: string = "0.00";
-  public defaultVATId: number = null;
-  public defaultVATRate: number = 0;
-  public defaultWTAXId: number = null;
-  public defaultWTAXRate: number = 0;
+  ) {
+    this.storage.get("sales_order").then(
+      result => {
+        let sales_order = result;
+        console.log(JSON.parse(sales_order));
+        if (sales_order) {
+          this.sOModel = sales_order;
+        }
+      }
+    )
+
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.token = token;
+        }
+      }
+    )
+    this.storage.get("companyId").then(
+      result => {
+        let companyId = result;
+        if (companyId) {
+          this.companyId = companyId;
+        }
+      }
+    )
+  }
+  trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
+  salesOrderItemQuantity: string = "0.00";
+  salesOrderItemPrice: string = "0.00";
+  salesOrderItemDiscountRate: string = "0.00";
+  salesOrderItemDiscountAmount: string = "0.00";
+  salesOrderItemNetPrice: string = "0.00";
+  salesOrderItemAmount: string = "0.00";
+  salesOrderItemVATRate: string = "0.00";
+  salesOrderItemVATAmount: string = "0.00";
+  salesOrderItemWTAXRate: string = "0.00";
+  salesOrderItemWTAXAmount: string = "0.00";
+  defaultVATId: number = null;
+  defaultVATRate: number = 0;
+  defaultWTAXId: number = null;
+  defaultWTAXRate: number = 0;
 
   listItemUnit: any = [];
   listDiscount: any = [];
   listTax: any = [];
-   getArticleItemUnitList(): void {
-    this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId).subscribe(
+  getArticleItemUnitList(): void {
+    this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
       data => {
+        console.log(data);
         this.listItemUnit = data;
         this.getDiscountList();
       }
     );
   }
 
-   getDiscountList(): void {
+  getDiscountList(): void {
     this.trnSalesOrderItemService.getDiscountList().subscribe(
       data => {
+        console.log(data);
         this.listDiscount = data;
-        // this.getTaxList();
+        this.getTaxList();
       }
     );
   }
-  public getTaxList(): void {
+  getTaxList(): void {
     this.trnSalesOrderItemService.getTaxList().subscribe(
       data => {
+        console.log(data);
         this.listTax = data;
         this.getDefaultTax();
       }
     );
   }
-  public getDefaultTax(): void {
-    var company =Number(localStorage.getItem('companyId'));
-    this.trnSalesOrderItemService.getCompanyDetail(company).subscribe(
+  getDefaultTax(): void {
+    this.trnSalesOrderItemService.getCompanyDetail(this.companyId).subscribe(
       data => {
+        console.log(data);
         setTimeout(() => {
           if (data != null) {
             this.defaultVATId = data.DefaultSIVATId,
-            this.defaultVATRate = data.DefaultSIVATRate,
-            this.defaultWTAXId = data.DefaultSIWTaxId,
-            this.defaultWTAXRate = data.DefaultSIWTaxRate
+              this.defaultVATRate = data.DefaultSIVATRate,
+              this.defaultWTAXId = data.DefaultSIWTaxId,
+              this.defaultWTAXRate = data.DefaultSIWTaxRate
           }
+          this.getSalesOrderItemDetail();
         }, 500);
-        this.getSalesOrderItemDetail();
       }
     )
   }
-  public getSalesOrderItemDetail(): void {
+  getSalesOrderItemDetail(): void {
+    console.log(this.itemData);
     this.trnSalesOrderItemService.getSalesOrderItemDetail(this.itemData.Id).subscribe(
       data => {
-
         setTimeout(() => {
           if (data != null) {
             this.trnSalesOrderItemModel.Id = data.Id;
@@ -137,21 +171,11 @@ export class SoItemDetailComponent implements OnInit {
             this.trnSalesOrderItemModel.Quantity = this.itemData.Quantity;
             this.trnSalesOrderItemModel.Price = this.itemData.Price;
             this.trnSalesOrderItemModel.DiscountId = this.itemData.DiscountId;
-            this.trnSalesOrderItemModel.DiscountRate =  this.itemData.DiscountRate;
-
-            // this.trnSalesOrderItemModel.VATId = this.itemData.VATId;
-            // let selectedVAT: any = this.listTaxObservableArray.filter(vat => vat.Id === this.itemData.VATId);
-            // let VATRate: number = selectedVAT[0].TaxRate;
-            // this.trnSalesOrderItemModel.VATRate = VATRate;
+            this.trnSalesOrderItemModel.DiscountRate = this.itemData.DiscountRate;
 
             this.trnSalesOrderItemModel.VATId = this.defaultVATId;
             let VATRate: number = this.defaultVATRate;
             this.trnSalesOrderItemModel.VATRate = VATRate;
-
-            // this.trnSalesOrderItemModel.WTAXId = this.itemData.WTAXId;
-            // let selectedWTAX: any = this.listTaxObservableArray.filter(vat => vat.Id === this.itemData.WTAXId);
-            // let WTAXRate: number = selectedWTAX[0].TaxRate;
-            // this.trnSalesOrderItemModel.WTAXRate = WTAXRate;
 
             this.trnSalesOrderItemModel.WTAXId = this.defaultWTAXId;
             let WTAXRate: number = this.defaultWTAXRate;
@@ -168,6 +192,7 @@ export class SoItemDetailComponent implements OnInit {
 
             // this.onSelectionChangeComputeDiscountAndAmount();
             // this.computeAmount();
+            console.log(this.trnSalesOrderItemModel);
           }
         }, 500);
 
@@ -175,7 +200,7 @@ export class SoItemDetailComponent implements OnInit {
     );
   }
 
-  public buttonSaveSalesOrderItemClick(): void {
+  buttonSaveSalesOrderItemClick(): void {
     if (this.trnSalesOrderItemModel.Id == 0) {
       this.trnSalesOrderItemService.addSalesOrderItem(this.trnSalesOrderItemModel).subscribe(
         data => {
@@ -207,13 +232,15 @@ export class SoItemDetailComponent implements OnInit {
     }
   }
 
-  
+
 
   ngOnInit() {
     console.log(this.itemData);
-    this.getArticleItemUnitList();
+    setTimeout(() => {
+      this.getArticleItemUnitList();
+    }, 500);
   }
-  dismiss() {  
-    this.modalController.dismiss();  
-  }  
+  dismiss() {
+    this.modalController.dismiss();
+  }
 }

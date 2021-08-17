@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
 import { TrnSalesOrderModel } from './../../models/trn-sales-order.model';
 import { Storage } from '@ionic/storage-angular';
-import { stringify } from '@angular/compiler/src/util';
 @Injectable({
   providedIn: 'root'
 })

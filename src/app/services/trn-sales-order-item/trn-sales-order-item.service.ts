@@ -3,24 +3,36 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
 import { TrnSalesOrderItemModel } from './../../models/trn-sales-order-item.model';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrnSalesOrderItemService {
-
+  public defaultAPIURLHost: string = this.appSettings.APIURLHost;
+  public options: any;
   constructor(
     private appSettings: AppSettings,
-    private httpClient: HttpClient
-  ) { }
+    private httpClient: HttpClient,
+    private storage: Storage
 
-  public defaultAPIURLHost: string = this.appSettings.APIURLHost;
-  public options: any = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-    })
-  };
+  ) {
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        console.log( token );
+        if(token){
+          this.options = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            })
+          }
+        }
+      }
+    )
+  }
+
 
   public getSalesOrderItemListBySalesOrder(SOId: number): Observable<any[]> {
     return new Observable<any[]>((observer) => {
@@ -177,11 +189,18 @@ export class TrnSalesOrderItemService {
     });
   }
 
-  public getArticleItemUnitList(articleId: number): Observable<any[]> {
+  public getArticleItemUnitList(articleId: number, token): Observable<any[]> {
+    let options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
+    console.log(token);
     return new Observable<any[]>((observer) => {
       let articleItemUnitListObservableArray = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemUnitAPI/list/" + articleId, this.options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemUnitAPI/list/" + articleId, options).subscribe(
         response => {
           let results = response;
 
@@ -276,7 +295,7 @@ export class TrnSalesOrderItemService {
     });
   }
 
-  
+
   public getCompanyDetail(id: number): Observable<any> {
     return new Observable<any>((observer) => {
       let mstCompanyModel: any;
@@ -306,13 +325,13 @@ export class TrnSalesOrderItemService {
               ForexLossAccountId: results["ForexLossAccountId"],
               ForexLossAccountManualCode: results["ForexLossAccount"].ManualCode,
               ForexLossAccountName: results["ForexLossAccount"].Account,
-              CostMethod: results["CostMethod"], 
+              CostMethod: results["CostMethod"],
               IncomeAccountId: results["IncomeAccountId"],
               IncomeAccountManualCode: results["IncomeAccount"].ManualCode,
               IncomeAccountName: results["IncomeAccount"].Account,
               DefaultRRVATId: results["DefaultRRVATId"],
-              DefaultRRVATManualCode : results["DefaultRRVAT"].ManualCode,
-              DefaultRRVATDescription:  results["DefaultRRVAT"].TaxDescription,
+              DefaultRRVATManualCode: results["DefaultRRVAT"].ManualCode,
+              DefaultRRVATDescription: results["DefaultRRVAT"].TaxDescription,
               DefaultRRVATRate: results["DefaultRRVAT"].TaxRate,
               DefaultRRWTaxId: results["DefaultRRWTaxId"],
               DefaultRRWTaxManualCode: results["DefaultRRWTax"].ManualCode,
