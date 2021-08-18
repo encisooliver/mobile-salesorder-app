@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 import { SysLoginModel } from 'src/app/models/sys-login-model';
 import { SysLoginService } from './../../services/sys-login/sys-login.service';
-import { Storage } from '@ionic/storage-angular';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -16,6 +17,7 @@ export class LoginPage implements OnInit {
     private sysLoginService: SysLoginService,
     private storage: Storage,
     private sysStorageService: SysStorageService,
+    private toastService: ToastService,
   ) { }
   sysLoginModel: SysLoginModel = {
     Username: '',
@@ -55,6 +57,7 @@ export class LoginPage implements OnInit {
     // this.disabled = true;
     (await this.sysLoginService.asyncLogin(this.sysLoginModel)).subscribe(
       data => {
+        this.toastService.success(JSON.stringify(data));
         console.log(data);
         let results = data;
         this.sysStorageService.set('access_token', results["AccessToken"]);
@@ -68,5 +71,9 @@ export class LoginPage implements OnInit {
         this.router.navigate(['/dashboard']);
       }
     );
+  }
+
+  async responseMessage(){
+
   }
 }

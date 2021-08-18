@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppSettings } from 'src/app/settings/app-settings';
 import { SysLoginService } from 'src/app/services/sys-login/sys-login.service';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
     HttpClientModule,
   ],
   declarations: [LoginPage],
-  providers: [AppSettings, SysLoginService, SysStorageService]
+  providers: [AppSettings, SysLoginService, SysStorageService, ToastService]
   
 })
 export class LoginPageModule {}
