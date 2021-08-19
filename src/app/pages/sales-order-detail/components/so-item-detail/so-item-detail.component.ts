@@ -5,6 +5,7 @@ import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.mode
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-so-item-detail',
@@ -22,12 +23,14 @@ export class SoItemDetailComponent implements OnInit {
     private decimalPipe: DecimalPipe,
     private trnSalesOrderItemService: TrnSalesOrderItemService,
     private storage: Storage,
+    private toastService: ToastService
 
   ) {
     this.storage.get("sales_order").then(
       result => {
         let sales_order = result;
         console.log(JSON.parse(sales_order));
+        console.log("Wazzap");
         if (sales_order) {
           this.sOModel = sales_order;
         }
@@ -196,6 +199,30 @@ export class SoItemDetailComponent implements OnInit {
           }
         }, 500);
 
+      }
+    );
+  }
+
+  editedSOList(Id): void {
+    console.log("POST MODEL API trnSalesOrderItemModel");
+    console.log("Hey");
+    // console.log(this.sOModel);
+    this.trnSalesOrderItemService.updateSalesOrderItem(this.itemData.Id).subscribe(
+      data => {
+
+        if (data[0] == true) {
+          this.toastService.success('Sales order was successfully updated!');
+          // console.log("SO MOdel   ");
+          // console.log(this.sOModel);
+          // this.router.navigate(['dashboard/sales-order-list']);
+          // this.router.navigate(['dashboard/sales-order-list']);
+          setTimeout(() => {
+            this.storage.set("sales_id", data[1]);
+            // this.router.navigate(['dashboard/sales-order-detail']);
+          }, 500);
+        } else {
+          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+        }
       }
     );
   }

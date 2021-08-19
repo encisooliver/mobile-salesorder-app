@@ -47,6 +47,7 @@ export class SoInventoryItemListComponent implements OnInit {
       result => {
         let sales_order = result;
         console.log(JSON.parse(sales_order));
+        console.log();
         if (sales_order) {
           this.sOModel = sales_order;
         }
@@ -96,8 +97,11 @@ export class SoInventoryItemListComponent implements OnInit {
       }
     );
   }
+  
   async openModal(item) {
     console.log(item);
+    console.log(this.sOModel.Id)
+    console.log("Hey hey")
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
     trnSalesOrderItemModel.Id = 0;
     trnSalesOrderItemModel.SOId = this.sOModel.Id;
