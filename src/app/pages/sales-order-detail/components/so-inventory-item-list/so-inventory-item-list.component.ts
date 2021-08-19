@@ -43,16 +43,7 @@ export class SoInventoryItemListComponent implements OnInit {
       }
     )
 
-    this.storage.get("sales_order").then(
-      result => {
-        let sales_order = result;
-        console.log(JSON.parse(sales_order));
-        console.log();
-        if (sales_order) {
-          this.sOModel = sales_order;
-        }
-      }
-    )
+   
   }
 
   articleItemListPageIndex: number = 15;
@@ -65,6 +56,20 @@ export class SoInventoryItemListComponent implements OnInit {
 
   isButtonAddArticleItemDisabled: boolean = false;
   items: any[] = [];
+
+  getSODetail(){
+    this.storage.get("sales_order").then(
+      result => {
+        let sales_order = result;
+        console.log();
+        if (sales_order) {
+          this.sOModel = JSON.parse(sales_order);
+          console.log(sales_order);
+        }
+        this.getArticleItemList();
+      }
+    )
+  }
   getArticleItemList(): void {
 
     let column = this.searchItemColumn;
@@ -97,11 +102,8 @@ export class SoInventoryItemListComponent implements OnInit {
       }
     );
   }
-  
   async openModal(item) {
     console.log(item);
-    console.log(this.sOModel.Id)
-    console.log("Hey hey")
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
     trnSalesOrderItemModel.Id = 0;
     trnSalesOrderItemModel.SOId = this.sOModel.Id;
@@ -147,8 +149,7 @@ export class SoInventoryItemListComponent implements OnInit {
   }
   ngOnInit() {
     setTimeout(() => {
-      this.getArticleItemList();
+      this.getSODetail();
     }, 500);
   }
-
 }

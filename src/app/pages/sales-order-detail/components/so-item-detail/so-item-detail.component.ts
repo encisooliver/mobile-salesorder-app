@@ -73,6 +73,7 @@ export class SoItemDetailComponent implements OnInit {
   listItemUnit: any = [];
   listDiscount: any = [];
   listTax: any = [];
+  
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
       data => {
