@@ -163,6 +163,8 @@ export class TrnSalesOrderItemService {
     return new Observable<[boolean, string]>((observer) => {
       this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/update/" + trnSalesOrderItemModel.Id, JSON.stringify(trnSalesOrderItemModel), this.options).subscribe(
         response => {
+          console.log(response);
+          console.log("dota");
           observer.next([true, ""]);
           observer.complete();
         },

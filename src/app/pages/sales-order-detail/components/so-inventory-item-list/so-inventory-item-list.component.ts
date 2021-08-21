@@ -61,7 +61,7 @@ export class SoInventoryItemListComponent implements OnInit {
     this.storage.get("sales_order").then(
       result => {
         let sales_order = result;
-        console.log();
+        console.log("List Detail");
         if (sales_order) {
           this.sOModel = JSON.parse(sales_order);
           console.log(sales_order);
@@ -102,6 +102,7 @@ export class SoInventoryItemListComponent implements OnInit {
       }
     );
   }
+  
   async openModal(item) {
     console.log(item);
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
@@ -137,7 +138,7 @@ export class SoInventoryItemListComponent implements OnInit {
     modal.onDidDismiss().then((id) => {
       if (id !== null) {
         // this.modelData = modelData.data;
-        console.log(id.data.name);
+        // console.log(id.data.name);
         // this.getSODateFilter();
       }
     });

@@ -6,6 +6,7 @@ import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-so-item-detail',
@@ -18,24 +19,26 @@ export class SoItemDetailComponent implements OnInit {
   sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   token;
   companyId;
+  trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
   constructor(
     private modalController: ModalController,
     private decimalPipe: DecimalPipe,
     private trnSalesOrderItemService: TrnSalesOrderItemService,
     private storage: Storage,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router
 
   ) {
-    this.storage.get("sales_order").then(
-      result => {
-        let sales_order = result;
-        console.log(JSON.parse(sales_order));
-        console.log("Wazzap");
-        if (sales_order) {
-          this.sOModel = sales_order;
-        }
-      }
-    )
+    // this.storage.get("sales_order").then(
+    //   result => {
+    //     let sales_order = result;
+    //     console.log(JSON.parse(sales_order));
+    //     console.log("Wazzap");
+    //     if (sales_order) {
+    //       this.sOModel = sales_order;
+    //     }
+    //   }
+    // )
 
     this.storage.get("access_token").then(
       result => {
@@ -53,8 +56,9 @@ export class SoItemDetailComponent implements OnInit {
         }
       }
     )
+     
   }
-  trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
+
   salesOrderItemQuantity: string = "0.00";
   salesOrderItemPrice: string = "0.00";
   salesOrderItemDiscountRate: string = "0.00";
@@ -73,6 +77,20 @@ export class SoItemDetailComponent implements OnInit {
   listItemUnit: any = [];
   listDiscount: any = [];
   listTax: any = [];
+
+  getSODetail(){
+    this.storage.get("sales_order").then(
+      result => {
+        let sales_order = result;
+        console.log("Hey");
+        if (sales_order) {
+          this.sOModel = JSON.parse(sales_order);
+          console.log(sales_order);
+        }
+        this.getArticleItemUnitList();
+      }
+    )
+  }
   
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
@@ -204,38 +222,17 @@ export class SoItemDetailComponent implements OnInit {
     );
   }
 
-  editedSOList(Id): void {
-    console.log("POST MODEL API trnSalesOrderItemModel");
-    console.log("Hey");
-    // console.log(this.sOModel);
-    this.trnSalesOrderItemService.updateSalesOrderItem(this.itemData.Id).subscribe(
-      data => {
-
-        if (data[0] == true) {
-          this.toastService.success('Sales order was successfully updated!');
-          // console.log("SO MOdel   ");
-          // console.log(this.sOModel);
-          // this.router.navigate(['dashboard/sales-order-list']);
-          // this.router.navigate(['dashboard/sales-order-list']);
-          setTimeout(() => {
-            this.storage.set("sales_id", data[1]);
-            // this.router.navigate(['dashboard/sales-order-detail']);
-          }, 500);
-        } else {
-          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-        }
-      }
-    );
-  }
-
   buttonSaveSalesOrderItemClick(): void {
     if (this.trnSalesOrderItemModel.Id == 0) {
       this.trnSalesOrderItemService.addSalesOrderItem(this.trnSalesOrderItemModel).subscribe(
         data => {
 
           if (data[0] == true) {
-            // this.toastr.success(this.setLabel('Sales order item was successfully saved!'), this.setLabel('Save Successful'));
-            // this.activitySalesOrderItemDetailDialog.close(200);
+            // this.toastService.success(this.setLabel('Sales order item was successfully saved!'), this.setLabel('Save Successful'));
+            this.toastService.success('Sales order was successfully added!');
+              console.log(data);
+              this.modalController.dismiss();
+              
           } else {
             // this.toastr.error(this.setLabel(data[1]), this.setLabel('Save Failed'));
             // this.isButtonSalesOrderItemDisabled = false;
@@ -244,12 +241,16 @@ export class SoItemDetailComponent implements OnInit {
         }
       );
     } else {
+      console.log(this.trnSalesOrderItemModel);
       this.trnSalesOrderItemService.updateSalesOrderItem(this.trnSalesOrderItemModel).subscribe(
         data => {
-
+          console.log(data);
+          console.log("Pro Karl");
           if (data[0] == true) {
             // this.toastr.success(this.setLabel('Sales order item was successfully updated!'), this.setLabel('Update Successful'));
             // this.activitySalesOrderItemDetailDialog.close(200);
+            this.toastService.success('Sales order was successfully updated!');
+            this.modalController.dismiss();
           } else {
             // this.toastr.error(this.setLabel(data[1]), this.setLabel('Update Failed'));
             // this.isButtonSalesOrderItemDisabled = false;
@@ -260,14 +261,38 @@ export class SoItemDetailComponent implements OnInit {
     }
   }
 
+  addSO(): void {
 
+    this.trnSalesOrderItemService.addSalesOrderItem(this.trnSalesOrderItemModel).subscribe(
+      data => {
+
+        if (data[0] == true) {
+          this.toastService.success('Sales order was successfully added!');
+          console.log(data[1]);
+          setTimeout(() => {
+            this.storage.set("sales_id", data[1]);
+            this.modalController.dismiss();
+          }, 500);
+        } else {
+          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+        }
+
+      }
+    );
+  }
 
   ngOnInit() {
     console.log(this.itemData);
     setTimeout(() => {
       this.getArticleItemUnitList();
     }, 500);
+    if(this.itemData){
+      this.trnSalesOrderItemModel = this.itemData;
+      console.log("CF");
+      console.log(this.itemData);
+    }
   }
+
   dismiss() {
     this.modalController.dismiss();
   }

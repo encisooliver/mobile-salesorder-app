@@ -4,7 +4,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <div *ngIf="isContentShow">
+    <ion-card *ngFor="let il of itemList; let i = index" class="ion-margin">
+      <ion-card-header>
+        <ion-card-subtitle>
+          {{il.ItemSKUCode}}
+        </ion-card-subtitle>
+        <ion-row>
+          <ion-card-content style="padding: 5px;">
+           {{il.ItemDescription}}
+          </ion-card-content>
+          <ion-card-content style="padding: 5px;">
+            {{il.Quantity}}
+          </ion-card-content>
+          <ion-label style="padding: 5px; margin-right: 5px;">
+            {{il.Price}}
+          </ion-label>
+        </ion-row>
+      </ion-card-header>
+      <ion-footer>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-button class="ion-no-margin" color="light" expand="full" (click)="openModal(il.Id)">
+              <ion-text color="primary">View</ion-text>
+            </ion-button>
+          </ion-col>
+          <ion-col class="ion-no-padding">
+            <ion-button class="ion-no-margin" color="light" expand="full" (click)="delete(so)">
+              <ion-text color="danger">Delete</ion-text>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-footer>
+    </ion-card>
+  </div>
+</ion-content>
 <ion-fab vertical="bottom" horizontal="end">
   <ion-fab-button (click)="addSOItem()">
     <ion-icon name="add"></ion-icon>
