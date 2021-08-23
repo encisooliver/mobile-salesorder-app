@@ -1,4 +1,3 @@
-
 <ion-tabs>
   <ion-tab-bar slot="sales-order">
     <ion-tab-button tab="so">
@@ -6,11 +5,14 @@
       <ion-label>Detail</ion-label>
 
     </ion-tab-button>
-
-    <ion-tab-button tab="so-items">
+    <!-- event trigger - event listener -->
+    <ion-tab-button tab="so-items" (itemCounts)="soItemCount($event)">
       <ion-icon name="cart-outline"></ion-icon>
       <ion-label>Items</ion-label>
-      <ion-badge>6</ion-badge>
+      <ion-badge>8</ion-badge>
+      <ion-badge *ngIf="itemCount != 0">
+        {{ itemCount }}
+      </ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="so-attachment">

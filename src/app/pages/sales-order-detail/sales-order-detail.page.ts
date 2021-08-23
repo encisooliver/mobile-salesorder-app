@@ -28,7 +28,8 @@ export class SalesOrderDetailPage implements OnInit {
         }
       }
     )
-   }
+  }
+  
   sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   soDate: String = "";
   neededDate: String = "";
@@ -82,6 +83,13 @@ export class SalesOrderDetailPage implements OnInit {
 
       }
     );
+  }
+
+  // event method
+  itemCount: number = 0;
+  soItemCount(data: number) {
+    console.log(data);
+    this.itemCount = data;
   }
   ngOnInit() {
     console.log(this.router.url)

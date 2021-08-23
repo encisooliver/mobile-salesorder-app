@@ -319,7 +319,13 @@ export class TrnSalesOrderService {
     });
   }
   //Customers List Active User
-  public getLockedArticleCustomerList(): Observable<any[]> {
+  public getLockedArticleCustomerList(token): Observable<any[]> {
+    this.options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
     return new Observable<any[]>((observer) => {
       let customerList = [];
 

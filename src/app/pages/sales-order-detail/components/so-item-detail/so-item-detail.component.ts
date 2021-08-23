@@ -29,17 +29,6 @@ export class SoItemDetailComponent implements OnInit {
     private router: Router
 
   ) {
-    // this.storage.get("sales_order").then(
-    //   result => {
-    //     let sales_order = result;
-    //     console.log(JSON.parse(sales_order));
-    //     console.log("Wazzap");
-    //     if (sales_order) {
-    //       this.sOModel = sales_order;
-    //     }
-    //   }
-    // )
-
     this.storage.get("access_token").then(
       result => {
         let token = result;
@@ -56,7 +45,6 @@ export class SoItemDetailComponent implements OnInit {
         }
       }
     )
-     
   }
 
   salesOrderItemQuantity: string = "0.00";
@@ -78,7 +66,7 @@ export class SoItemDetailComponent implements OnInit {
   listDiscount: any = [];
   listTax: any = [];
 
-  getSODetail(){
+  getSODetail() {
     this.storage.get("sales_order").then(
       result => {
         let sales_order = result;
@@ -91,7 +79,7 @@ export class SoItemDetailComponent implements OnInit {
       }
     )
   }
-  
+
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
       data => {
@@ -177,6 +165,7 @@ export class SoItemDetailComponent implements OnInit {
             this.salesOrderItemVATAmount = this.decimalPipe.transform(data.VATAmount, "1.2-2");
             this.salesOrderItemWTAXRate = this.decimalPipe.transform(data.WTAXRate, "1.2-2");
             this.salesOrderItemWTAXAmount = this.decimalPipe.transform(data.WTAXAmount, "1.2-2");
+            console.log(this.trnSalesOrderItemModel);
           } else {
             this.trnSalesOrderItemModel.Id = this.itemData.Id;
             this.trnSalesOrderItemModel.SOId = this.itemData.SOId;
@@ -230,9 +219,9 @@ export class SoItemDetailComponent implements OnInit {
           if (data[0] == true) {
             // this.toastService.success(this.setLabel('Sales order item was successfully saved!'), this.setLabel('Save Successful'));
             this.toastService.success('Sales order was successfully added!');
-              console.log(data);
-              this.modalController.dismiss();
-              
+            console.log(data);
+            this.modalController.dismiss();
+
           } else {
             // this.toastr.error(this.setLabel(data[1]), this.setLabel('Save Failed'));
             // this.isButtonSalesOrderItemDisabled = false;
@@ -282,15 +271,24 @@ export class SoItemDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.itemData);
-    setTimeout(() => {
-      this.getArticleItemUnitList();
-    }, 500);
-    if(this.itemData){
-      this.trnSalesOrderItemModel = this.itemData;
-      console.log("CF");
-      console.log(this.itemData);
-    }
+    this.storage.get("sales_order").then(
+      result => {
+        let sales_order = result;
+        if (sales_order) {
+          this.sOModel = JSON.parse(sales_order);
+          this.getArticleItemUnitList();
+        }
+      }
+    )
+
+    // setTimeout(() => {
+    //   this.getArticleItemUnitList();
+    // }, 500);
+    // if(this.itemData){
+    //   this.trnSalesOrderItemModel = this.itemData;
+    //   console.log("CF");
+    //   console.log(this.itemData);
+    // }
   }
 
   dismiss() {

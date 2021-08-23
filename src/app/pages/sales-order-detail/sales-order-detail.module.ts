@@ -16,6 +16,7 @@ import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-art
 import { SoInventoryItemListComponent } from './components/so-inventory-item-list/so-inventory-item-list.component';
 import { SoItemDetailComponent } from './components/so-item-detail/so-item-detail.component';
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
+import { MyDirectiveDirective } from './sample.directive';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/
     SoAttachmentComponent,
     SoItemsComponent,
     SoInventoryItemListComponent,
-    SoItemDetailComponent
+    SoItemDetailComponent,
+    MyDirectiveDirective
   ],
   providers: [
     AppSettings, 

@@ -14,6 +14,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 
 export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
+  token: string = "";
   sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
 
   constructor(
@@ -34,6 +35,7 @@ export class SoDetailsComponent implements OnInit {
         }
       }
     )
+
   }
 
   id: number = 0;
@@ -50,7 +52,7 @@ export class SoDetailsComponent implements OnInit {
   neededDate: String = "";
 
   getCustomerUsers() {
-    this.trnSalesOrderService.getLockedArticleCustomerList().subscribe(
+    this.trnSalesOrderService.getLockedArticleCustomerList(this.token).subscribe(
       data => {
         this.CustomerUsers = data;
         console.log("Customer ID");
@@ -104,52 +106,48 @@ export class SoDetailsComponent implements OnInit {
   getSO() {
     this.trnSalesOrderService.getSalesOrderDetail(this.sales_id).subscribe(
       data => {
-
-        setTimeout(() => {
-          if (data != null) {
-            this.sOModel.Id = data.Id;
-            this.sOModel.BranchManualCode = data.BranchManualCode;
-            this.sOModel.BranchName = data.BranchName;
-            this.sOModel.CurrencyId = data.CurrencyId;
-            this.sOModel.ExchangeRate = data.ExchangeRate;
-            this.sOModel.ExchangeCurrency = data.ExchangeCurrency;
-            this.sOModel.ExchangeCurrencyManualCode = data.ExchangeCurrencyManualCode;
-            this.sOModel.SONumber = data.SONumber;
-            this.sOModel.SODate = data.SODate;
-            this.soDate = new Date(this.sOModel.SODate).toISOString();
-            this.sOModel.ManualNumber = data.ManualNumber;
-            this.sOModel.DocumentReference = data.DocumentReference;
-            this.sOModel.CustomerId = data.CustomerId;
-            this.sOModel.CustomerName = data.CustomerName;
-            this.sOModel.TermId = data.TermId;
-            this.sOModel.DiscountId = data.DiscountId;
-            this.sOModel.DiscountRate = data.DiscountRate;
-            this.sOModel.DateNeeded = data.DateNeeded;
-            this.neededDate = new Date(this.sOModel.DateNeeded).toISOString();
-            this.sOModel.Remarks = data.Remarks;
-            this.sOModel.SoldByUserId = data.SoldByUserId;
-            this.sOModel.SoldByUserFullname = data.SoldByUserFullname;
-            this.sOModel.PreparedByUserId = data.PreparedByUserId;
-            this.sOModel.PreparedByUserFullname = data.PreparedByUserFullname;
-            this.sOModel.CheckedByUserId = data.CheckedByUserId;
-            this.sOModel.CheckedByUserFullname = data.CheckedByUserFullname;
-            this.sOModel.ApprovedByUserId = data.ApprovedByUserId;
-            this.sOModel.ApprovedByUserFullname = data.ApprovedByUserFullname;
-            this.sOModel.Amount = data.Amount;
-            this.sOModel.Status = data.Status;
-            this.sOModel.IsCancelled = data.IsCancelled;
-            this.sOModel.IsPrinted = data.IsPrinted;
-            this.sOModel.IsLocked = data.IsLocked;
-            this.sOModel.CreatedByUserFullname = data.CreatedByUserFullname;
-            this.sOModel.CreatedDateTime = data.CreatedDateTime;
-            this.sOModel.UpdatedByUserFullname = data.UpdatedByUserFullname;
-            this.sOModel.UpdatedDateTime = data.UpdatedDateTime;
-            this.isShown = true;
-            console.log(this.sOModel);
-            this.storage.set("sales_order", JSON.stringify(this.sOModel));
-          }
-        }, 500);
-
+        if (data != null) {
+          this.sOModel.Id = data.Id;
+          this.sOModel.BranchManualCode = data.BranchManualCode;
+          this.sOModel.BranchName = data.BranchName;
+          this.sOModel.CurrencyId = data.CurrencyId;
+          this.sOModel.ExchangeRate = data.ExchangeRate;
+          this.sOModel.ExchangeCurrency = data.ExchangeCurrency;
+          this.sOModel.ExchangeCurrencyManualCode = data.ExchangeCurrencyManualCode;
+          this.sOModel.SONumber = data.SONumber;
+          this.sOModel.SODate = data.SODate;
+          this.soDate = new Date(this.sOModel.SODate).toISOString();
+          this.sOModel.ManualNumber = data.ManualNumber;
+          this.sOModel.DocumentReference = data.DocumentReference;
+          this.sOModel.CustomerId = data.CustomerId;
+          this.sOModel.CustomerName = data.CustomerName;
+          this.sOModel.TermId = data.TermId;
+          this.sOModel.DiscountId = data.DiscountId;
+          this.sOModel.DiscountRate = data.DiscountRate;
+          this.sOModel.DateNeeded = data.DateNeeded;
+          this.neededDate = new Date(this.sOModel.DateNeeded).toISOString();
+          this.sOModel.Remarks = data.Remarks;
+          this.sOModel.SoldByUserId = data.SoldByUserId;
+          this.sOModel.SoldByUserFullname = data.SoldByUserFullname;
+          this.sOModel.PreparedByUserId = data.PreparedByUserId;
+          this.sOModel.PreparedByUserFullname = data.PreparedByUserFullname;
+          this.sOModel.CheckedByUserId = data.CheckedByUserId;
+          this.sOModel.CheckedByUserFullname = data.CheckedByUserFullname;
+          this.sOModel.ApprovedByUserId = data.ApprovedByUserId;
+          this.sOModel.ApprovedByUserFullname = data.ApprovedByUserFullname;
+          this.sOModel.Amount = data.Amount;
+          this.sOModel.Status = data.Status;
+          this.sOModel.IsCancelled = data.IsCancelled;
+          this.sOModel.IsPrinted = data.IsPrinted;
+          this.sOModel.IsLocked = data.IsLocked;
+          this.sOModel.CreatedByUserFullname = data.CreatedByUserFullname;
+          this.sOModel.CreatedDateTime = data.CreatedDateTime;
+          this.sOModel.UpdatedByUserFullname = data.UpdatedByUserFullname;
+          this.sOModel.UpdatedDateTime = data.UpdatedDateTime;
+          this.isShown = true;
+          console.log(this.sOModel);
+          this.storage.set("sales_order", JSON.stringify(this.sOModel));
+        }
       }
     );
   }
@@ -159,19 +157,10 @@ export class SoDetailsComponent implements OnInit {
     console.log(this.sOModel);
     this.trnSalesOrderService.saveSalesOrder(this.sOModel).subscribe(
       data => {
-
         if (data[0] == true) {
           this.toastService.success('Sales order was successfully updated!');
-          console.log("SO MOdel   ");
-          console.log(this.sOModel);
-          // this.router.navigate(['dashboard/sales-order-list']);
-          // this.router.navigate(['dashboard/sales-order-list']);
-          setTimeout(() => {
-            this.storage.set("sales_id", data[1]);
-            // this.router.navigate(['dashboard/sales-order-detail']);
-          }, 500);
         } else {
-          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+          // this.toastr.error(data[1], this.setLabel('Add Failed'));
         }
       }
     );
@@ -191,10 +180,15 @@ export class SoDetailsComponent implements OnInit {
     return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
   ngOnInit() {
-    setTimeout(() => {
-      this.getCustomerUsers();
-
-    }, 500);
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.token = token;
+          this.getCustomerUsers();
+        }
+      }
+    )
   }
 
 }
