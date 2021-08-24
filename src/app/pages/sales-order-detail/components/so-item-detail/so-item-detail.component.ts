@@ -65,6 +65,7 @@ export class SoItemDetailComponent implements OnInit {
   listItemUnit: any = [];
   listDiscount: any = [];
   listTax: any = [];
+  listItemPrice: any = [];
 
   getSODetail() {
     this.storage.get("sales_order").then(
@@ -85,11 +86,20 @@ export class SoItemDetailComponent implements OnInit {
       data => {
         console.log(data);
         this.listItemUnit = data;
-        this.getDiscountList();
+        this.getArticleItemPriceList();
       }
     );
   }
+  getArticleItemPriceList(): void {
+    this.trnSalesOrderItemService.getArticleItemPriceList(this.itemData.ItemId, this.token).subscribe(
+      data => {
+        console.log(data);
+        this.listItemPrice = data;
+        this.getDiscountList();
 
+      }
+    );
+  }
   getDiscountList(): void {
     this.trnSalesOrderItemService.getDiscountList().subscribe(
       data => {
@@ -165,7 +175,6 @@ export class SoItemDetailComponent implements OnInit {
             this.salesOrderItemVATAmount = this.decimalPipe.transform(data.VATAmount, "1.2-2");
             this.salesOrderItemWTAXRate = this.decimalPipe.transform(data.WTAXRate, "1.2-2");
             this.salesOrderItemWTAXAmount = this.decimalPipe.transform(data.WTAXAmount, "1.2-2");
-            console.log(this.trnSalesOrderItemModel);
           } else {
             this.trnSalesOrderItemModel.Id = this.itemData.Id;
             this.trnSalesOrderItemModel.SOId = this.itemData.SOId;
@@ -200,9 +209,8 @@ export class SoItemDetailComponent implements OnInit {
             this.salesOrderItemAmount = this.decimalPipe.transform(this.itemData.Amount, "1.2-2");
             this.salesOrderItemVATRate = this.decimalPipe.transform(VATRate, "1.2-2");
             this.salesOrderItemWTAXRate = this.decimalPipe.transform(WTAXRate, "1.2-2");
-
-            // this.onSelectionChangeComputeDiscountAndAmount();
-            // this.computeAmount();
+            this.onSelectionChangeComputeDiscountAndAmount();
+            this.computeAmount();
             console.log(this.trnSalesOrderItemModel);
           }
         }, 500);
@@ -210,6 +218,7 @@ export class SoItemDetailComponent implements OnInit {
       }
     );
   }
+
 
   buttonSaveSalesOrderItemClick(): void {
     if (this.trnSalesOrderItemModel.Id == 0) {
@@ -250,25 +259,237 @@ export class SoItemDetailComponent implements OnInit {
     }
   }
 
-  addSO(): void {
-
-    this.trnSalesOrderItemService.addSalesOrderItem(this.trnSalesOrderItemModel).subscribe(
-      data => {
-
-        if (data[0] == true) {
-          this.toastService.success('Sales order was successfully added!');
-          console.log(data[1]);
-          setTimeout(() => {
-            this.storage.set("sales_id", data[1]);
-            this.modalController.dismiss();
-          }, 500);
-        } else {
-          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-        }
-
+  public onKeyPressNumberOnly(event: any): boolean {
+    let charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode != 46 && charCode != 45 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    } else {
+      if (charCode === 46 && event.target.value.split('.').length === 2) {
+        return false;
+      } else {
+        return true;
       }
-    );
+    }
   }
+
+  public onFocusNumberRemoveCommas(field: string) {
+    if (field === "salesOrderItemQuantity") {
+      this.salesOrderItemQuantity = this.salesOrderItemQuantity.split(',').join("");
+    }
+    if (field === "salesOrderItemPrice") {
+      this.salesOrderItemPrice = this.salesOrderItemPrice.split(',').join("");
+    }
+    if (field === "salesOrderItemDiscountRate") {
+      this.salesOrderItemDiscountRate = this.salesOrderItemDiscountRate.split(',').join("");
+    }
+    if (field === "salesOrderItemDiscountAmount") {
+      this.salesOrderItemDiscountAmount = this.salesOrderItemDiscountAmount.split(',').join("");
+    }
+    if (field === "salesOrderItemNetPrice") {
+      this.salesOrderItemNetPrice = this.salesOrderItemNetPrice.split(',').join("");
+    }
+    if (field === "salesOrderItemAmount") {
+      this.salesOrderItemAmount = this.salesOrderItemAmount.split(',').join("");
+    }
+    if (field === "salesOrderItemVATRate") {
+      this.salesOrderItemVATRate = this.salesOrderItemVATRate.split(',').join("");
+    }
+    if (field === "salesOrderItemVATAmount") {
+      this.salesOrderItemVATAmount = this.salesOrderItemVATAmount.split(',').join("");
+    }
+    if (field === "salesOrderItemWTAXRate") {
+      this.salesOrderItemWTAXRate = this.salesOrderItemWTAXRate.split(',').join("");
+    }
+    if (field === "salesOrderItemWTAXAmount") {
+      this.salesOrderItemWTAXAmount = this.salesOrderItemWTAXAmount.split(',').join("");
+    }
+  }
+
+  public onaBlurNumberAddCommas(numberValue: string, field: string) {
+    if (field === "salesOrderItemQuantity") {
+      this.salesOrderItemQuantity = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.Quantity = parseFloat(this.salesOrderItemQuantity.split(',').join(""));
+    }
+    if (field === "salesOrderItemPrice") {
+      this.salesOrderItemPrice = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.Price = parseFloat(this.salesOrderItemPrice.split(',').join(""));
+    }
+    if (field === "salesOrderItemDiscountRate") {
+      this.salesOrderItemDiscountRate = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.DiscountRate = parseFloat(this.salesOrderItemDiscountRate.split(',').join(""));
+    }
+    if (field === "salesOrderItemDiscountAmount") {
+      this.salesOrderItemDiscountAmount = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.DiscountAmount = parseFloat(this.salesOrderItemDiscountAmount.split(',').join(""));
+    }
+    if (field === "salesOrderItemNetPrice") {
+      this.salesOrderItemNetPrice = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.NetPrice = parseFloat(this.salesOrderItemNetPrice.split(',').join(""));
+    }
+    if (field === "salesOrderItemAmount") {
+      this.salesOrderItemAmount = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.Amount = parseFloat(this.salesOrderItemAmount.split(',').join(""));
+    }
+    if (field === "salesOrderItemVATRate") {
+      this.salesOrderItemVATRate = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.VATRate = parseFloat(this.salesOrderItemVATRate.split(',').join(""));
+    }
+    if (field === "salesOrderItemVATAmount") {
+      this.salesOrderItemVATAmount = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.VATRate = parseFloat(this.salesOrderItemVATAmount.split(',').join(""));
+    }
+    if (field === "salesOrderItemWTAXRate") {
+      this.salesOrderItemWTAXRate = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.WTAXRate = parseFloat(this.salesOrderItemWTAXRate.split(',').join(""));
+    }
+    if (field === "salesOrderItemWTAXAmount") {
+      this.salesOrderItemWTAXAmount = this.decimalPipe.transform(numberValue, "1.2-2");
+      this.trnSalesOrderItemModel.WTAXAmount = parseFloat(this.salesOrderItemWTAXAmount.split(',').join(""));
+    }
+  }
+
+  public onSelectionChangeComputeDiscountAndAmount(): void {
+    let selectedDiscount: any = this.listDiscount.filter(wtax => wtax.Id === this.trnSalesOrderItemModel.DiscountId);
+    let DiscountRate: number = selectedDiscount[0].DiscountRate;
+
+    this.trnSalesOrderItemModel.DiscountRate = DiscountRate;
+    this.salesOrderItemDiscountRate = this.decimalPipe.transform(DiscountRate, "1.2-2");
+    console.log(selectedDiscount);
+    this.computeAmount();
+  }
+
+  public onKeyUpComputeAmountFromQuantity(event: any) {
+    let quantity = event.target.value;
+    this.trnSalesOrderItemModel.Quantity = quantity;
+    console.log();
+    this.computeAmount();
+  }
+
+  public onKeyUpComputeAmountFromDiscountRate(event: any) {
+    let discountRate = event.target.value;
+    this.trnSalesOrderItemModel.DiscountRate = discountRate;
+
+    this.computeAmount();
+  }
+
+  onSelectionChangeComputePrice(event: any) {
+    let price = event.target.value;
+    this.trnSalesOrderItemModel.Price = parseFloat(price);
+    this.computeAmount();
+  }
+  public computeAmount() {
+    let quantity = this.trnSalesOrderItemModel.Quantity;
+    let price = this.trnSalesOrderItemModel.Price;
+    let discountRate = this.trnSalesOrderItemModel.DiscountRate;
+
+    let discountAmount = price * (discountRate / 100);
+    this.trnSalesOrderItemModel.DiscountAmount = discountAmount;
+    this.salesOrderItemDiscountAmount = this.decimalPipe.transform(discountAmount, "1.2-2");
+
+    let netPrice = price - discountAmount;
+    this.trnSalesOrderItemModel.NetPrice = netPrice;
+    this.salesOrderItemNetPrice = this.decimalPipe.transform(netPrice, "1.2-2");
+
+    let amount = netPrice * quantity;
+    this.trnSalesOrderItemModel.Amount = amount;
+    this.salesOrderItemAmount = this.decimalPipe.transform(amount, "1.2-2");
+
+    this.computeVATAmount();
+    this.computeWTAXAmount();
+  }
+
+  public onKeyUpComputeAmountFromDiscountAmount(event: any) {
+    let discountAmount: number = event.target.value;
+    this.trnSalesOrderItemModel.DiscountAmount = discountAmount;
+
+    this.computeDiscountRateAndAmount();
+  }
+
+  public computeDiscountRateAndAmount() {
+    let discountAmount = this.trnSalesOrderItemModel.DiscountAmount;
+    let price = this.trnSalesOrderItemModel.Price;
+
+    let discountRate = (discountAmount / price) * 100;
+    this.trnSalesOrderItemModel.DiscountRate = discountRate;
+    this.salesOrderItemDiscountRate = this.decimalPipe.transform(discountRate, "1.2-2");
+
+    let quantity = this.trnSalesOrderItemModel.Quantity;
+
+    let netPrice = price - discountAmount;
+    this.trnSalesOrderItemModel.NetPrice = netPrice;
+    this.salesOrderItemNetPrice = this.decimalPipe.transform(netPrice, "1.2-2");
+
+    let amount = netPrice * quantity;
+    this.trnSalesOrderItemModel.Amount = amount;
+    this.salesOrderItemAmount = this.decimalPipe.transform(amount, "1.2-2");
+
+    this.computeVATAmount();
+    this.computeWTAXAmount();
+  }
+
+  public onSelectionChangeComputeVATAmount(): void {
+    let selectedVAT: any = this.listTax.filter(vat => vat.Id === this.trnSalesOrderItemModel.VATId);
+    let VATRate: number = selectedVAT[0].TaxRate;
+
+    this.trnSalesOrderItemModel.VATRate = VATRate;
+    this.salesOrderItemVATRate = this.decimalPipe.transform(VATRate, "1.2-2");
+
+    this.computeVATAmount();
+  }
+
+  public computeVATAmount() {
+    // let exchangeRate: number = this.dialogData.ExchangeRate;
+    let exchangeRate: number = 1;
+    let amount = this.trnSalesOrderItemModel.Amount;
+
+    if (exchangeRate > 0) {
+      amount = this.trnSalesOrderItemModel.Amount * exchangeRate;
+    }
+
+    let VATRate = this.trnSalesOrderItemModel.VATRate;
+
+    let VATAmount = 0;
+    //  amount / (1 + (VATRate / 100)) * (VATRate / 100)
+    if (VATRate > 0) {
+      VATAmount = amount / (1 + (VATRate / 100)) * (VATRate / 100);
+    }
+
+    this.trnSalesOrderItemModel.VATAmount = VATAmount;
+    this.salesOrderItemVATAmount = this.decimalPipe.transform(VATAmount, "1.2-2");
+  }
+
+  public onSelectionChangeComputeWTAXAmount(): void {
+    let selectedWTAX: any = this.listTax.filter(wtax => wtax.Id === this.trnSalesOrderItemModel.WTAXId);
+    let WTAXRate: number = selectedWTAX[0].TaxRate;
+
+    this.trnSalesOrderItemModel.WTAXRate = WTAXRate;
+    this.salesOrderItemWTAXRate = this.decimalPipe.transform(WTAXRate, "1.2-2");
+
+    this.computeWTAXAmount();
+  }
+
+  public computeWTAXAmount() {
+    // let exchangeRate: number = this.dialogData.ExchangeRate;
+    let exchangeRate: number = 1;
+    let amount = this.trnSalesOrderItemModel.Amount;
+
+    if (exchangeRate > 0) {
+      amount = this.trnSalesOrderItemModel.Amount * exchangeRate;
+    }
+
+    let VATAmount = this.trnSalesOrderItemModel.VATAmount;
+    let WTAXRate = this.trnSalesOrderItemModel.WTAXRate;
+
+    let WTAXAmount = 0;
+    // amount / (1 + (WTAXRate / 100)) * (WTAXRate / 100)
+    if (WTAXRate) {
+      WTAXAmount = (amount - VATAmount) * (WTAXRate / 100)
+    }
+    this.trnSalesOrderItemModel.WTAXAmount = WTAXAmount;
+    this.salesOrderItemWTAXAmount = this.decimalPipe.transform(WTAXAmount, "1.2-2");
+  }
+
+
 
   ngOnInit() {
     this.storage.get("sales_order").then(

@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
 import { TrnSalesOrderItemModel } from './../../models/trn-sales-order-item.model';
 import { Storage } from '@ionic/storage-angular';
+import { DecimalPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +15,14 @@ export class TrnSalesOrderItemService {
   constructor(
     private appSettings: AppSettings,
     private httpClient: HttpClient,
-    private storage: Storage
-
+    private storage: Storage,
+    private decimalPipe: DecimalPipe,
   ) {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log( token );
-        if(token){
+        console.log(token);
+        if (token) {
           this.options = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
@@ -223,6 +224,42 @@ export class TrnSalesOrderItemService {
           }
 
           observer.next(articleItemUnitListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  public getArticleItemPriceList(articleId: number, token: string): Observable<any[]> {
+    let options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
+    return new Observable<any[]>((observer) => {
+      let articleItemPriceListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemPriceAPI/list/" + articleId, options).subscribe(
+        response => {
+          let results = response;
+
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              articleItemPriceListObservableArray.push({
+                Id: results[i].Id,
+                ArticleId: results[i].ArticleId,
+                ArticleItemManualCode: results[i].ArticleItem.Article.ManualCode,
+                ArticleItemSKUCode: results[i].ArticleItem.SKUCode,
+                ArticleItemBarCode: results[i].ArticleItem.BarCode,
+                ArticleItemDescription: results[i].ArticleItem.Description,
+                PriceDescription: results[i].PriceDescription,
+                Price: this.decimalPipe.transform(results[i].Price, "1.2-2")
+              });
+            }
+          }
+
+          observer.next(articleItemPriceListObservableArray);
           observer.complete();
         }
       );

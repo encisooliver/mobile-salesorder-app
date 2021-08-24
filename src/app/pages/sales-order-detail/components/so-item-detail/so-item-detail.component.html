@@ -1,41 +1,45 @@
-<ion-header>  
-  <ion-toolbar >  
-    <ion-title>Item Detail</ion-title>  
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Item Detail</ion-title>
     <!-- <ion-icon slot=""name='close-circle' (click)='dismiss()' style='float: right;'></ion-icon>   -->
     <!-- <ion-buttons left>
       <button ion-button icon-only (click)="dismiss()">
           <ion-icon size="large"style="margin-left: 10px;"color="primary"name="arrow-back"></ion-icon>
       </button>
   </ion-buttons> -->
-  <ion-icon name="return-down-back-outline" slot="start" size="large"style="margin-left: 10px; margin-right: 30px"color="primary" (click)="dismiss()"></ion-icon>
-  <ion-button slot="end"size="small" color="success" (click)="buttonSaveSalesOrderItemClick()">Save</ion-button>
-  </ion-toolbar>  
-</ion-header>  
-  
-<ion-content>  
-    <div>
+    <ion-icon name="return-down-back-outline" slot="start" size="large" style="margin-left: 10px; margin-right: 30px"
+      color="primary" (click)="dismiss()"></ion-icon>
+    <ion-button slot="end" size="small" color="success" (click)="buttonSaveSalesOrderItemClick()">Save</ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
     <ion-item>
       <ion-label position="floating">SKU Code:</ion-label>
       <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemSKUCode"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Bar Code:</ion-label>
-      <ion-input  [(ngModel)]="trnSalesOrderItemModel.ItemBarCode"></ion-input>
+      <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemBarCode"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Description:</ion-label>
-      <ion-input  [(ngModel)]="trnSalesOrderItemModel.ItemDescription"></ion-input>
+      <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemDescription"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Unit:</ion-label>
       <ion-select [(ngModel)]="trnSalesOrderItemModel.UnitId">
-        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}</ion-select-option>
+        <ion-select-option *ngFor="let unit of listItemUnit;" [value]="unit.UnitId">{{unit.UnitName}}
+        </ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount:</ion-label>
-      <ion-select [(ngModel)]="trnSalesOrderItemModel.DiscountId">
-        <ion-select-option *ngFor="let discount of listDiscount;" [value]="discount.Id">{{discount.Discount}}</ion-select-option>
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.DiscountId"
+        (ionChange)="onSelectionChangeComputeDiscountAndAmount()">
+        <ion-select-option *ngFor="let discount of listDiscount;" [value]="discount.Id">{{discount.Discount}}
+        </ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -43,60 +47,83 @@
       <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemInventoryCode"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="floating">Particulars</ion-label>
-      <ion-textarea [(ngModel)]="trnSalesOrderItemModel.Particulars"></ion-textarea>
-    </ion-item>
-    <ion-item>
       <ion-label position="floating">Quantity:</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemQuantity"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemQuantity" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Price:</ion-label>
-      <ion-input  [(ngModel)]="salesOrderItemPrice"></ion-input>
+      <ion-select [(ngModel)]="salesOrderItemPrice" (ionChange)="onSelectionChangeComputePrice($event)">
+        <ion-select-option *ngFor="let price of listItemPrice;" [value]="price.Price">{{price.Price + " " + price.PriceDescription}}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount Rate:</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemDiscountRate"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemDiscountRate"
+        (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Discount Amount:</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemDiscountAmount"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemDiscountAmount"
+        (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Net Price:</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemNetPrice"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemNetPrice" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Amount:</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemAmount"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemAmount" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT</ion-label>
-      <ion-select [(ngModel)]="trnSalesOrderItemModel.VATId">
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.VATId" (ionChange)="onSelectionChangeComputeVATAmount()">
         <ion-select-option *ngFor="let tax of listTax;" [value]="tax.Id">{{tax.TaxDescription}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT RATE</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemVATRate"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemVATRate" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">VAT Amount</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemVATAmount"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemVATAmount" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax</ion-label>
-      <ion-select [(ngModel)]="trnSalesOrderItemModel.WTAXId">
+      <ion-select [(ngModel)]="trnSalesOrderItemModel.WTAXId" (ionChange)="onSelectionChangeComputeWTAXAmount()">
         <ion-select-option *ngFor="let tax of listTax;" [value]="tax.Id">{{tax.TaxDescription}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax Rate</ion-label>
-      <ion-input [(ngModel)]="salesOrderItemWTAXRate"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemWTAXRate" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Withholding Tax Amount</ion-label>
-      <ion-input  [(ngModel)]="salesOrderItemWTAXAmount"></ion-input>
+      <ion-input [(ngModel)]="salesOrderItemWTAXAmount" (ionFocus)="onFocusNumberRemoveCommas('salesOrderItemQuantity')"
+        (ionBlur)="onaBlurNumberAddCommas(salesOrderItemQuantity, 'salesOrderItemQuantity')"
+        (ionInput)="onKeyUpComputeAmountFromQuantity($event)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Particulars</ion-label>
+      <ion-textarea [(ngModel)]="trnSalesOrderItemModel.Particulars"></ion-textarea>
     </ion-item>
   </div>
-</ion-content> 
+</ion-content>

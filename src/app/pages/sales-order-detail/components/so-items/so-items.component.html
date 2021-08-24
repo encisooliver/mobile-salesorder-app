@@ -13,7 +13,7 @@
         </ion-card-subtitle>
         <ion-row>
           <ion-card-content style="padding: 5px;">
-           {{item.ItemDescription}}  {{item.Quantity}} {{item.BaseUnitName}} {{item.Price.toFixed(2)}}
+            {{item.ItemDescription}} {{item.Quantity}} {{item.BaseUnitName}} {{item.Price.toFixed(2)}}
           </ion-card-content>
         </ion-row>
       </ion-card-header>
@@ -39,9 +39,10 @@
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>
-<ion-fab vertical="center" horizontal="end">
-  <!-- event emitter - fire event -->
-    <ion-fab-button (click)="clickEmitEvent()">
+
+<!-- event emitter - fire event -->
+<!-- <ion-fab vertical="center" horizontal="end">
+  <ion-fab-button (click)="clickEmitEvent()">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
-</ion-fab>
+</ion-fab> -->
