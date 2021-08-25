@@ -229,10 +229,9 @@ export class TrnSalesOrderService {
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
         response => {
           let results = response;
-
+          console.log(response);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              console.log(results[i].Id + "Sample");
               currencyExchangeListObservableArray.push({
                 Id: results[i].Id,
                 CurrencyId: results[i].CurrencyId,
