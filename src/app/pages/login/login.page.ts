@@ -57,17 +57,15 @@ export class LoginPage implements OnInit {
     // this.disabled = true;
     (await this.sysLoginService.asyncLogin(this.sysLoginModel)).subscribe(
       data => {
-        this.toastService.success(JSON.stringify(data));
-        console.log(data);
         let results = data;
-        // this.sysStorageService.set('access_token', results["AccessToken"]);
-        // this.sysStorageService.set('expires_in', results["ExpiresIn"]);
-        // this.sysStorageService.set('username', results["UserName"]);
-        // this.sysStorageService.set('fullname', results["FullName"]);
-        // this.sysStorageService.set('companyId', results["CompanyId"]);
-        // this.sysStorageService.set('company', results["Company"]);
-        // this.sysStorageService.set('branchId', results["BranchId"]);
-        // this.sysStorageService.set('branch', results["Branch"]);
+        this.sysStorageService.set('access_token', results["AccessToken"]);
+        this.sysStorageService.set('expires_in', results["ExpiresIn"]);
+        this.sysStorageService.set('username', results["UserName"]);
+        this.sysStorageService.set('fullname', results["FullName"]);
+        this.sysStorageService.set('companyId', results["CompanyId"]);
+        this.sysStorageService.set('company', results["Company"]);
+        this.sysStorageService.set('branchId', results["BranchId"]);
+        this.sysStorageService.set('branch', results["Branch"]);
         this.router.navigate(['/dashboard']);
       }
     );
