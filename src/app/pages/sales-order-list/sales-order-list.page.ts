@@ -9,6 +9,7 @@ import { promise } from 'protractor';
 import { SoDetailsComponent } from '../sales-order-detail/components/so-details/so-details.component';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 import { DeleteModalPage } from './delete-modal/delete-modal.page';
+import { NetworkService } from 'src/app/services/network.service';
 
 @Component({
   selector: 'app-sales-order-list',
@@ -25,7 +26,8 @@ export class SalesOrderListPage implements OnInit {
     private toastService: ToastService,
     private storage: Storage,
     private modalController: ModalController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private networkService: NetworkService
   ) {
     this.storage.get("access_token").then(
       result => {
@@ -177,6 +179,7 @@ export class SalesOrderListPage implements OnInit {
   } 
 
   ngOnInit() {
+    this.networkService.checkNetwork();
     let _startDate =new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
     let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
 
