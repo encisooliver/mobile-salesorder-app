@@ -21,7 +21,6 @@ export class TrnSalesOrderItemService {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log(token);
         if (token) {
           this.options = {
             headers: new HttpHeaders({
@@ -164,8 +163,6 @@ export class TrnSalesOrderItemService {
     return new Observable<[boolean, string]>((observer) => {
       this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/update/" + trnSalesOrderItemModel.Id, JSON.stringify(trnSalesOrderItemModel), this.options).subscribe(
         response => {
-          console.log(response);
-          console.log("dota");
           observer.next([true, ""]);
           observer.complete();
         },
@@ -199,7 +196,6 @@ export class TrnSalesOrderItemService {
         'Authorization': 'Bearer ' + token
       })
     }
-    console.log(token);
     return new Observable<any[]>((observer) => {
       let articleItemUnitListObservableArray = [];
 

@@ -32,7 +32,6 @@ export class MstArticleItemService {
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemInventoryAPI/list/paginated/" + 3 + "/" + column + "/" + skip + "/" + take + "?keywords=" + keywords, option).subscribe(
         response => {
           let results = response;
-          console.log(results);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               itemListObservableArray.push({

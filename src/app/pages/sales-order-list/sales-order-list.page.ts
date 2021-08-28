@@ -31,7 +31,6 @@ export class SalesOrderListPage implements OnInit {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log(token);
         if (token) {
           this.token = token;
         }
@@ -51,7 +50,6 @@ export class SalesOrderListPage implements OnInit {
     let endStart = new Date(this.lastDay).toLocaleDateString("fr-CA");
     this.trnSalesOrderService.getSOListByDate(this.token, dateStart, endStart).subscribe(
       data => {
-        console.log(data);
         if (data.length > 0) {
           this.soList = data;
         }else{
@@ -70,10 +68,8 @@ export class SalesOrderListPage implements OnInit {
 
         if (data[0] == true) {
           this.toastService.success('Sales order was successfully added!');
-          console.log(data[1]);
           setTimeout(() => {
-            this.storage.set("sales_id", data[1]);
-            this.router.navigate(['dashboard/sales-order-detail']);
+            this.router.navigate(['dashboard/sales-order-detail/' + data[1]]);
           }, 500);
         } else {
           // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
@@ -84,8 +80,7 @@ export class SalesOrderListPage implements OnInit {
   }
 
   editSO(id) {
-    this.router.navigate(['dashboard/sales-order-detail']);
-    this.storage.set("sales_id", id);
+    this.router.navigate(['dashboard/sales-order-detail/' + id]);
   }
   
   deleteSO(id): void {
@@ -95,7 +90,6 @@ export class SalesOrderListPage implements OnInit {
 
         if (data[0] == true) {
           this.toastService.success('Sales order was successfully deleted!');
-          console.log(data[1]);
           this.modalController.dismiss(close);
           this.router.navigate(['dashboard/sales-order-list']);
           setTimeout(() => {
@@ -130,7 +124,6 @@ export class SalesOrderListPage implements OnInit {
     modal.onDidDismiss().then((id) => {
       if (id !== null) {
         // this.modelData = modelData.data;
-        console.log(id.data.name);
         this.getSODateFilter();
       }
     });
@@ -141,7 +134,6 @@ export class SalesOrderListPage implements OnInit {
 
   dateChange() {
     this.getSODateFilter();
-    console.log(this.firstDay, this.lastDay);
   }
 
   async showConfirm(sOModel) { 
@@ -156,7 +148,6 @@ export class SalesOrderListPage implements OnInit {
             data => {
               if (data[0] == true) {
                 this.toastService.success('Sales order was successfully deleted!');
-                console.log(data[1]);
                 // this.router.navigate(['dashboard/sales-order-list']);
                 this.getSODateFilter();
               } else {
@@ -165,13 +156,11 @@ export class SalesOrderListPage implements OnInit {
       
             }
           );
-        console.log('Confirm Ok'); 
         }}, 
         { 
         text: 'Cancel', 
         role: 'cancel',
         handler: () => { 
-        console.log('Confirm Cancel.');  
         }}] 
       }); 
       await confirm.present(); 
@@ -180,11 +169,9 @@ export class SalesOrderListPage implements OnInit {
   ngOnInit() {
     let _startDate =new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
     let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
-
+    this.firstDay = new Date(_startDate).toISOString();
+    this.lastDay = new Date(_endDay).toISOString();
     setTimeout(() => {
-      this.firstDay = new Date(_startDate).toISOString();
-      this.lastDay = new Date(_endDay).toISOString();
-      console.log(this.firstDay, this.lastDay);
       this.getSODateFilter();
     }, 500);
   }

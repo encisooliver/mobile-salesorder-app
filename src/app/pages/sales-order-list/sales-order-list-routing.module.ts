@@ -7,7 +7,8 @@ const routes: Routes = [
   {
     path: '',
     component: SalesOrderListPage
-  },  {
+  },
+  {
     path: 'delete-modal',
     loadChildren: () => import('./delete-modal/delete-modal.module').then( m => m.DeleteModalPageModule)
   }

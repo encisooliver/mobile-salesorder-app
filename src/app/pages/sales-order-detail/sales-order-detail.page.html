@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Sales Order</ion-title>
+    <ion-icon name="return-down-back-outline" slot="start" size="large" style="margin-left: 10px; margin-right: 30px"
+      color="primary" (click)="back()"></ion-icon>
+    <ion-button slot="end" ion-button color="light" (click)="saveSO()">Save</ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -30,13 +33,34 @@
         <app-so-details [sOModel]="sOModel"></app-so-details>
       </div>
       <div [hidden]="soItemHidden">
-        <app-so-items (itemCounts)="soItemCount($event)"></app-so-items>
+        <app-so-items [sOModel]="sOModel" (itemsEventEmitter)="receiveItemEven($event)"></app-so-items>
       </div>
     </ng-container>
+
   </div>
+
 </ion-content>
-<ion-fab vertical="bottom" horizontal="end">
-  <ion-fab-button (click)="addSOItem()">
+
+<!-- <ion-fab vertical="center" horizontal="end">
+  <ion-fab-button (click)="saveSO()">
     <ion-icon name="save"></ion-icon>
   </ion-fab-button>
-</ion-fab>
+</ion-fab> -->
+<ion-footer>
+  <ion-toolbar color="light">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+              
+          </div>
+        </ion-col>
+        <ion-col>
+          <div>
+              
+          </div>
+        </ion-col>
+
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

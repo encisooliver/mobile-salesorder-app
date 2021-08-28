@@ -15,8 +15,8 @@ import { Router } from '@angular/router';
 })
 export class SoItemDetailComponent implements OnInit {
 
+  @Input() soData: TrnSalesOrderModel = new TrnSalesOrderModel();
   @Input() itemData: any;
-  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   token;
   companyId;
   trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
@@ -29,22 +29,6 @@ export class SoItemDetailComponent implements OnInit {
     private router: Router
 
   ) {
-    this.storage.get("access_token").then(
-      result => {
-        let token = result;
-        if (token) {
-          this.token = token;
-        }
-      }
-    )
-    this.storage.get("companyId").then(
-      result => {
-        let companyId = result;
-        if (companyId) {
-          this.companyId = companyId;
-        }
-      }
-    )
   }
 
   salesOrderItemQuantity: string = "0.00";
@@ -66,20 +50,6 @@ export class SoItemDetailComponent implements OnInit {
   listDiscount: any = [];
   listTax: any = [];
   listItemPrice: any = [];
-
-  getSODetail() {
-    this.storage.get("sales_order").then(
-      result => {
-        let sales_order = result;
-        console.log("Hey");
-        if (sales_order) {
-          this.sOModel = JSON.parse(sales_order);
-          console.log(sales_order);
-        }
-        this.getArticleItemUnitList();
-      }
-    )
-  }
 
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
@@ -257,6 +227,10 @@ export class SoItemDetailComponent implements OnInit {
         }
       );
     }
+  }
+
+  addSOItemClick(){
+    this.modalController.dismiss(this.trnSalesOrderItemModel);
   }
 
   public onKeyPressNumberOnly(event: any): boolean {
@@ -489,30 +463,28 @@ export class SoItemDetailComponent implements OnInit {
     this.salesOrderItemWTAXAmount = this.decimalPipe.transform(WTAXAmount, "1.2-2");
   }
 
+  dismiss() {
+    this.modalController.dismiss();
+  }
 
 
   ngOnInit() {
-    this.storage.get("sales_order").then(
+    this.storage.get("companyId").then(
       result => {
-        let sales_order = result;
-        if (sales_order) {
-          this.sOModel = JSON.parse(sales_order);
+        let companyId = result;
+        if (companyId) {
+          this.companyId = companyId;
+        }
+      }
+    )
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.token = token;
           this.getArticleItemUnitList();
         }
       }
     )
-
-    // setTimeout(() => {
-    //   this.getArticleItemUnitList();
-    // }, 500);
-    // if(this.itemData){
-    //   this.trnSalesOrderItemModel = this.itemData;
-    //   console.log("CF");
-    //   console.log(this.itemData);
-    // }
-  }
-
-  dismiss() {
-    this.modalController.dismiss();
   }
 }

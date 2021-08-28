@@ -15,27 +15,14 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
   token: string = "";
-  // sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-  @Input() public sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private storage: Storage,
     private trnSalesOrderService: TrnSalesOrderService,
     private toastService: ToastService,
-
   ) {
-    this.storage.get("sales_id").then(
-      result => {
-        let sales_id = result;
-        console.log(sales_id);
-        if (sales_id) {
-          this.sales_id = sales_id;
-          console.log(sales_id);
-        }
-      }
-    )
-
   }
 
   id: number = 0;
@@ -89,55 +76,6 @@ export class SoDetailsComponent implements OnInit {
       data => {
         this.status = data;
         this.isShown = true;
-        // this.getSO();
-      }
-    );
-  }
-  getSO() {
-    this.trnSalesOrderService.getSalesOrderDetail(this.sales_id).subscribe(
-      data => {
-        if (data != null) {
-          this.sOModel.Id = data.Id;
-          this.sOModel.BranchManualCode = data.BranchManualCode;
-          this.sOModel.BranchName = data.BranchName;
-          this.sOModel.CurrencyId = data.CurrencyId;
-          this.sOModel.ExchangeRate = data.ExchangeRate;
-          this.sOModel.ExchangeCurrency = data.ExchangeCurrency;
-          this.sOModel.ExchangeCurrencyManualCode = data.ExchangeCurrencyManualCode;
-          this.sOModel.SONumber = data.SONumber;
-          this.sOModel.SODate = data.SODate;
-          this.soDate = new Date(this.sOModel.SODate).toISOString();
-          this.sOModel.ManualNumber = data.ManualNumber;
-          this.sOModel.DocumentReference = data.DocumentReference;
-          this.sOModel.CustomerId = data.CustomerId;
-          this.sOModel.CustomerName = data.CustomerName;
-          this.sOModel.TermId = data.TermId;
-          this.sOModel.DiscountId = data.DiscountId;
-          this.sOModel.DiscountRate = data.DiscountRate;
-          this.sOModel.DateNeeded = data.DateNeeded;
-          this.neededDate = new Date(this.sOModel.DateNeeded).toISOString();
-          this.sOModel.Remarks = data.Remarks;
-          this.sOModel.SoldByUserId = data.SoldByUserId;
-          this.sOModel.SoldByUserFullname = data.SoldByUserFullname;
-          this.sOModel.PreparedByUserId = data.PreparedByUserId;
-          this.sOModel.PreparedByUserFullname = data.PreparedByUserFullname;
-          this.sOModel.CheckedByUserId = data.CheckedByUserId;
-          this.sOModel.CheckedByUserFullname = data.CheckedByUserFullname;
-          this.sOModel.ApprovedByUserId = data.ApprovedByUserId;
-          this.sOModel.ApprovedByUserFullname = data.ApprovedByUserFullname;
-          this.sOModel.Amount = data.Amount;
-          this.sOModel.Status = data.Status;
-          this.sOModel.IsCancelled = data.IsCancelled;
-          this.sOModel.IsPrinted = data.IsPrinted;
-          this.sOModel.IsLocked = data.IsLocked;
-          this.sOModel.CreatedByUserFullname = data.CreatedByUserFullname;
-          this.sOModel.CreatedDateTime = data.CreatedDateTime;
-          this.sOModel.UpdatedByUserFullname = data.UpdatedByUserFullname;
-          this.sOModel.UpdatedDateTime = data.UpdatedDateTime;
-          this.isShown = true;
-          console.log(this.sOModel);
-          this.storage.set("sales_order", JSON.stringify(this.sOModel));
-        }
       }
     );
   }

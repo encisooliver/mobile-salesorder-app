@@ -18,7 +18,6 @@ export class TrnSalesOrderService {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log( token );
         if(token){
           this.options = {
             headers: new HttpHeaders({
@@ -162,11 +161,17 @@ export class TrnSalesOrderService {
     });
   }
 
-  public getSalesOrderDetail(id: number): Observable<TrnSalesOrderModel> {
+  public getSalesOrderDetail(id: number, token: string): Observable<TrnSalesOrderModel> {
+    let options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
     return new Observable<TrnSalesOrderModel>((observer) => {
       let trnSalesOrderModel: TrnSalesOrderModel = null;
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/detail/" + id, this.options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/detail/" + id, options).subscribe(
         response => {
           let results = response;
 
@@ -209,8 +214,6 @@ export class TrnSalesOrderService {
               UpdatedByUserFullname: results["UpdatedByUser"].Fullname,
               UpdatedDateTime: results["UpdatedDateTime"]
             }
-            console.log("trnSalesOrderModel FROM API");
-            console.log(trnSalesOrderModel);
           }
 
           observer.next(trnSalesOrderModel);
@@ -229,7 +232,6 @@ export class TrnSalesOrderService {
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
         response => {
           let results = response;
-          console.log(response);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               currencyExchangeListObservableArray.push({
@@ -306,8 +308,6 @@ export class TrnSalesOrderService {
                 IsActive: results[i].IsActive,
                 IsLocked: results[i].IsLocked
               });
-              console.log("API getActiveUserList");
-              console.log(userListObservableArray);
             }
           }
 

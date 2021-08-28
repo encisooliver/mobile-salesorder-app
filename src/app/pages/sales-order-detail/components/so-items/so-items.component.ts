@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
@@ -8,6 +8,7 @@ import { SoInventoryItemListComponent } from '../so-inventory-item-list/so-inven
 import { Storage } from '@ionic/storage';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SoItemDetailComponent } from '../so-item-detail/so-item-detail.component';
+import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 
 @Component({
   selector: 'app-so-items',
@@ -15,7 +16,8 @@ import { SoItemDetailComponent } from '../so-item-detail/so-item-detail.componen
   styleUrls: ['./so-items.component.scss'],
 })
 export class SoItemsComponent implements OnInit {
-  sales_id: number = 0;
+  @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Output() itemsEventEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private router: Router,
@@ -26,28 +28,17 @@ export class SoItemsComponent implements OnInit {
     private alertCtrl: AlertController
   ) {
   }
-  // event emitter
-  @Output() itemCounts: EventEmitter<any> = new EventEmitter<any>();
-  // event emitter method
-  clickEmitEvent() {
-    console.log(this.soItems.length);
-    this.itemCounts.emit("event test");
-  }
 
   soItems: any[] = [];
   isContentShow: boolean = false;
 
   getSOList() {
     this.soItems = [];
-    this.trnSalesOrderItemService.getSalesOrderItemListBySalesOrder(this.sales_id).subscribe(
+    this.trnSalesOrderItemService.getSalesOrderItemListBySalesOrder(this.sOModel.Id).subscribe(
       data => {
-        console.log(data);
         if (data.length > 0) {
           this.soItems = data;
-          setTimeout(() => {
-            console.log(this.soItems.length);
-
-          }, 300);
+          this.clickEmitEvent();
         }
         this.isContentShow = true;
       }
@@ -58,6 +49,7 @@ export class SoItemsComponent implements OnInit {
     const modal = await this.modalCtrl.create({
       component: SoItemDetailComponent,
       componentProps: {
+        soData: this.sOModel,
         itemData: soItem
       },
     });
@@ -72,6 +64,7 @@ export class SoItemsComponent implements OnInit {
     let modal = await this.modalCtrl.create({
       component: SoInventoryItemListComponent,
       componentProps: {
+        soData: this.sOModel
       },
       cssClass: "modal-fullscreen"
     });
@@ -81,7 +74,6 @@ export class SoItemsComponent implements OnInit {
       this.getSOList();
     });
   }
-
   async deleteSOItem(sOModel) {
     const confirm = await this.alertCtrl.create({
       header: 'Confirmation',
@@ -101,29 +93,61 @@ export class SoItemsComponent implements OnInit {
 
             }
           );
-          console.log('Confirm Ok');
         }
       },
       {
         text: 'Cancel',
         role: 'cancel',
         handler: () => {
-          console.log('Confirm Cancel.');
         }
       }]
     });
     await confirm.present();
   }
-
-  ngOnInit() {
-    this.storage.get("sales_id").then(
-      result => {
-        let sales_id = result;
-        if (sales_id) {
-          this.sales_id = sales_id;
-          this.getSOList()
+  // event emitter method
+  clickEmitEvent() {
+    let items = this.soItems;
+    let soItems: TrnSalesOrderItemModel[] = [];
+    if (items.length > 0) {
+      items.forEach(item => {
+        let so_item: TrnSalesOrderItemModel = {
+          Id: item.Id,
+          SOId: item.SOId,
+          ItemId: item.ItemId,
+          ItemManualCode: item.ItemManualCode,
+          ItemSKUCode: item.ItemSKUCode,
+          ItemBarCode: item.ItemBarCode,
+          ItemDescription: item.ItemDescription,
+          ItemInventoryId: item.ItemInventoryId,
+          ItemInventoryCode: item.ItemInventoryCode,
+          Particulars: item.Particulars,
+          Quantity: item.Quantity,
+          UnitId: item.UnitId,
+          Price: item.Price,
+          DiscountId: item.DiscountId,
+          DiscountRate: item.DiscountRate,
+          DiscountAmount: item.DiscountAmount,
+          NetPrice: item.NetPrice,
+          Amount: item.Amount,
+          VATId: item.VATId,
+          VATRate: item.VATRate,
+          VATAmount: item.VATAmount,
+          WTAXId: item.WTAXId,
+          WTAXRate: item.WTAXRate,
+          WTAXAmount: item.WTAXAmount,
+          LineTimeStamp: item.LineTimeStamp
         }
-      }
-    )
+        console.log(so_item);
+        soItems.push(so_item);
+      });
+      this.itemsEventEmitter.emit(soItems);
+    } else {
+      this.itemsEventEmitter.emit(soItems);
+    }
+  }
+  ngOnInit() {
+    setTimeout(() => {
+      this.getSOList();
+    }, 300);
   }
 }

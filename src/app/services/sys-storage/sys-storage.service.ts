@@ -29,22 +29,34 @@ export class SysStorageService {
     return this._storage.get(key);
   }
 
-  addSO(so: SalesOrder): Promise<any> {
+  addSO(so: SalesOrder): Promise<SalesOrder> {
+    let new_so: SalesOrder = {
+      Id: 0,
+      SalesOrder: so.SalesOrder,
+      Items: so.Items
+    }
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
+      console.log(so_list);
       if (so_list) {
-        so_list.push(so);
-        return this.storage.set(SO_KEY, so_list);
+        let newId = so_list.length + 1;
+        new_so.Id = newId;
+        so_list.push(new_so);
+        this.storage.set(SO_KEY, so_list);
+        return new_so;
       } else {
-        return this.storage.set(SO_KEY, [so]);
+        let newId = 1;
+        new_so.Id = newId;
+        this.storage.set(SO_KEY, [so]);
+        return new_so;
       }
     });
   }
 
-  getUsers(): Promise<SalesOrder[]> {
+  getSOs(): Promise<SalesOrder[]> {
     return this.storage.get(SO_KEY);
   }
 
-  getUserDetail(id: String): Promise<SalesOrder> {
+  getSODetail(id: String): Promise<SalesOrder> {
     let so: SalesOrder;
     return this.storage.get(SO_KEY).then(
       response => {
@@ -63,21 +75,21 @@ export class SysStorageService {
       });
   }
 
-  updateSO(sa: SalesOrder): Promise<any> {
+  updateSO(sa: SalesOrder): Promise<SalesOrder> {
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
       if (!so_list || so_list.length === 0) {
         return null;
       }
-      let newUsers: SalesOrder[] = [];
+      let SOs: SalesOrder[] = [];
       for (let i of so_list) {
         if (i.Id === sa.Id) {
-          newUsers.push(sa);
+          SOs.push(sa);
         } else {
-          newUsers.push(i);
+          SOs.push(i);
         }
       }
 
-      return this.storage.set(SO_KEY, newUsers);
+      return this.storage.set(SO_KEY, SOs);
     });
   }
 
