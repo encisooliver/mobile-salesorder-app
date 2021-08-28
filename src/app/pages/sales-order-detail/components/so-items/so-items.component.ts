@@ -15,9 +15,6 @@ import { SoItemDetailComponent } from '../so-item-detail/so-item-detail.componen
   styleUrls: ['./so-items.component.scss'],
 })
 export class SoItemsComponent implements OnInit {
-
- 
-
   sales_id: number = 0;
 
   constructor(
@@ -28,6 +25,13 @@ export class SoItemsComponent implements OnInit {
     private toastService: ToastService,
     private alertCtrl: AlertController
   ) {
+  }
+  // event emitter
+  @Output() itemCounts: EventEmitter<any> = new EventEmitter<any>();
+  // event emitter method
+  clickEmitEvent() {
+    console.log(this.soItems.length);
+    this.itemCounts.emit("event test");
   }
 
   soItems: any[] = [];
@@ -42,7 +46,7 @@ export class SoItemsComponent implements OnInit {
           this.soItems = data;
           setTimeout(() => {
             console.log(this.soItems.length);
-           
+
           }, 300);
         }
         this.isContentShow = true;
@@ -109,13 +113,6 @@ export class SoItemsComponent implements OnInit {
       }]
     });
     await confirm.present();
-  }
-  // event emitter
-  @Output() itemCounts: EventEmitter<number> = new EventEmitter<number>();
-  // event emitter method
-  clickEmitEvent(){
-    console.log(this.soItems.length);
-    this.itemCounts.emit(this.soItems.length);
   }
 
   ngOnInit() {

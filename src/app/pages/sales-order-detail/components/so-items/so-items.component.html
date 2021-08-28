@@ -1,39 +1,31 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Items</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <div *ngIf="isContentShow">
-    <ion-card *ngFor="let item of soItems; let i = index" class="ion-margin">
-      <ion-card-header>
-        <ion-card-subtitle>
-          {{item.ItemSKUCode}}
-        </ion-card-subtitle>
-        <ion-row>
-          <ion-card-content style="padding: 5px;">
-            {{item.ItemDescription}} {{item.Quantity}} {{item.BaseUnitName}} {{item.Price.toFixed(2)}}
-          </ion-card-content>
-        </ion-row>
-      </ion-card-header>
-      <ion-footer>
-        <ion-row>
-          <ion-col class="ion-no-padding">
-            <ion-button class="ion-no-margin" color="light" expand="full" (click)="soItemDetail(item)">
-              <ion-text color="primary">View</ion-text>
-            </ion-button>
-          </ion-col>
-          <ion-col class="ion-no-padding">
-            <ion-button class="ion-no-margin" color="light" expand="full" (click)="deleteSOItem(item)">
-              <ion-text color="danger">Delete</ion-text>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-footer>
-    </ion-card>
-  </div>
-</ion-content>
+<div *ngIf="isContentShow">
+  <ion-card *ngFor="let item of soItems; let i = index" class="ion-margin">
+    <ion-card-header>
+      <ion-card-subtitle>
+        {{item.ItemSKUCode}}
+      </ion-card-subtitle>
+      <ion-row>
+        <ion-card-content style="padding: 5px;">
+          {{item.ItemDescription}} {{item.Quantity}} {{item.BaseUnitName}} {{item.Price.toFixed(2)}}
+        </ion-card-content>
+      </ion-row>
+    </ion-card-header>
+    <ion-footer>
+      <ion-row>
+        <ion-col class="ion-no-padding">
+          <ion-button class="ion-no-margin" color="light" expand="full" (click)="soItemDetail(item)">
+            <ion-text color="primary">View</ion-text>
+          </ion-button>
+        </ion-col>
+        <ion-col class="ion-no-padding">
+          <ion-button class="ion-no-margin" color="light" expand="full" (click)="deleteSOItem(item)">
+            <ion-text color="danger">Delete</ion-text>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-footer>
+  </ion-card>
+</div>
 <ion-fab vertical="bottom" horizontal="end">
   <ion-fab-button (click)="addSOItem()">
     <ion-icon name="add"></ion-icon>

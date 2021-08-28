@@ -16,8 +16,9 @@ import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-art
 import { SoInventoryItemListComponent } from './components/so-inventory-item-list/so-inventory-item-list.component';
 import { SoItemDetailComponent } from './components/so-item-detail/so-item-detail.component';
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
-import { MyDirectiveDirective } from './sample.directive';
-
+import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
+import { Storage } from '@ionic/storage-angular';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -33,14 +34,14 @@ import { MyDirectiveDirective } from './sample.directive';
     SoItemsComponent,
     SoInventoryItemListComponent,
     SoItemDetailComponent,
-    MyDirectiveDirective
   ],
   providers: [
     AppSettings, 
     TrnSalesOrderService, 
     MstArticleItemService,
     TrnSalesOrderItemService,
-    DecimalPipe
+    DecimalPipe,
+    SysStorageService
   ]
 })
 export class SalesOrderDetailPageModule {}

@@ -8,7 +8,8 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 import { DashboardPage } from './dashboard.page';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
+import { Storage } from '@ionic/storage-angular';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,5 +18,6 @@ import { BrowserModule } from '@angular/platform-browser';
     DashboardPageRoutingModule,
   ],
   declarations: [DashboardPage],
+  providers: [LocalSalesOrderService, Storage]
 })
-export class DashboardPageModule {}
+export class DashboardPageModule { }

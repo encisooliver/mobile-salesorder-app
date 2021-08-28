@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SalesOrder } from '../../software-models/sales-order.model';
-
+import { Storage } from '@ionic/storage-angular';
 const SO_KEY = "sales_order";
 
 @Injectable({
@@ -8,8 +8,14 @@ const SO_KEY = "sales_order";
 })
 export class LocalSalesOrderService {
 
-  constructor(private storage: Storage) { }
-
+  constructor(private storage: Storage) { this.init();
+  
+  }
+  async init() {
+    // If using, define drivers here: await this.storage.defineDriver(/*...*/);
+    const storage = await this.storage.create();
+    this.storage = storage;
+  }
   addSO(so: SalesOrder): Promise<any> {
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
       if (so_list) {
@@ -26,7 +32,7 @@ export class LocalSalesOrderService {
   }
 
   getUserDetail(id: String): Promise<SalesOrder> {
-    let so: SalesOrder[];
+    let so: SalesOrder;
     return this.storage.get(SO_KEY).then(
       response => {
         var so_list = response;

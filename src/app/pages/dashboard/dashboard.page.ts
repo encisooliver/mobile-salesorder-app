@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage-angular';
 import { NgZone } from '@angular/core';
 import { Network } from '@capacitor/network';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,18 +24,9 @@ export class DashboardPage implements OnInit {
     private storage: Storage,
     private router: Router,
     private zone: NgZone,
+    private localSalesOrderService: LocalSalesOrderService
   ) {
-    Network.getStatus().then(status => this.statusSubject.next(status.connected)
-    );
-    this.isOnline$ = this.statusSubject.asObservable();
-
-    Network.addListener('networkStatusChange', (status) => {
-      console.log(status);
-      this.zone.run(() => {
-        this.statusSubject.next(status.connected);
-        console.log(status.connected);
-      });
-    });
+    
   }
 
   async getStatus(){
@@ -56,7 +48,7 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/'])
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getStatus();
   }
 

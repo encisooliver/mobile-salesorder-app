@@ -37,7 +37,7 @@ export class TrnSalesOrderItemService {
 
   public getSalesOrderItemListBySalesOrder(SOId: number): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      let salesOrderItemListObservableArray = [];
+      let salesOrderItemList = [];
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/list/" + SOId, this.options).subscribe(
         response => {
@@ -45,7 +45,7 @@ export class TrnSalesOrderItemService {
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderItemListObservableArray.push({
+              salesOrderItemList.push({
                 Id: results[i].Id,
                 SOId: results[i].SOId,
                 ItemId: results[i].ItemId,
@@ -92,7 +92,7 @@ export class TrnSalesOrderItemService {
             }
           }
 
-          observer.next(salesOrderItemListObservableArray);
+          observer.next(salesOrderItemList);
           observer.complete();
         }
       );

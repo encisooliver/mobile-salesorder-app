@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
 import { Storage } from '@ionic/storage-angular';
+import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
+import { SalesOrder } from 'src/app/version-two/software-models/sales-order.model';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -15,28 +18,18 @@ export class SalesOrderDetailPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private trnSalesOrderService: TrnSalesOrderService,
-    private storage: Storage,
-
+    private sysStorageService: SysStorageService
   ) {
-    this.storage.get("sales_id").then(
-      result => {
-        let sales_id = result;
-        console.log(sales_id);
-        if (sales_id) {
-          this.sales_id = sales_id;
-          console.log(sales_id);
-        }
-      }
-    )
+    
   }
-  
+
   sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   soDate: String = "";
   neededDate: String = "";
+  isShown: boolean = false;
   getSO() {
     this.trnSalesOrderService.getSalesOrderDetail(this.sales_id).subscribe(
       data => {
-
         setTimeout(() => {
           if (data != null) {
             this.sOModel.Id = data.Id;
@@ -76,8 +69,12 @@ export class SalesOrderDetailPage implements OnInit {
             this.sOModel.CreatedDateTime = data.CreatedDateTime;
             this.sOModel.UpdatedByUserFullname = data.UpdatedByUserFullname;
             this.sOModel.UpdatedDateTime = data.UpdatedDateTime;
-            console.log(this.sOModel);
-            this.storage.set("sales_order", JSON.stringify(this.sOModel));
+
+            setTimeout(() => {
+              this.isShown = true;
+              this.soDetailHidden = false;
+              this.soItemHidden = true;
+            }, 500);
           }
         }, 500);
 
@@ -85,15 +82,43 @@ export class SalesOrderDetailPage implements OnInit {
     );
   }
 
+  saveSO() {
+    let so: SalesOrder = {
+      Id: 0,
+      SalesOrder: this.sOModel,
+      Items: null
+    };
+    this.sysStorageService.addSO(so).then(data => {
+      console.log(data);
+    });
+  }
+
   // event method
   itemCount: number = 0;
-  soItemCount(data: number) {
+  soItemCount(data: string) {
     console.log(data);
-    this.itemCount = data;
+    // this.itemCount = data;
+  }
+  soDetailHidden: boolean = false;
+  soItemHidden: boolean = true;
+  showSODetail() {
+    this.soDetailHidden = false;
+    this.soItemHidden = true;
+  }
+  showSOItem() {
+    this.soDetailHidden = true;
+    this.soItemHidden = false;
   }
   ngOnInit() {
-    console.log(this.router.url)
-    let id = this.route.snapshot.params['id'];
-    console.log(id);
+    this.sysStorageService.get("sales_id").then(
+      result => {
+        let sales_id = result;
+        console.log(sales_id);
+        if (sales_id) {
+          this.sales_id = sales_id;
+          this.getSO();
+        }
+      }
+    )
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
@@ -15,8 +15,8 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
   token: string = "";
-  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-
+  // sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Input() public sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -55,10 +55,6 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getLockedArticleCustomerList(this.token).subscribe(
       data => {
         this.CustomerUsers = data;
-        console.log("Customer ID");
-        console.log(this.sOModel.CustomerId);
-        console.log("Customer Users");
-        console.log(data);
         this.getActiveuser();
       }
     );
@@ -67,8 +63,6 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getActiveUserList().subscribe(
       data => {
         this.activeUsers = data;
-        console.log("Active Users");
-        console.log(data);
         this.getCurrency();
       }
     );
@@ -77,8 +71,6 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getCurrencyExchange().subscribe(
       data => {
         this.currencies = data;
-        console.log("Currency");
-        console.log(data);
         this.getTerms();
       }
     );
@@ -87,7 +79,6 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getTermList().subscribe(
       data => {
         this.terms = data;
-        console.log("Sample Log" + data);
         this.getStatus();
       }
     );
@@ -97,9 +88,8 @@ export class SoDetailsComponent implements OnInit {
     this.trnSalesOrderService.getCodeTableListByCategory("SALES ORDER STATUS").subscribe(
       data => {
         this.status = data;
-        console.log("getStatus");
-        console.log(data);
-        this.getSO();
+        this.isShown = true;
+        // this.getSO();
       }
     );
   }
@@ -153,8 +143,6 @@ export class SoDetailsComponent implements OnInit {
   }
 
   editedSO(): void {
-    console.log("POST MODEL API this.sOModeL");
-    console.log(this.sOModel);
     this.trnSalesOrderService.saveSalesOrder(this.sOModel).subscribe(
       data => {
         if (data[0] == true) {
@@ -167,16 +155,13 @@ export class SoDetailsComponent implements OnInit {
   }
 
   compareFn(e1: any, e2: any): boolean {
-    console.log("com", e1.id, e2.id)
     return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 
   compareFn1(e1: TrnSalesOrderModel, e2: TrnSalesOrderModel): boolean {
-    console.log("com", e1.Id, e2.Id)
     return e2.Id == e1.Id;
   }
   compareFn2(e1: any, e2: any): boolean {
-    console.log("com", e1.id, e2.id)
     return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
   ngOnInit() {

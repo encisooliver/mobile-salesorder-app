@@ -1,23 +1,42 @@
-<ion-tabs>
-  <ion-tab-bar slot="sales-order">
-    <ion-tab-button tab="so">
-      <ion-icon name="reorder-three-outline"></ion-icon>
-      <ion-label>Detail</ion-label>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sales Order</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    </ion-tab-button>
-    <!-- event trigger - event listener -->
-    <ion-tab-button tab="so-items" (itemCounts)="soItemCount($event)">
-      <ion-icon name="cart-outline"></ion-icon>
-      <ion-label>Items</ion-label>
-      <ion-badge>8</ion-badge>
-      <ion-badge *ngIf="itemCount != 0">
-        {{ itemCount }}
-      </ion-badge>
-    </ion-tab-button>
+<ion-content>
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <ion-item>
+              <ion-button (click)="showSODetail()">Detail</ion-button>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div>
+            <ion-item>
+              <ion-button (click)="showSOItem()">Items</ion-button>
+            </ion-item>
+          </div>
+        </ion-col>
 
-    <ion-tab-button tab="so-attachment">
-      <ion-icon name="attach-outline"></ion-icon>
-      <ion-label>Attachment</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+      </ion-row>
+    </ion-grid>
+    <ng-container *ngIf="isShown">
+      <div [hidden]="soDetailHidden">
+        <app-so-details [sOModel]="sOModel"></app-so-details>
+      </div>
+      <div [hidden]="soItemHidden">
+        <app-so-items (itemCounts)="soItemCount($event)"></app-so-items>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>
+<ion-fab vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="addSOItem()">
+    <ion-icon name="save"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
