@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'delete-modal',
-    loadChildren: () => import('./delete-modal/delete-modal.module').then( m => m.DeleteModalPageModule)
+    loadChildren: () => import('../../shared/components/delete-modal/delete-modal.module').then( m => m.DeleteModalPageModule)
   }
 
 ];

@@ -16,14 +16,13 @@ export class SoInventoryItemListComponent implements OnInit {
 
   token: string = "";
   branchId: number = 0;
-  @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-
+  @Input() sOData: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Input() sOItemsData: TrnSalesOrderItemModel[] = [];
   constructor(
     private mstArticleItemService: MstArticleItemService,
     private storage: Storage,
     private modalCtrl: ModalController
   ) {
-   
   }
 
   articleItemListPageIndex: number = 15;
@@ -74,7 +73,7 @@ export class SoInventoryItemListComponent implements OnInit {
     console.log(item);
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
     trnSalesOrderItemModel.Id = 0;
-    trnSalesOrderItemModel.SOId = this.sOModel.Id;
+    trnSalesOrderItemModel.SOId = this.sOData.Id;
     trnSalesOrderItemModel.ItemId = item.ArticleId;
     trnSalesOrderItemModel.ItemManualCode = item.ArticleItem.Article.ManualCode;
     trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.SKUCode;
@@ -86,8 +85,8 @@ export class SoInventoryItemListComponent implements OnInit {
     trnSalesOrderItemModel.Particulars = "";
     trnSalesOrderItemModel.Quantity = 1;
     trnSalesOrderItemModel.Price = item.ArticleItem.Price;
-    trnSalesOrderItemModel.DiscountId = this.sOModel.DiscountId;
-    trnSalesOrderItemModel.DiscountRate = this.sOModel.DiscountRate;
+    trnSalesOrderItemModel.DiscountId = this.sOData.DiscountId;
+    trnSalesOrderItemModel.DiscountRate = this.sOData.DiscountRate;
     trnSalesOrderItemModel.DiscountAmount = 0;
     trnSalesOrderItemModel.NetPrice = item.ArticleItem.Price;
     trnSalesOrderItemModel.Amount = item.ArticleItem.Price;
@@ -98,8 +97,9 @@ export class SoInventoryItemListComponent implements OnInit {
 
       component: SoItemDetailComponent,
       componentProps: {
-        soData: this.sOModel,
-        itemData: trnSalesOrderItemModel
+        soData: this.sOData,
+        itemData: trnSalesOrderItemModel,
+        action: "Add"
       }
     });
 
@@ -113,9 +113,12 @@ export class SoInventoryItemListComponent implements OnInit {
     return await modal.present();
   }
   async close() {
-    await this.modalCtrl.dismiss({ status: 200 });
+    await this.modalCtrl.dismiss(this.soItems);
   }
   ngOnInit() {
+    if(this.sOItemsData != null){
+      this.soItems = this.sOItemsData;
+    }
     this.storage.get("branchId").then(
       result => {
         let branchId = result;

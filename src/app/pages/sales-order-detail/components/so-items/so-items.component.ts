@@ -17,7 +17,7 @@ import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 })
 export class SoItemsComponent implements OnInit {
   @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-  @Output() itemsEventEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() itemsEventEmitter: EventEmitter<TrnSalesOrderItemModel[]> = new EventEmitter<TrnSalesOrderItemModel[]>();
 
   constructor(
     private router: Router,
@@ -34,15 +34,22 @@ export class SoItemsComponent implements OnInit {
 
   getSOList() {
     this.soItems = [];
-    this.trnSalesOrderItemService.getSalesOrderItemListBySalesOrder(this.sOModel.Id).subscribe(
-      data => {
-        if (data.length > 0) {
-          this.soItems = data;
-          this.clickEmitEvent();
-        }
-        this.isContentShow = true;
-      }
-    );
+    this.soItems = this.sOModel.SOItems;
+    this.clickEmitEvent();
+    setTimeout(() => {
+      this.isContentShow = true;
+      console.log("items:", this.soItems);
+
+    }, 300);
+    // this.trnSalesOrderItemService.getSalesOrderItemListBySalesOrder(this.sOModel.Id).subscribe(
+    //   data => {
+    //     if (data.length > 0) {
+    //       this.soItems = data;
+    //       this.clickEmitEvent();
+    //     }
+    //     this.isContentShow = true;
+    //   }
+    // );
   }
 
   async soItemDetail(soItem) {
@@ -50,13 +57,21 @@ export class SoItemsComponent implements OnInit {
       component: SoItemDetailComponent,
       componentProps: {
         soData: this.sOModel,
-        itemData: soItem
+        itemData: soItem,
+        action: "Update"
       },
     });
 
     await modal.present();
     await modal.onDidDismiss().then(data => {
-      this.getSOList();
+      if (data != null) {
+        let item = data.data;
+        for (var i = 0; i < this.soItems.length; i++) {
+          if (this.soItems[i].Id == item.Id) {
+            this.soItems[i] = item;
+          }
+        }
+      }
     });
 
   }
@@ -64,14 +79,18 @@ export class SoItemsComponent implements OnInit {
     let modal = await this.modalCtrl.create({
       component: SoInventoryItemListComponent,
       componentProps: {
-        sOModel: this.sOModel
+        sOData: this.sOModel,
+        sOItemsData: this.soItems
       },
       cssClass: "modal-fullscreen"
     });
 
     await modal.present();
     await modal.onDidDismiss().then(data => {
-      this.getSOList();
+      if (data != null) {
+        let items = data.data;
+        this.soItems = items;
+      }
     });
   }
   async deleteSOItem(sOModel) {
@@ -146,9 +165,6 @@ export class SoItemsComponent implements OnInit {
     }
   }
   ngOnInit() {
-    console.log(this.sOModel);
-    setTimeout(() => {
-      this.getSOList();
-    }, 300);
+    this.getSOList();
   }
 }

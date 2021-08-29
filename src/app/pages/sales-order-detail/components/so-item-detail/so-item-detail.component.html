@@ -3,7 +3,8 @@
     <ion-title>Item Detail</ion-title>
     <ion-icon name="return-down-back-outline" slot="start" size="large" style="margin-left: 10px; margin-right: 30px"
       color="primary" (click)="dismiss()"></ion-icon>
-    <ion-button slot="end" size="small" color="success" (click)="addSOItemClick()">Save</ion-button>
+    <ion-button *ngIf="action == 'Add'" slot="end" size="small" color="success" (click)="saveSOItemClick()">Add</ion-button>
+    <ion-button *ngIf="action == 'Update'"  slot="end" size="small" color="success" (click)="saveSOItemClick()">Update</ion-button>
   </ion-toolbar>
 </ion-header>
 

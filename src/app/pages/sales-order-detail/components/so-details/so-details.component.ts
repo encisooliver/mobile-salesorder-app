@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
-import { SalesOrderListPage } from 'src/app/pages/sales-order-list/sales-order-list.page';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 
@@ -16,6 +15,8 @@ export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
   token: string = "";
   @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Output() sOEventEmitter: EventEmitter<any> = new EventEmitter<any>();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -92,16 +93,11 @@ export class SoDetailsComponent implements OnInit {
     );
   }
 
-  compareFn(e1: any, e2: any): boolean {
-    return e1 && e2 ? e1.id === e2.id : e1 === e2;
+  clickEmitEvent() {
+    let so = this.sOModel;
+    this.sOEventEmitter.emit(so);
   }
 
-  compareFn1(e1: TrnSalesOrderModel, e2: TrnSalesOrderModel): boolean {
-    return e2.Id == e1.Id;
-  }
-  compareFn2(e1: any, e2: any): boolean {
-    return e1 && e2 ? e1.id === e2.id : e1 === e2;
-  }
   ngOnInit() {
     this.storage.get("access_token").then(
       result => {
@@ -113,5 +109,4 @@ export class SoDetailsComponent implements OnInit {
       }
     )
   }
-
 }

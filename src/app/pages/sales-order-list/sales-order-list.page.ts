@@ -8,7 +8,7 @@ import { create } from 'domain';
 import { promise } from 'protractor';
 import { SoDetailsComponent } from '../sales-order-detail/components/so-details/so-details.component';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
-import { DeleteModalPage } from './delete-modal/delete-modal.page';
+import { DeleteModalPage } from '../../shared/components/delete-modal/delete-modal.page';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 
@@ -71,54 +71,54 @@ export class SalesOrderListPage implements OnInit {
       }
     );
   }
-  salesOrder: SalesOrder = new SalesOrder();
+
   addSO(): void {
-    
-    this.salesOrder.SalesOrder = {
+    let so: TrnSalesOrderModel = {
       Id: 0,
-      BranchManualCode:  "",
-      BranchName:  "",
+      BranchManualCode: "",
+      BranchName: "",
       CurrencyId: 1,
-      CurrencyManualCode:  "",
+      CurrencyManualCode: "",
       ExchangeRate: 1,
-      ExchangeCurrency:  "PHP",
-      ExchangeCurrencyManualCode:  "PHP",
-      SONumber:  "",
+      ExchangeCurrency: "PHP",
+      ExchangeCurrencyManualCode: "PHP",
+      SONumber: "",
 
       SODate: new Date(),
-      ManualNumber:  "",
-      DocumentReference:  "",
+      ManualNumber: "",
+      DocumentReference: "",
       CustomerId: 1,
-      CustomerName:  "",
+      CustomerName: "",
       TermId: 1,
       DiscountId: 9,
       DiscountRate: 0,
       DateNeeded: new Date(),
-      Remarks:  "",
+      Remarks: "",
 
       Amount: 0,
-      Status:  "NEW",
+      Status: "NEW",
 
       SoldByUserId: 0,
-      SoldByUserFullname:  "",
+      SoldByUserFullname: "",
       PreparedByUserId: 0,
-      PreparedByUserFullname:  "",
+      PreparedByUserFullname: "",
       CheckedByUserId: 0,
-      CheckedByUserFullname:  "",
+      CheckedByUserFullname: "",
       ApprovedByUserId: 0,
-      ApprovedByUserFullname:  "",
+      ApprovedByUserFullname: "",
       IsCancelled: false,
       IsPrinted: false,
       IsLocked: false,
-      CreatedByUserFullname:  "",
-      CreatedDateTime:  "",
-      UpdatedByUserFullname:  "",
-      UpdatedDateTime: ""
+      CreatedByUserFullname: "",
+      CreatedDateTime: "",
+      UpdatedByUserFullname: "",
+      UpdatedDateTime: "",
+      SOItems: []
     }
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {
-        data: JSON.stringify(this.salesOrder),
-        type: "Add",
+        salesOrderData: JSON.stringify(so),
+        action: "Add",
       },
       skipLocationChange: true
     });
@@ -139,43 +139,86 @@ export class SalesOrderListPage implements OnInit {
     // );
   }
 
-  editSO(id) {
-    // this.router.navigate(['dashboard/sales-order-detail/' + id]);
+  editSO(sales_order: any) {
+    let so: TrnSalesOrderModel = {
+      Id: sales_order.id,
+      BranchManualCode: sales_order.BranchManualCode,
+      BranchName: sales_order.BranchName,
+      CurrencyId: sales_order.CurrencyId,
+      CurrencyManualCode: sales_order.CurrencyManualCode,
+      ExchangeRate: sales_order.ExchangeRate,
+      ExchangeCurrency: sales_order.ExchangeCurrency,
+      ExchangeCurrencyManualCode: sales_order.ExchangeCurrencyManualCode,
+      SONumber: sales_order.SONumber,
+
+      SODate: sales_order.SODate,
+      ManualNumber: sales_order.ManualNumber,
+      DocumentReference: sales_order.DocumentReference,
+      CustomerId: sales_order.CustomerId,
+      CustomerName: sales_order.CustomerName,
+      TermId: sales_order.TermId,
+      DiscountId: sales_order.DiscountId,
+      DiscountRate: sales_order.DiscountRate,
+      DateNeeded: sales_order.DateNeeded,
+      Remarks: sales_order.Remarks,
+
+      Amount: sales_order.Amount,
+      Status: sales_order.Status,
+
+      SoldByUserId: sales_order.SoldByUserId,
+      SoldByUserFullname: sales_order.SoldByUserFullname,
+      PreparedByUserId: sales_order.PreparedByUser,
+      PreparedByUserFullname: sales_order.PreparedByUserFullname,
+      CheckedByUserId: sales_order.CheckedByUserId,
+      CheckedByUserFullname: sales_order.CheckedByUserFullname,
+      ApprovedByUserId: sales_order.ApprovedByUserId,
+      ApprovedByUserFullname: sales_order.ApprovedByUserFullname,
+      IsCancelled: sales_order.IsCancelled,
+      IsPrinted: sales_order.IsPrinted,
+      IsLocked: sales_order.IsLocked,
+      CreatedByUserFullname: sales_order.CreatedByUserFullname,
+      CreatedDateTime: sales_order.CreatedDateTime,
+      UpdatedByUserFullname: sales_order.UpdatedByUserFullname,
+      UpdatedDateTime: sales_order.UpdatedDateTime,
+      SOItems: sales_order.SOItems,
+    }
+
+    console.log(so);
 
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {
-        data: JSON.stringify(this.salesOrder),
-        type: "Edit",
+        salesOrderData: JSON.stringify(so),
+        action: "Edit",
       },
       skipLocationChange: true
     });
   }
 
-  deleteSO(id): void {
+  // deleteSO(id): void {
 
-    this.trnSalesOrderService.deleteSalesOrder(id).subscribe(
-      data => {
+  //   this.trnSalesOrderService.deleteSalesOrder(id).subscribe(
+  //     data => {
 
-        if (data[0] == true) {
-          this.toastService.success('Sales order was successfully deleted!');
-          this.modalController.dismiss(close);
-          this.router.navigate(['dashboard/sales-order-list']);
-          setTimeout(() => {
-            // let tempId = this.soListPage.getSoList().find(x =>{ // refresh list
-            //   return x.Id===id;
-            // });
-            // let index = this.soListPage.getSoList().indexOf(tempId);
-            // this.soListPage.getSoList().splice(index,1)[0];
-            // this.router.navigate(['dashboard/sales-order-list']);
+  //       if (data[0] == true) {
+  //         this.toastService.success('Sales order was successfully deleted!');
+  //         this.modalController.dismiss(close);
+  //         this.router.navigate(['dashboard/sales-order-list']);
+  //         setTimeout(() => {
+  //           // let tempId = this.soListPage.getSoList().find(x =>{ // refresh list
+  //           //   return x.Id===id;
+  //           // });
+  //           // let index = this.soListPage.getSoList().indexOf(tempId);
+  //           // this.soListPage.getSoList().splice(index,1)[0];
+  //           // this.router.navigate(['dashboard/sales-order-list']);
 
-          }, 500);
-        } else {
-          // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-        }
+  //         }, 500);
+  //       } else {
+  //         // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
+  //       }
 
-      }
-    );
-  }
+  //     }
+  //   );
+  // }
 
   async openModal(sOModel) {
 

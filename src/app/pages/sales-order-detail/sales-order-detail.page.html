@@ -10,11 +10,11 @@
 <ion-content>
   <div>
     <ng-container *ngIf="isShown">
-      <div [hidden]="soDetailHidden">
-        <app-so-details [sOModel]="sOModel"></app-so-details>
+      <div [hidden]="salesOrderHidden">
+        <app-so-details [sOModel]="salesOrder" (sOEventEmitter)="receiveSODetailEvent($event)"></app-so-details>
       </div>
       <div [hidden]="soItemHidden">
-        <app-so-items [sOModel]="sOModel" (itemsEventEmitter)="receiveItemEven($event)"></app-so-items>
+        <app-so-items [sOModel]="salesOrder" (itemsEventEmitter)="receiveItemEvent($event)"></app-so-items>
       </div>
     </ng-container>
 
@@ -26,7 +26,7 @@
   <ion-toolbar color="light">
     <ion-grid>
       <ion-row>
-        <ion-col class="ion-activatable ripple-parent" (click)="showSODetail()">
+        <ion-col class="ion-activatable ripple-parent" (click)="showsalesOrder()">
           <ion-icon name="reorder-three-outline"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-col>

@@ -32,8 +32,7 @@ export class SysStorageService {
   addSO(so: SalesOrder): Promise<SalesOrder> {
     let new_so: SalesOrder = {
       Id: 0,
-      SalesOrder: so.SalesOrder,
-      Items: so.Items
+      SalesOrder: so.SalesOrder
     }
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
       console.log(so_list);

@@ -17,6 +17,8 @@ export class SoItemDetailComponent implements OnInit {
 
   @Input() soData: TrnSalesOrderModel = new TrnSalesOrderModel();
   @Input() itemData: any;
+  @Input() action: string = "";
+
   token;
   companyId;
   trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
@@ -27,7 +29,6 @@ export class SoItemDetailComponent implements OnInit {
     private storage: Storage,
     private toastService: ToastService,
     private router: Router
-
   ) {
   }
 
@@ -226,7 +227,7 @@ export class SoItemDetailComponent implements OnInit {
     }
   }
 
-  addSOItemClick() {
+  saveSOItemClick() {
     this.modalController.dismiss(this.trnSalesOrderItemModel);
   }
 

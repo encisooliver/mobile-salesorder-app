@@ -75,91 +75,6 @@ export class TrnSalesOrderService {
     });
   }
 
-  public getSalesOrderListByCustomer(customerId: number): Observable<any[]> {
-    return new Observable<any[]>((observer) => {
-      let salesOrderListObservableArray = [];
-
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byCustomer/" + customerId, this.options).subscribe(
-        response => {
-          let results = response;
-
-          if (results["length"] > 0) {
-            for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderListObservableArray.push({
-                Id: results[i].Id,
-                BranchId: results[i].BranchId,
-                BranchCode: results[i].Branch.BranchCode,
-                BranchManualCode: results[i].Branch.ManualCode,
-                BranchName: results[i].Branch.Branch,
-                ExchangeCurrency: results[i].Currency.Currency,
-                CurrencyManualCode: results[i].Currency.ManualCode,
-                SONumber: results[i].SONumber,
-                SODate: results[i].SODate,
-                ManualNumber: results[i].ManualNumber,
-                DocumentReference: results[i].DocumentReference,
-                CustomerId: results[i].CustomerId,
-                CustomerManualCode: results[i].Customer.Article.ManualCode,
-                CustomerName: results[i].Customer.Customer,
-                CustomerReceivableAccountId: results[i].Customer.ReceivableAccountId,
-                CustomerReceivableAccountCode: results[i].Customer.ReceivableAccount.AccountCode,
-                CustomerReceivableAccountManualCode: results[i].Customer.ReceivableAccount.ManualCode,
-                CustomerReceivableAccountName: results[i].Customer.ReceivableAccount.Account,
-                Remarks: results[i].Remarks,
-                Amount: results[i].Amount,
-                Status: results[i].Status
-              });
-            }
-          }
-
-          observer.next(salesOrderListObservableArray);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public getSalesOrderListByCustomerByCurrency(customerId: number, currencyId: number): Observable<any[]> {
-    return new Observable<any[]>((observer) => {
-      let salesOrderListObservableArray = [];
-
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byCustomer/" + customerId + "/" + currencyId, this.options).subscribe(
-        response => {
-          let results = response;
-
-          if (results["length"] > 0) {
-            for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderListObservableArray.push({
-                Id: results[i].Id,
-                BranchId: results[i].BranchId,
-                BranchCode: results[i].Branch.BranchCode,
-                BranchManualCode: results[i].Branch.ManualCode,
-                BranchName: results[i].Branch.Branch,
-                ExchangeCurrency: results[i].Currency.Currency,
-                CurrencyManualCode: results[i].Currency.ManualCode,
-                SONumber: results[i].SONumber,
-                SODate: results[i].SODate,
-                ManualNumber: results[i].ManualNumber,
-                DocumentReference: results[i].DocumentReference,
-                CustomerId: results[i].CustomerId,
-                CustomerManualCode: results[i].Customer.Article.ManualCode,
-                CustomerName: results[i].Customer.Customer,
-                CustomerReceivableAccountId: results[i].Customer.ReceivableAccountId,
-                CustomerReceivableAccountCode: results[i].Customer.ReceivableAccount.AccountCode,
-                CustomerReceivableAccountManualCode: results[i].Customer.ReceivableAccount.ManualCode,
-                CustomerReceivableAccountName: results[i].Customer.ReceivableAccount.Account,
-                Remarks: results[i].Remarks,
-                Amount: results[i].Amount,
-                Status: results[i].Status
-              });
-            }
-          }
-
-          observer.next(salesOrderListObservableArray);
-          observer.complete();
-        }
-      );
-    });
-  }
 
   public getSalesOrderDetail(id: number, token: string): Observable<TrnSalesOrderModel> {
     let options = {
@@ -212,7 +127,8 @@ export class TrnSalesOrderService {
               CreatedByUserFullname: results["CreatedByUser"].Fullname,
               CreatedDateTime: results["CreatedDateTime"],
               UpdatedByUserFullname: results["UpdatedByUser"].Fullname,
-              UpdatedDateTime: results["UpdatedDateTime"]
+              UpdatedDateTime: results["UpdatedDateTime"],
+              SOItems: results["SOItems"],
             }
           }
 
@@ -424,10 +340,6 @@ export class TrnSalesOrderService {
       );
     });
   }
-  // public async EditEmployeeDetail() {
-  //   let currentEmployee = this.listEmployeeCollectionView.currentItem;
-  //   this.router.navigate(['/software/employee-detail/' + currentEmployee.Id]);
-  // }
 
   public lockSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {

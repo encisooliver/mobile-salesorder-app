@@ -2,26 +2,24 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { AppSettings } from './../../settings/app-settings';
-import { TrnSalesOrderItemModel } from './../../models/trn-sales-order-item.model';
-import { Storage } from '@ionic/storage-angular';
-import { DecimalPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TrnSalesOrderItemService {
+export class SetupService {
+
   public defaultAPIURLHost: string = this.appSettings.APIURLHost;
   public options: any;
+
   constructor(
     private appSettings: AppSettings,
     private httpClient: HttpClient,
-    private storage: Storage,
-    private decimalPipe: DecimalPipe,
+    private storage: Storage
   ) {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        if (token) {
+        if(token){
           this.options = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
@@ -33,229 +31,139 @@ export class TrnSalesOrderItemService {
     )
   }
 
-
-  public getSalesOrderItemListBySalesOrder(SOId: number): Observable<any[]> {
+  public getCurrencyExchange(): Observable<any[]> {
+  
     return new Observable<any[]>((observer) => {
-      let salesOrderItemList = [];
+      let currencyExchangeListObservableArray = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/list/" + SOId, this.options).subscribe(
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
+        response => {
+          let results = response;
+          if (results["length"] > 0) {
+            for (let i = 0; i <= results["length"] - 1; i++) {
+              currencyExchangeListObservableArray.push({
+                Id: results[i].Id,
+                CurrencyId: results[i].CurrencyId,
+                CurrencyManualCode: results[i].Currency.ManualCode,
+                CurrencyName: results[i].Currency.Currency,
+                ExchangeCurrencyId: results[i].ExchangeCurrencyId,
+                ExchangeCurrency: results[i].ExchangeCurrency.Currency,
+                ExchangeCurrencyManualCode: results[i].ExchangeCurrency.ManualCode,
+                ExchangeDate: results[i].ExchangeDate,
+                ExchangeRate: results[i].ExchangeRate,
+              });
+            }
+          }
+
+          observer.next(currencyExchangeListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  public getTermList(): Observable<any[]> {
+    return new Observable<any[]>((observer) => {
+      let termListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstTermAPI/list", this.options).subscribe(
         response => {
           let results = response;
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderItemList.push({
+              termListObservableArray.push({
                 Id: results[i].Id,
-                SOId: results[i].SOId,
-                ItemId: results[i].ItemId,
-                ItemManualCode: results[i].Item.Article.ManualCode,
-                ItemSKUCode: results[i].Item.SKUCode,
-                ItemBarCode: results[i].Item.BarCode,
-                ItemDescription: results[i].Item.Description,
-                ItemInventoryId: results[i].ItemInventoryId,
-                ItemInventoryCode: results[i].ItemInventory.InventoryCode,
-                Particulars: results[i].Particulars,
-                Quantity: results[i].Quantity,
-                UnitId: results[i].UnitId,
-                UnitCode: results[i].Unit.UnitCode,
-                UnitManualCode: results[i].Unit.ManualCode,
-                UnitName: results[i].Unit.Unit,
-                Price: results[i].Price,
-                DiscountId: results[i].DiscountId,
-                DiscountName: results[i].Discount.Discount,
-                DiscountRate: results[i].DiscountRate,
-                DiscountAmount: results[i].DiscountAmount,
-                NetPrice: results[i].NetPrice,
-                Amount: results[i].Amount,
-                VATId: results[i].VATId,
-                VATTaxCode: results[i].VAT.TaxCode,
-                VATTaxManualCode: results[i].VAT.ManualCode,
-                VATTaxDescription: results[i].VAT.TaxDescription,
-                VATRate: results[i].VATRate,
-                VATAmount: results[i].VATAmount,
-                WTAXId: results[i].WTAXId,
-                WTAXTaxCode: results[i].WTAX.TaxCode,
-                WTAXTaxManualCode: results[i].WTAX.ManualCode,
-                WTAXTaxDescription: results[i].WTAX.TaxDescription,
-                WTAXRate: results[i].WTAXRate,
-                WTAXAmount: results[i].WTAXAmount,
-                BaseQuantity: results[i].BaseQuantity,
-                BaseUnitId: results[i].UnitId,
-                BaseUnitCode: results[i].BaseUnit.UnitCode,
-                BaseUnitManualCode: results[i].BaseUnit.ManualCode,
-                BaseUnitName: results[i].BaseUnit.Unit,
-                BaseNetPrice: results[i].BaseNetPrice,
-                BaseAmount: results[i].BaseAmount,
-                LineTimeStamp: results[i].LineTimeStamp
+                TermCode: results[i].TermCode,
+                ManualCode: results[i].ManualCode,
+                Term: results[i].Term,
+                NumberOfDays: results[i].NumberOfDays,
+                CreatedByUserFullname: results[i].CreatedByUser.Fullname,
+                CreatedDateTime: results[i].CreatedDateTime,
+                UpdatedByUserFullname: results[i].UpdatedByUser.Fullname,
+                UpdatedDateTime: results[i].UpdatedDateTime
               });
             }
           }
 
-          observer.next(salesOrderItemList);
+          observer.next(termListObservableArray);
           observer.complete();
         }
       );
     });
   }
 
-  public getSalesOrderItemDetail(id: number): Observable<TrnSalesOrderItemModel> {
-    return new Observable<TrnSalesOrderItemModel>((observer) => {
-      let trnSalesOrderItemModel: TrnSalesOrderItemModel = null;
-
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/detail/" + id, this.options).subscribe(
-        response => {
-          let results = response;
-
-          if (results != null) {
-            trnSalesOrderItemModel = {
-              Id: results["Id"],
-              SOId: results["SOId"],
-              ItemId: results["ItemId"],
-              ItemManualCode: results["Item"].Article.ManualCode,
-              ItemSKUCode: results["Item"].SKUCode,
-              ItemBarCode: results["Item"].BarCode,
-              ItemDescription: results["Item"].Description,
-              ItemInventoryId: results["ItemInventoryId"],
-              ItemInventoryCode: results["ItemInventory"].InventoryCode,
-              Particulars: results["Particulars"],
-              Quantity: results["Quantity"],
-              UnitId: results["UnitId"],
-              Price: results["Price"],
-              DiscountId: results["DiscountId"],
-              DiscountRate: results["DiscountRate"],
-              DiscountAmount: results["DiscountAmount"],
-              NetPrice: results["NetPrice"],
-              Amount: results["Amount"],
-              VATId: results["VATId"],
-              VATRate: results["VATRate"],
-              VATAmount: results["VATAmount"],
-              WTAXId: results["WTAXId"],
-              WTAXRate: results["WTAXRate"],
-              WTAXAmount: results["WTAXAmount"],
-              LineTimeStamp: results["LineTimeStamp"]
-            }
-          }
-
-          observer.next(trnSalesOrderItemModel);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public addSalesOrderItem(trnSalesOrderItemModel: TrnSalesOrderItemModel): Observable<[boolean, any]> {
-    return new Observable<[boolean, any]>((observer) => {
-      this.httpClient.post(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/add", JSON.stringify(trnSalesOrderItemModel), this.options).subscribe(
-        response => {
-          let id = response;
-          observer.next([true, id]);
-          observer.complete();
-        },
-        error => {
-          observer.next([false, error.error]);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public updateSalesOrderItem(trnSalesOrderItemModel: TrnSalesOrderItemModel): Observable<[boolean, string]> {
-    return new Observable<[boolean, string]>((observer) => {
-      this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/update/" + trnSalesOrderItemModel.Id, JSON.stringify(trnSalesOrderItemModel), this.options).subscribe(
-        response => {
-          observer.next([true, ""]);
-          observer.complete();
-        },
-        error => {
-          observer.next([false, error.error]);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public deleteSalesOrderItem(id: number): Observable<[boolean, string]> {
-    return new Observable<[boolean, string]>((observer) => {
-      this.httpClient.delete(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/delete/" + id, this.options).subscribe(
-        response => {
-          observer.next([true, ""]);
-          observer.complete();
-        },
-        error => {
-          observer.next([false, error.error]);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public getArticleItemUnitList(articleId: number, token): Observable<any[]> {
-    let options = {
+  public getLockedArticleCustomerList(token): Observable<any[]> {
+    this.options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       })
     }
     return new Observable<any[]>((observer) => {
-      let articleItemUnitListObservableArray = [];
+      let customerList = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemUnitAPI/list/" + articleId, options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleCustomerAPI/list/locked", this.options).subscribe(
         response => {
           let results = response;
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              articleItemUnitListObservableArray.push({
+             customerList.push({
                 Id: results[i].Id,
                 ArticleId: results[i].ArticleId,
-                ArticleItemManualCode: results[i].ArticleItem.Article.ManualCode,
-                ArticleItemSKUCode: results[i].ArticleItem.SKUCode,
-                ArticleItemBarCode: results[i].ArticleItem.BarCode,
-                ArticleItemDescription: results[i].ArticleItem.Description,
-                UnitId: results[i].UnitId,
-                UnitName: results[i].Unit.Unit,
-                Multiplier: results[i].Multiplier
+                ArticleCode: results[i].Article.ArticleCode,
+                ArticleManualCode: results[i].ArticleManualCode,
+                ArticleParticulars: results[i].ArticleParticulars,
+                Article: results[i].Article.Article,
+                Customer: results[i].Customer,
+                Address: results[i].Address,
+                ContactPerson: results[i].ContactPerson,
+                ContactNumber: results[i].ContactNumber,
+                Category: results[i].Category,
+                ReceivableAccountId: results[i].ReceivableAccountId,
+                ReceivableAccountManualCode: results[i].ReceivableAccount.ManualCode,
+                ReceivableAccountName: results[i].ReceivableAccount.Account,
+                TermId: results[i].TermId,
+                TermName: results[i].Term.Term,
+                CreditLimit: results[i].CreditLimit,
+                IsLocked: results[i].IsLocked,
+                CreatedByUserFullname: results[i].CreatedByUser.Fullname,
+                CreatedDateTime: results[i].CreatedDateTime,
+                UpdatedByUserFullname: results[i].UpdatedByUser.Fullname,
+                UpdatedDateTime: results[i].UpdatedDateTime
               });
             }
           }
 
-          observer.next(articleItemUnitListObservableArray);
+          observer.next(customerList);
           observer.complete();
         }
       );
     });
   }
-
-  public getArticleItemPriceList(articleId: number, token: string): Observable<any[]> {
-    let options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      })
-    }
+  
+  public getCodeTableListByCategory(category: string): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      let articleItemPriceListObservableArray = [];
+      let codeTableListObservableArray =[];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/MstArticleItemPriceAPI/list/" + articleId, options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/MstCodeTableAPI/transactionList/" + category, this.options).subscribe(
         response => {
           let results = response;
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              articleItemPriceListObservableArray.push({
+              codeTableListObservableArray.push({
                 Id: results[i].Id,
-                ArticleId: results[i].ArticleId,
-                ArticleItemManualCode: results[i].ArticleItem.Article.ManualCode,
-                ArticleItemSKUCode: results[i].ArticleItem.SKUCode,
-                ArticleItemBarCode: results[i].ArticleItem.BarCode,
-                ArticleItemDescription: results[i].ArticleItem.Description,
-                PriceDescription: results[i].PriceDescription,
-                Price: this.decimalPipe.transform(results[i].Price, "1.2-2")
+                Code: results[i].Code,
+                CodeValue: results[i].CodeValue,
+                Category: results[i].Category
               });
             }
           }
 
-          observer.next(articleItemPriceListObservableArray);
+          observer.next(codeTableListObservableArray);
           observer.complete();
         }
       );

@@ -44,7 +44,6 @@ export class ItemListPage implements OnInit {
   public searchItemKeywords: string = "";
   public searchItemColumn: string = "All"
 
-
   public isButtonAddArticleItemDisabled: boolean = false;
   public items: any[] = [];
   public getArticleItemList(): void {
