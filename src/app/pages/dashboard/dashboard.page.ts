@@ -14,6 +14,7 @@ import { LocalSalesOrderService } from 'src/app/version-two/software-services/lo
 })
 export class DashboardPage implements OnInit {
   isOnline$: Observable<boolean>;
+  isOnline: boolean;
   private statusSubject = new BehaviorSubject<boolean>(false);
   public pages = [
     { title: 'Sales Order', url: '/dashboard/sales-order-list', icon: 'list' },
@@ -26,7 +27,17 @@ export class DashboardPage implements OnInit {
     private zone: NgZone,
     private localSalesOrderService: LocalSalesOrderService
   ) {
-    
+    Network.getStatus().then((status) => {
+      console.log('isOnline', status.connected);
+      this.isOnline = status.connected;
+    });
+
+    Network.addListener('networkStatusChange', (status) => {
+      this.zone.run(() => {
+        console.log('isOnline', status.connected);
+        this.isOnline = status.connected;
+      });
+    });
   }
 
   async getStatus(){
@@ -49,7 +60,7 @@ export class DashboardPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.getStatus();
+    // this.getStatus();
   }
 
 }

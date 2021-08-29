@@ -87,7 +87,7 @@ export class SoInventoryItemListComponent implements OnInit {
     trnSalesOrderItemModel.Quantity = 1;
     trnSalesOrderItemModel.Price = item.ArticleItem.Price;
     trnSalesOrderItemModel.DiscountId = this.sOModel.DiscountId;
-    trnSalesOrderItemModel.DiscountRate = 0;
+    trnSalesOrderItemModel.DiscountRate = this.sOModel.DiscountRate;
     trnSalesOrderItemModel.DiscountAmount = 0;
     trnSalesOrderItemModel.NetPrice = item.ArticleItem.Price;
     trnSalesOrderItemModel.Amount = item.ArticleItem.Price;

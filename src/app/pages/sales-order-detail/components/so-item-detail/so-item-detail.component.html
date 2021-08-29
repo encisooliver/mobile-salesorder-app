@@ -1,12 +1,6 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Item Detail</ion-title>
-    <!-- <ion-icon slot=""name='close-circle' (click)='dismiss()' style='float: right;'></ion-icon>   -->
-    <!-- <ion-buttons left>
-      <button ion-button icon-only (click)="dismiss()">
-          <ion-icon size="large"style="margin-left: 10px;"color="primary"name="arrow-back"></ion-icon>
-      </button>
-  </ion-buttons> -->
     <ion-icon name="return-down-back-outline" slot="start" size="large" style="margin-left: 10px; margin-right: 30px"
       color="primary" (click)="dismiss()"></ion-icon>
     <ion-button slot="end" size="small" color="success" (click)="addSOItemClick()">Save</ion-button>
@@ -14,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <div>
+  <div *ngIf="isShown">
     <ion-item>
       <ion-label position="floating">SKU Code:</ion-label>
       <ion-input [(ngModel)]="trnSalesOrderItemModel.ItemSKUCode"></ion-input>
@@ -55,7 +49,8 @@
     <ion-item>
       <ion-label position="floating">Price:</ion-label>
       <ion-select [(ngModel)]="salesOrderItemPrice" (ionChange)="onSelectionChangeComputePrice($event)">
-        <ion-select-option *ngFor="let price of listItemPrice;" [value]="price.Price">{{price.Price + " " + price.PriceDescription}}
+        <ion-select-option *ngFor="let price of listItemPrice;" [value]="price.Price">{{price.Price + " " +
+          price.PriceDescription}}
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -126,4 +121,3 @@
       <ion-textarea [(ngModel)]="trnSalesOrderItemModel.Particulars"></ion-textarea>
     </ion-item>
   </div>
- 

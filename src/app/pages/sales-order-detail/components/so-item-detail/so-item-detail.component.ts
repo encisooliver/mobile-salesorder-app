@@ -50,11 +50,11 @@ export class SoItemDetailComponent implements OnInit {
   listDiscount: any = [];
   listTax: any = [];
   listItemPrice: any = [];
+  isShown: boolean = false;
 
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
       data => {
-        console.log(data);
         this.listItemUnit = data;
         this.getArticleItemPriceList();
       }
@@ -63,7 +63,6 @@ export class SoItemDetailComponent implements OnInit {
   getArticleItemPriceList(): void {
     this.trnSalesOrderItemService.getArticleItemPriceList(this.itemData.ItemId, this.token).subscribe(
       data => {
-        console.log(data);
         this.listItemPrice = data;
         this.getDiscountList();
 
@@ -82,7 +81,6 @@ export class SoItemDetailComponent implements OnInit {
   getTaxList(): void {
     this.trnSalesOrderItemService.getTaxList().subscribe(
       data => {
-        console.log(data);
         this.listTax = data;
         this.getDefaultTax();
       }
@@ -108,83 +106,82 @@ export class SoItemDetailComponent implements OnInit {
     console.log(this.itemData);
     this.trnSalesOrderItemService.getSalesOrderItemDetail(this.itemData.Id).subscribe(
       data => {
-        setTimeout(() => {
-          if (data != null) {
-            this.trnSalesOrderItemModel.Id = data.Id;
-            this.trnSalesOrderItemModel.SOId = data.SOId;
-            this.trnSalesOrderItemModel.ItemId = data.ItemId;
-            this.trnSalesOrderItemModel.ItemManualCode = data.ItemManualCode;
-            this.trnSalesOrderItemModel.ItemSKUCode = data.ItemSKUCode;
-            this.trnSalesOrderItemModel.ItemBarCode = data.ItemBarCode;
-            this.trnSalesOrderItemModel.ItemDescription = data.ItemDescription;
-            this.trnSalesOrderItemModel.UnitId = data.UnitId;
-            this.trnSalesOrderItemModel.ItemInventoryId = data.ItemInventoryId;
-            this.trnSalesOrderItemModel.ItemInventoryCode = data.ItemInventoryCode;
-            this.trnSalesOrderItemModel.Particulars = data.Particulars;
-            this.trnSalesOrderItemModel.Quantity = data.Quantity;
-            this.trnSalesOrderItemModel.Price = data.Price;
-            this.trnSalesOrderItemModel.DiscountId = data.DiscountId;
-            this.trnSalesOrderItemModel.DiscountRate = data.DiscountRate;
-            this.trnSalesOrderItemModel.DiscountAmount = data.DiscountAmount;
-            this.trnSalesOrderItemModel.NetPrice = data.NetPrice;
-            this.trnSalesOrderItemModel.Amount = data.Amount;
-            this.trnSalesOrderItemModel.VATId = data.VATId;
-            this.trnSalesOrderItemModel.VATRate = data.VATRate;
-            this.trnSalesOrderItemModel.VATAmount = data.VATAmount;
-            this.trnSalesOrderItemModel.WTAXId = data.WTAXId;
-            this.trnSalesOrderItemModel.WTAXRate = data.WTAXRate;
-            this.trnSalesOrderItemModel.WTAXAmount = data.WTAXAmount;
+        if (data != null) {
+          this.trnSalesOrderItemModel.Id = data.Id;
+          this.trnSalesOrderItemModel.SOId = data.SOId;
+          this.trnSalesOrderItemModel.ItemId = data.ItemId;
+          this.trnSalesOrderItemModel.ItemManualCode = data.ItemManualCode;
+          this.trnSalesOrderItemModel.ItemSKUCode = data.ItemSKUCode;
+          this.trnSalesOrderItemModel.ItemBarCode = data.ItemBarCode;
+          this.trnSalesOrderItemModel.ItemDescription = data.ItemDescription;
+          this.trnSalesOrderItemModel.UnitId = data.UnitId;
+          this.trnSalesOrderItemModel.ItemInventoryId = data.ItemInventoryId;
+          this.trnSalesOrderItemModel.ItemInventoryCode = data.ItemInventoryCode;
+          this.trnSalesOrderItemModel.Particulars = data.Particulars;
+          this.trnSalesOrderItemModel.Quantity = data.Quantity;
+          this.trnSalesOrderItemModel.Price = data.Price;
+          this.trnSalesOrderItemModel.DiscountId = data.DiscountId;
+          this.trnSalesOrderItemModel.DiscountRate = data.DiscountRate;
+          this.trnSalesOrderItemModel.DiscountAmount = data.DiscountAmount;
+          this.trnSalesOrderItemModel.NetPrice = data.NetPrice;
+          this.trnSalesOrderItemModel.Amount = data.Amount;
+          this.trnSalesOrderItemModel.VATId = data.VATId;
+          this.trnSalesOrderItemModel.VATRate = data.VATRate;
+          this.trnSalesOrderItemModel.VATAmount = data.VATAmount;
+          this.trnSalesOrderItemModel.WTAXId = data.WTAXId;
+          this.trnSalesOrderItemModel.WTAXRate = data.WTAXRate;
+          this.trnSalesOrderItemModel.WTAXAmount = data.WTAXAmount;
 
-            this.salesOrderItemQuantity = this.decimalPipe.transform(data.Quantity, "1.2-2");
-            this.salesOrderItemPrice = this.decimalPipe.transform(data.Price, "1.2-2");
-            this.salesOrderItemDiscountRate = this.decimalPipe.transform(data.DiscountRate, "1.2-2");
-            this.salesOrderItemDiscountAmount = this.decimalPipe.transform(data.DiscountAmount, "1.2-2");
-            this.salesOrderItemNetPrice = this.decimalPipe.transform(data.NetPrice, "1.2-2");
-            this.salesOrderItemAmount = this.decimalPipe.transform(data.Amount, "1.2-2");
-            this.salesOrderItemVATRate = this.decimalPipe.transform(data.VATRate, "1.2-2");
-            this.salesOrderItemVATAmount = this.decimalPipe.transform(data.VATAmount, "1.2-2");
-            this.salesOrderItemWTAXRate = this.decimalPipe.transform(data.WTAXRate, "1.2-2");
-            this.salesOrderItemWTAXAmount = this.decimalPipe.transform(data.WTAXAmount, "1.2-2");
-          } else {
-            this.trnSalesOrderItemModel.Id = this.itemData.Id;
-            this.trnSalesOrderItemModel.SOId = this.itemData.SOId;
-            this.trnSalesOrderItemModel.ItemId = this.itemData.ItemId;
-            this.trnSalesOrderItemModel.ItemManualCode = this.itemData.ManualCode;
-            this.trnSalesOrderItemModel.ItemSKUCode = this.itemData.ItemSKUCode;
-            this.trnSalesOrderItemModel.ItemBarCode = this.itemData.ItemBarCode;
-            this.trnSalesOrderItemModel.ItemDescription = this.itemData.ItemDescription;
-            this.trnSalesOrderItemModel.UnitId = this.itemData.UnitId;
-            this.trnSalesOrderItemModel.ItemInventoryId = this.itemData.ItemInventoryId;
-            this.trnSalesOrderItemModel.ItemInventoryCode = this.itemData.ItemInventoryCode;
-            this.trnSalesOrderItemModel.Particulars = this.itemData.Particulars;
+          this.salesOrderItemQuantity = this.decimalPipe.transform(data.Quantity, "1.2-2");
+          this.salesOrderItemPrice = this.decimalPipe.transform(data.Price, "1.2-2");
+          this.salesOrderItemDiscountRate = this.decimalPipe.transform(data.DiscountRate, "1.2-2");
+          this.salesOrderItemDiscountAmount = this.decimalPipe.transform(data.DiscountAmount, "1.2-2");
+          this.salesOrderItemNetPrice = this.decimalPipe.transform(data.NetPrice, "1.2-2");
+          this.salesOrderItemAmount = this.decimalPipe.transform(data.Amount, "1.2-2");
+          this.salesOrderItemVATRate = this.decimalPipe.transform(data.VATRate, "1.2-2");
+          this.salesOrderItemVATAmount = this.decimalPipe.transform(data.VATAmount, "1.2-2");
+          this.salesOrderItemWTAXRate = this.decimalPipe.transform(data.WTAXRate, "1.2-2");
+          this.salesOrderItemWTAXAmount = this.decimalPipe.transform(data.WTAXAmount, "1.2-2");
+        } else {
+          this.trnSalesOrderItemModel.Id = this.itemData.Id;
+          this.trnSalesOrderItemModel.SOId = this.itemData.SOId;
+          this.trnSalesOrderItemModel.ItemId = this.itemData.ItemId;
+          this.trnSalesOrderItemModel.ItemManualCode = this.itemData.ManualCode;
+          this.trnSalesOrderItemModel.ItemSKUCode = this.itemData.ItemSKUCode;
+          this.trnSalesOrderItemModel.ItemBarCode = this.itemData.ItemBarCode;
+          this.trnSalesOrderItemModel.ItemDescription = this.itemData.ItemDescription;
+          this.trnSalesOrderItemModel.UnitId = this.itemData.UnitId;
+          this.trnSalesOrderItemModel.ItemInventoryId = this.itemData.ItemInventoryId;
+          this.trnSalesOrderItemModel.ItemInventoryCode = this.itemData.ItemInventoryCode;
+          this.trnSalesOrderItemModel.Particulars = this.itemData.Particulars;
 
-            this.trnSalesOrderItemModel.Quantity = this.itemData.Quantity;
-            this.trnSalesOrderItemModel.Price = this.itemData.Price;
-            this.trnSalesOrderItemModel.DiscountId = this.itemData.DiscountId;
-            this.trnSalesOrderItemModel.DiscountRate = this.itemData.DiscountRate;
+          this.trnSalesOrderItemModel.Quantity = this.itemData.Quantity;
+          this.trnSalesOrderItemModel.Price = this.itemData.Price;
+          this.trnSalesOrderItemModel.DiscountId = this.itemData.DiscountId;
+          this.trnSalesOrderItemModel.DiscountRate = this.itemData.DiscountRate;
 
-            this.trnSalesOrderItemModel.VATId = this.defaultVATId;
-            let VATRate: number = this.defaultVATRate;
-            this.trnSalesOrderItemModel.VATRate = VATRate;
+          this.trnSalesOrderItemModel.VATId = this.defaultVATId;
+          let VATRate: number = this.defaultVATRate;
+          this.trnSalesOrderItemModel.VATRate = VATRate;
 
-            this.trnSalesOrderItemModel.WTAXId = this.defaultWTAXId;
-            let WTAXRate: number = this.defaultWTAXRate;
-            this.trnSalesOrderItemModel.WTAXRate = WTAXRate;
+          this.trnSalesOrderItemModel.WTAXId = this.defaultWTAXId;
+          let WTAXRate: number = this.defaultWTAXRate;
+          this.trnSalesOrderItemModel.WTAXRate = WTAXRate;
 
-            this.salesOrderItemQuantity = this.decimalPipe.transform(this.itemData.Quantity, "1.2-2");
-            this.salesOrderItemPrice = this.decimalPipe.transform(this.itemData.Price, "1.2-2");
-            this.salesOrderItemDiscountRate = this.decimalPipe.transform(this.itemData.DiscountRate, "1.2-2");
-            this.salesOrderItemDiscountAmount = this.decimalPipe.transform(this.itemData.DiscountAmount, "1.2-2");
-            this.salesOrderItemNetPrice = this.decimalPipe.transform(this.itemData.NetPrice, "1.2-2");
-            this.salesOrderItemAmount = this.decimalPipe.transform(this.itemData.Amount, "1.2-2");
-            this.salesOrderItemVATRate = this.decimalPipe.transform(VATRate, "1.2-2");
-            this.salesOrderItemWTAXRate = this.decimalPipe.transform(WTAXRate, "1.2-2");
-            this.onSelectionChangeComputeDiscountAndAmount();
-            this.computeAmount();
-            console.log(this.trnSalesOrderItemModel);
-          }
-        }, 500);
-
+          this.salesOrderItemQuantity = this.decimalPipe.transform(this.itemData.Quantity, "1.2-2");
+          this.salesOrderItemPrice = this.decimalPipe.transform(this.itemData.Price, "1.2-2");
+          this.salesOrderItemDiscountRate = this.decimalPipe.transform(this.itemData.DiscountRate, "1.2-2");
+          this.salesOrderItemDiscountAmount = this.decimalPipe.transform(this.itemData.DiscountAmount, "1.2-2");
+          this.salesOrderItemNetPrice = this.decimalPipe.transform(this.itemData.NetPrice, "1.2-2");
+          this.salesOrderItemAmount = this.decimalPipe.transform(this.itemData.Amount, "1.2-2");
+          this.salesOrderItemVATRate = this.decimalPipe.transform(VATRate, "1.2-2");
+          this.salesOrderItemWTAXRate = this.decimalPipe.transform(WTAXRate, "1.2-2");
+          // this.onSelectionChangeComputeDiscountAndAmount();
+          this.computeAmount();
+          setTimeout(() => {
+            this.isShown = true;
+          }, 500);
+        }
       }
     );
   }
@@ -229,7 +226,7 @@ export class SoItemDetailComponent implements OnInit {
     }
   }
 
-  addSOItemClick(){
+  addSOItemClick() {
     this.modalController.dismiss(this.trnSalesOrderItemModel);
   }
 
@@ -323,7 +320,7 @@ export class SoItemDetailComponent implements OnInit {
   }
 
   public onSelectionChangeComputeDiscountAndAmount(): void {
-    let selectedDiscount: any = this.listDiscount.filter(wtax => wtax.Id === this.trnSalesOrderItemModel.DiscountId);
+    let selectedDiscount: any = this.listDiscount.filter(data => data.Id === this.trnSalesOrderItemModel.DiscountId);
     let DiscountRate: number = selectedDiscount[0].DiscountRate;
 
     this.trnSalesOrderItemModel.DiscountRate = DiscountRate;
@@ -469,6 +466,7 @@ export class SoItemDetailComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log(this.itemData);
     this.storage.get("companyId").then(
       result => {
         let companyId = result;

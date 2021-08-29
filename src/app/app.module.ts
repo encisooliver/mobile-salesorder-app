@@ -11,7 +11,6 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRouterActivate } from './app-router.activate';
 import { SysStorageService } from './services/sys-storage/sys-storage.service';
 import { ToastService } from './shared/toast/toast.service';
-import { LocalSalesOrderService } from './version-two/software-services/local-services/local-sales-order.service';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

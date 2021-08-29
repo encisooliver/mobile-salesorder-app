@@ -64,7 +64,7 @@ export class SoItemsComponent implements OnInit {
     let modal = await this.modalCtrl.create({
       component: SoInventoryItemListComponent,
       componentProps: {
-        soData: this.sOModel
+        sOModel: this.sOModel
       },
       cssClass: "modal-fullscreen"
     });
@@ -146,6 +146,7 @@ export class SoItemsComponent implements OnInit {
     }
   }
   ngOnInit() {
+    console.log(this.sOModel);
     setTimeout(() => {
       this.getSOList();
     }, 300);
