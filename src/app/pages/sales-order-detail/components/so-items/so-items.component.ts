@@ -69,6 +69,8 @@ export class SoItemsComponent implements OnInit {
         for (var i = 0; i < this.soItems.length; i++) {
           if (this.soItems[i].Id == item.Id) {
             this.soItems[i] = item;
+            this.clickEmitEvent();
+            break;
           }
         }
       }
@@ -90,10 +92,13 @@ export class SoItemsComponent implements OnInit {
       if (data != null) {
         let items = data.data;
         this.soItems = items;
+        setTimeout(() => {
+          this.clickEmitEvent();
+        }, 100);
       }
     });
   }
-  async deleteSOItem(sOModel) {
+  async deleteSOItem(item) {
     const confirm = await this.alertCtrl.create({
       header: 'Confirmation',
       message: 'Do you want to delete this?',
@@ -101,17 +106,27 @@ export class SoItemsComponent implements OnInit {
         text: 'Confirm',
         role: 'Confirm',
         handler: () => {
-          this.trnSalesOrderItemService.deleteSalesOrderItem(sOModel.Id).subscribe(
-            data => {
-              if (data[0] == true) {
-                this.toastService.success('Successfully deleted!');
-                this.getSOList();
-              } else {
-                // this.toastr.error(this.setLabel('');
-              }
 
-            }
-          );
+          let tempId = this.soItems.find(x => { // refresh list
+            return x.ItemId === item.ItemId;
+          });
+          let index = this.soItems.indexOf(tempId);
+          this.soItems.splice(index, 1)[0];
+          setTimeout(() => {
+            this.clickEmitEvent();
+          }, 100);
+
+          // this.trnSalesOrderItemService.deleteSalesOrderItem(sOModel.Id).subscribe(
+          //   data => {
+          //     if (data[0] == true) {
+          //       this.toastService.success('Successfully deleted!');
+          //       this.getSOList();
+          //     } else {
+          //       // this.toastr.error(this.setLabel('');
+          //     }
+
+          //   }
+          // );
         }
       },
       {

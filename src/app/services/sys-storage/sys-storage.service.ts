@@ -34,6 +34,7 @@ export class SysStorageService {
       Id: 0,
       SalesOrder: so.SalesOrder
     }
+    console.log(new_so);
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
       console.log(so_list);
       if (so_list) {
@@ -45,7 +46,7 @@ export class SysStorageService {
       } else {
         let newId = 1;
         new_so.Id = newId;
-        this.storage.set(SO_KEY, [so]);
+        this.storage.set(SO_KEY, [new_so]);
         return new_so;
       }
     });

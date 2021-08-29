@@ -37,6 +37,10 @@ const routes: Routes = [
         path: 'item-detail',
         loadChildren: () => import('./../../pages/item-detail/item-detail.module').then( m => m.ItemDetailPageModule)
       },
+      {
+        path: 'sales-order-list-local',
+        loadChildren: () => import('./../../pages/sales-order-list-local/sales-order-list-local.module').then( m => m.SalesOrderListLocalPageModule)
+      },
     ]
   }
 ];

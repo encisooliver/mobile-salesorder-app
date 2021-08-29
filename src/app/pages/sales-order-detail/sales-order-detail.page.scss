@@ -3,7 +3,21 @@ ion-col {
     position: relative;
     overflow: hidden;
     border-radius: 5px;
-    ion-icon{
-        font-size: 25px;
+    ion-label{
+        ion-icon{
+            font-size: 35px;
+        }
     }
+}
+
+#col-badge{
+    position: relative;
+    background-color: transparent;
+}
+
+#item-badge{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-radius: 50%;
 }

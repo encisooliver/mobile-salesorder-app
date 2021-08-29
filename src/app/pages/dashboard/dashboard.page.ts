@@ -19,7 +19,9 @@ export class DashboardPage implements OnInit {
   public pages = [
     { title: 'Sales Order', url: '/dashboard/sales-order-list', icon: 'list' },
     { title: 'Items', url: '/dashboard/item-list', icon: 'pricetag' },
-    { title: 'Customers', url: '/dashboard/customer-list', icon: 'people' }
+    { title: 'Customers', url: '/dashboard/customer-list', icon: 'people' },
+    { title: 'SO Parking', url: '/dashboard/sales-order-list-local', icon: 'list' },
+
   ];
   constructor(
     private storage: Storage,

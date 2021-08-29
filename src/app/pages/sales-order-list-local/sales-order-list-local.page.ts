@@ -6,13 +6,14 @@ import { ToastService } from './../../shared/toast/toast.service';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
-
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 @Component({
-  selector: 'app-sales-order-list',
-  templateUrl: './sales-order-list.page.html',
-  styleUrls: ['./sales-order-list.page.scss'],
+  selector: 'app-sales-order-list-local',
+  templateUrl: './sales-order-list-local.page.html',
+  styleUrls: ['./sales-order-list-local.page.scss'],
 })
-export class SalesOrderListPage implements OnInit {
+export class SalesOrderListLocalPage implements OnInit {
+
   token: string = "";
 
   constructor(
@@ -22,6 +23,7 @@ export class SalesOrderListPage implements OnInit {
     private storage: Storage,
     private modalController: ModalController,
     private alertCtrl: AlertController,
+    private sysStorageService: SysStorageService,
   ) {
 
     this.storage.get("access_token").then(
@@ -50,10 +52,9 @@ export class SalesOrderListPage implements OnInit {
   isContentShow: boolean = false;
 
   getSODateFilter() {
-    let dateStart = new Date(this.firstDay).toLocaleDateString("fr-CA");
-    let endStart = new Date(this.lastDay).toLocaleDateString("fr-CA");
-    this.trnSalesOrderService.getSOListByDate(this.token, dateStart, endStart).subscribe(
+    this.sysStorageService.getSOs().then(
       data => {
+        console.log(data);
         if (data.length > 0) {
           this.soList = data;
         } else {
@@ -134,86 +135,61 @@ export class SalesOrderListPage implements OnInit {
   }
 
   editSO(sales_order: any) {
-    let so: TrnSalesOrderModel = {
-      Id: sales_order.id,
-      BranchManualCode: sales_order.BranchManualCode,
-      BranchName: sales_order.BranchName,
-      CurrencyId: sales_order.CurrencyId,
-      CurrencyManualCode: sales_order.CurrencyManualCode,
-      ExchangeRate: sales_order.ExchangeRate,
-      ExchangeCurrency: sales_order.ExchangeCurrency,
-      ExchangeCurrencyManualCode: sales_order.ExchangeCurrencyManualCode,
-      SONumber: sales_order.SONumber,
+    console.log(sales_order);
+    // let so: TrnSalesOrderModel = {
+    //   Id: sales_order.id,
+    //   BranchManualCode: sales_order.BranchManualCode,
+    //   BranchName: sales_order.BranchName,
+    //   CurrencyId: sales_order.CurrencyId,
+    //   CurrencyManualCode: sales_order.CurrencyManualCode,
+    //   ExchangeRate: sales_order.ExchangeRate,
+    //   ExchangeCurrency: sales_order.ExchangeCurrency,
+    //   ExchangeCurrencyManualCode: sales_order.ExchangeCurrencyManualCode,
+    //   SONumber: sales_order.SONumber,
 
-      SODate: sales_order.SODate,
-      ManualNumber: sales_order.ManualNumber,
-      DocumentReference: sales_order.DocumentReference,
-      CustomerId: sales_order.CustomerId,
-      CustomerName: sales_order.CustomerName,
-      TermId: sales_order.TermId,
-      DiscountId: sales_order.DiscountId,
-      DiscountRate: sales_order.DiscountRate,
-      DateNeeded: sales_order.DateNeeded,
-      Remarks: sales_order.Remarks,
+    //   SODate: sales_order.SODate,
+    //   ManualNumber: sales_order.ManualNumber,
+    //   DocumentReference: sales_order.DocumentReference,
+    //   CustomerId: sales_order.CustomerId,
+    //   CustomerName: sales_order.CustomerName,
+    //   TermId: sales_order.TermId,
+    //   DiscountId: sales_order.DiscountId,
+    //   DiscountRate: sales_order.DiscountRate,
+    //   DateNeeded: sales_order.DateNeeded,
+    //   Remarks: sales_order.Remarks,
 
-      Amount: sales_order.Amount,
-      Status: sales_order.Status,
+    //   Amount: sales_order.Amount,
+    //   Status: sales_order.Status,
 
-      SoldByUserId: sales_order.SoldByUserId,
-      SoldByUserFullname: sales_order.SoldByUserFullname,
-      PreparedByUserId: sales_order.PreparedByUser,
-      PreparedByUserFullname: sales_order.PreparedByUserFullname,
-      CheckedByUserId: sales_order.CheckedByUserId,
-      CheckedByUserFullname: sales_order.CheckedByUserFullname,
-      ApprovedByUserId: sales_order.ApprovedByUserId,
-      ApprovedByUserFullname: sales_order.ApprovedByUserFullname,
-      IsCancelled: sales_order.IsCancelled,
-      IsPrinted: sales_order.IsPrinted,
-      IsLocked: sales_order.IsLocked,
-      CreatedByUserFullname: sales_order.CreatedByUserFullname,
-      CreatedDateTime: sales_order.CreatedDateTime,
-      UpdatedByUserFullname: sales_order.UpdatedByUserFullname,
-      UpdatedDateTime: sales_order.UpdatedDateTime,
-      SOItems: sales_order.SOItems,
-    }
+    //   SoldByUserId: sales_order.SoldByUserId,
+    //   SoldByUserFullname: sales_order.SoldByUserFullname,
+    //   PreparedByUserId: sales_order.PreparedByUser,
+    //   PreparedByUserFullname: sales_order.PreparedByUserFullname,
+    //   CheckedByUserId: sales_order.CheckedByUserId,
+    //   CheckedByUserFullname: sales_order.CheckedByUserFullname,
+    //   ApprovedByUserId: sales_order.ApprovedByUserId,
+    //   ApprovedByUserFullname: sales_order.ApprovedByUserFullname,
+    //   IsCancelled: sales_order.IsCancelled,
+    //   IsPrinted: sales_order.IsPrinted,
+    //   IsLocked: sales_order.IsLocked,
+    //   CreatedByUserFullname: sales_order.CreatedByUserFullname,
+    //   CreatedDateTime: sales_order.CreatedDateTime,
+    //   UpdatedByUserFullname: sales_order.UpdatedByUserFullname,
+    //   UpdatedDateTime: sales_order.UpdatedDateTime,
+    //   SOItems: sales_order.SOItems,
+    // }
 
-    console.log(so);
+    // console.log(so);
 
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {
-        salesOrderData: JSON.stringify(so),
+        salesOrderData: JSON.stringify(sales_order),
         action: "Edit",
-        destination: "Cloud Storage"
+        destination: "Local Storage"
       },
       skipLocationChange: true
     });
   }
-
-  // deleteSO(id): void {
-
-  //   this.trnSalesOrderService.deleteSalesOrder(id).subscribe(
-  //     data => {
-
-  //       if (data[0] == true) {
-  //         this.toastService.success('Sales order was successfully deleted!');
-  //         this.modalController.dismiss(close);
-  //         this.router.navigate(['dashboard/sales-order-list']);
-  //         setTimeout(() => {
-  //           // let tempId = this.soListPage.getSoList().find(x =>{ // refresh list
-  //           //   return x.Id===id;
-  //           // });
-  //           // let index = this.soListPage.getSoList().indexOf(tempId);
-  //           // this.soListPage.getSoList().splice(index,1)[0];
-  //           // this.router.navigate(['dashboard/sales-order-list']);
-
-  //         }, 500);
-  //       } else {
-  //         // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-  //       }
-
-  //     }
-  //   );
-  // }
 
   async openModal(sOModel) {
 
@@ -283,5 +259,5 @@ export class SalesOrderListPage implements OnInit {
       this.getSODateFilter();
     }, 500);
   }
-}
 
+}

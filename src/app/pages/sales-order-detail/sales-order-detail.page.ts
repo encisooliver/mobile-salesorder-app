@@ -5,8 +5,8 @@ import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales
 import { Storage } from '@ionic/storage-angular';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
-import { SalesOrder } from 'src/app/models/sales-order.model';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { SalesOrder } from 'src/app/models/sales-order.model';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -34,12 +34,14 @@ export class SalesOrderDetailPage implements OnInit {
     Id: 0,
     SalesOrder: new TrnSalesOrderModel(),
   };
+  destination: string = "Cloud Storage"
 
   soDate: String = "";
   neededDate: String = "";
   isShown: boolean = false;
   salesOrderHidden: boolean = false;
   soItemHidden: boolean = true;
+  sub: any;
 
   getSO() {
     let id = this.route.snapshot.params['id'];
@@ -112,9 +114,11 @@ export class SalesOrderDetailPage implements OnInit {
   }
 
   saveSOToLocal() {
-
-    if (this.salesOrder.Id == 0) {
+    this.salesOrder.SOItems = this.sOItems;
+    this.salesOrderLocalModel.SalesOrder = this.salesOrder;
+    if (this.salesOrderLocalModel.Id == 0) {
       this.sysStorageService.addSO(this.salesOrderLocalModel).then(data => {
+        console.log(data);
         this.salesOrderLocalModel = data;
       });
     } else {
@@ -150,9 +154,13 @@ export class SalesOrderDetailPage implements OnInit {
     }, 300);
   }
   back() {
-    this.router.navigate(['dashboard/sales-order-list']);
+    let _destination = this.destination;
+    if(_destination == "Cloud Storage"){
+      this.router.navigate(['dashboard/sales-order-list']);
+    } else{
+      this.router.navigate(['dashboard/sales-order-list-local']);
+    }
   }
-  sub: any;
   ngOnInit() {
 
     this.storage.get("access_token").then(
@@ -166,60 +174,78 @@ export class SalesOrderDetailPage implements OnInit {
 
     this.sub = this.route.queryParams.subscribe(params => {
       if (params != null) {
-        let action = params['action'];
-        if (action != null) {
-          this.action = action;
-          console.log(this.action);
-        }
 
-        let so = JSON.parse(params['salesOrderData']);
-        if (so != null) {
-          this.salesOrder = so;
-          this.salesOrder.Id = so.Id;
-          this.salesOrder.BranchManualCode = so.BranchManualCode;
-          this.salesOrder.BranchName = so.BranchName;
-          this.salesOrder.CurrencyId = so.CurrencyId;
-          this.salesOrder.ExchangeRate = so.ExchangeRate;
-          this.salesOrder.ExchangeCurrency = so.ExchangeCurrency;
-          this.salesOrder.ExchangeCurrencyManualCode = so.ExchangeCurrencyManualCode;
-          this.salesOrder.SONumber = so.SONumber;
-          this.salesOrder.SODate = so.SODate;
-          this.soDate = new Date(this.salesOrder.SODate).toISOString();
-          this.salesOrder.ManualNumber = so.ManualNumber;
-          this.salesOrder.DocumentReference = so.DocumentReference;
-          this.salesOrder.CustomerId = so.CustomerId;
-          this.salesOrder.CustomerName = so.CustomerName;
-          this.salesOrder.TermId = so.TermId;
-          this.salesOrder.DiscountId = so.DiscountId;
-          this.salesOrder.DiscountRate = so.DiscountRate;
-          this.salesOrder.DateNeeded = so.DateNeeded;
-          this.neededDate = new Date(this.salesOrder.DateNeeded).toISOString();
-          this.salesOrder.Remarks = so.Remarks;
-          this.salesOrder.SoldByUserId = so.SoldByUserId;
-          this.salesOrder.SoldByUserFullname = so.SoldByUserFullname;
-          this.salesOrder.PreparedByUserId = so.PreparedByUserId;
-          this.salesOrder.PreparedByUserFullname = so.PreparedByUserFullname;
-          this.salesOrder.CheckedByUserId = so.CheckedByUserId;
-          this.salesOrder.CheckedByUserFullname = so.CheckedByUserFullname;
-          this.salesOrder.ApprovedByUserId = so.ApprovedByUserId;
-          this.salesOrder.ApprovedByUserFullname = so.ApprovedByUserFullname;
-          this.salesOrder.Amount = so.Amount;
-          this.salesOrder.Status = so.Status;
-          this.salesOrder.IsCancelled = so.IsCancelled;
-          this.salesOrder.IsPrinted = so.IsPrinted;
-          this.salesOrder.IsLocked = so.IsLocked;
-          this.salesOrder.CreatedByUserFullname = so.CreatedByUserFullname;
-          this.salesOrder.CreatedDateTime = so.CreatedDateTime;
-          this.salesOrder.UpdatedByUserFullname = so.UpdatedByUserFullname;
-          this.salesOrder.UpdatedDateTime = so.UpdatedDateTime;
-          this.salesOrder.SOItems = so.SOItems;
+        let destination = params['destination'];
+        this.destination = destination;
+        if (destination == "Local Storage") {
+          
+          let action = params['action'];
+          if (action != null) this.action = action;
+
+          let so = JSON.parse(params['salesOrderData']);
+          console.log(so);
+          this.salesOrderLocalModel = so;
+          this.salesOrder = this.salesOrderLocalModel.SalesOrder;
           console.log(this.salesOrder);
           setTimeout(() => {
             this.isShown = true;
             this.salesOrderHidden = false;
             this.soItemHidden = true;
           }, 500);
+        } else {
+
+          let action = params['action'];
+          if (action != null) this.action = action;
+          let so = JSON.parse(params['salesOrderData']);
+          if (so != null) {
+            this.salesOrder = so;
+            this.salesOrder.Id = so.Id;
+            this.salesOrder.BranchManualCode = so.BranchManualCode;
+            this.salesOrder.BranchName = so.BranchName;
+            this.salesOrder.CurrencyId = so.CurrencyId;
+            this.salesOrder.ExchangeRate = so.ExchangeRate;
+            this.salesOrder.ExchangeCurrency = so.ExchangeCurrency;
+            this.salesOrder.ExchangeCurrencyManualCode = so.ExchangeCurrencyManualCode;
+            this.salesOrder.SONumber = so.SONumber;
+            this.salesOrder.SODate = so.SODate;
+            this.soDate = new Date(this.salesOrder.SODate).toISOString();
+            this.salesOrder.ManualNumber = so.ManualNumber;
+            this.salesOrder.DocumentReference = so.DocumentReference;
+            this.salesOrder.CustomerId = so.CustomerId;
+            this.salesOrder.CustomerName = so.CustomerName;
+            this.salesOrder.TermId = so.TermId;
+            this.salesOrder.DiscountId = so.DiscountId;
+            this.salesOrder.DiscountRate = so.DiscountRate;
+            this.salesOrder.DateNeeded = so.DateNeeded;
+            this.neededDate = new Date(this.salesOrder.DateNeeded).toISOString();
+            this.salesOrder.Remarks = so.Remarks;
+            this.salesOrder.SoldByUserId = so.SoldByUserId;
+            this.salesOrder.SoldByUserFullname = so.SoldByUserFullname;
+            this.salesOrder.PreparedByUserId = so.PreparedByUserId;
+            this.salesOrder.PreparedByUserFullname = so.PreparedByUserFullname;
+            this.salesOrder.CheckedByUserId = so.CheckedByUserId;
+            this.salesOrder.CheckedByUserFullname = so.CheckedByUserFullname;
+            this.salesOrder.ApprovedByUserId = so.ApprovedByUserId;
+            this.salesOrder.ApprovedByUserFullname = so.ApprovedByUserFullname;
+            this.salesOrder.Amount = so.Amount;
+            this.salesOrder.Status = so.Status;
+            this.salesOrder.IsCancelled = so.IsCancelled;
+            this.salesOrder.IsPrinted = so.IsPrinted;
+            this.salesOrder.IsLocked = so.IsLocked;
+            this.salesOrder.CreatedByUserFullname = so.CreatedByUserFullname;
+            this.salesOrder.CreatedDateTime = so.CreatedDateTime;
+            this.salesOrder.UpdatedByUserFullname = so.UpdatedByUserFullname;
+            this.salesOrder.UpdatedDateTime = so.UpdatedDateTime;
+            this.salesOrder.SOItems = so.SOItems;
+            console.log(this.salesOrder);
+            setTimeout(() => {
+              this.isShown = true;
+              this.salesOrderHidden = false;
+              this.soItemHidden = true;
+            }, 500);
+          }
         }
+
 
 
       }
