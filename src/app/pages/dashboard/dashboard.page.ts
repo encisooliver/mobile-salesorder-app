@@ -5,7 +5,7 @@ import { Storage } from '@ionic/storage-angular';
 import { NgZone } from '@angular/core';
 import { Network } from '@capacitor/network';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +25,7 @@ export class DashboardPage implements OnInit {
     private storage: Storage,
     private router: Router,
     private zone: NgZone,
-    private localSalesOrderService: LocalSalesOrderService
+    private sysStorageService: SysStorageService
   ) {
     Network.getStatus().then((status) => {
       console.log('isOnline', status.connected);

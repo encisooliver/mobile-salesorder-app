@@ -16,12 +16,6 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
-  {
-    path: 'software',
-    loadChildren: () => import('./version-two/software-pages/software/software.module').then( m => m.SoftwarePageModule)
-  },
-
-
 ];
 
 @NgModule({

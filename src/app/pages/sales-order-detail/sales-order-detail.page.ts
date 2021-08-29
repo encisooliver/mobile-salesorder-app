@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
 import { Storage } from '@ionic/storage-angular';
-import { LocalSalesOrderService } from 'src/app/version-two/software-services/local-services/local-sales-order.service';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 import { SalesOrder } from 'src/app/models/sales-order.model';
