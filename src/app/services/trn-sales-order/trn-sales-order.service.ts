@@ -18,7 +18,7 @@ export class TrnSalesOrderService {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        if(token){
+        if (token) {
           this.options = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export class TrnSalesOrderService {
       this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byDateRange/" + startDate + "/" + endDate, options).subscribe(
         response => {
           let results = response;
-
+          console.log(results);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               salesOrderListObservableArray.push({
@@ -140,9 +140,19 @@ export class TrnSalesOrderService {
   }
 
   public getCurrencyExchange(): Observable<any[]> {
-  
+
     return new Observable<any[]>((observer) => {
-      let currencyExchangeListObservableArray = [];
+      let currencyExchangeListObservableArray = [{
+        Id: 0,
+        CurrencyId: 1,
+        CurrencyManualCode: "PHP",
+        CurrencyName: "PHP",
+        ExchangeCurrencyId: 1,
+        ExchangeCurrency: "PHP",
+        ExchangeCurrencyManualCode: "PHP",
+        ExchangeDate: null,
+        ExchangeRate: null,
+      }];
 
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
@@ -202,7 +212,7 @@ export class TrnSalesOrderService {
     });
   }
 
-//sold by services
+  //sold by services
   public getActiveUserList(): Observable<any[]> {
     return new Observable<any[]>((observer) => {
       let userListObservableArray = [];
@@ -250,7 +260,7 @@ export class TrnSalesOrderService {
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-             customerList.push({
+              customerList.push({
                 Id: results[i].Id,
                 ArticleId: results[i].ArticleId,
                 ArticleCode: results[i].Article.ArticleCode,
@@ -283,10 +293,10 @@ export class TrnSalesOrderService {
       );
     });
   }
-  
+
   public getCodeTableListByCategory(category: string): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      let codeTableListObservableArray =[];
+      let codeTableListObservableArray = [];
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCodeTableAPI/transactionList/" + category, this.options).subscribe(
         response => {

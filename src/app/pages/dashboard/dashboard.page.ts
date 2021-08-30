@@ -15,13 +15,14 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
 export class DashboardPage implements OnInit {
   isOnline$: Observable<boolean>;
   isOnline: boolean;
+  username: string = "";
+  fullname: string = "";
   private statusSubject = new BehaviorSubject<boolean>(false);
   public pages = [
-    { title: 'Sales Order', url: '/dashboard/sales-order-list', icon: 'list' },
-    { title: 'Items', url: '/dashboard/item-list', icon: 'pricetag' },
-    { title: 'Customers', url: '/dashboard/customer-list', icon: 'people' },
-    { title: 'SO Parking', url: '/dashboard/sales-order-list-local', icon: 'list' },
-
+    { title: 'SALES ORDER', url: '/dashboard/sales-order-list', icon: 'list' },
+    { title: 'SO PARKING', url: '/dashboard/sales-order-list-local', icon: 'list' },
+    { title: 'ITEMS', url: '/dashboard/item-list', icon: 'pricetag' },
+    { title: 'CUSTOMER', url: '/dashboard/customer-list', icon: 'people' },
   ];
   constructor(
     private storage: Storage,
@@ -40,6 +41,23 @@ export class DashboardPage implements OnInit {
         this.isOnline = status.connected;
       });
     });
+
+    this.storage.get("username").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.username = token;
+        }
+      }
+    )
+    this.storage.get("fullname").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.fullname = token;
+        }
+      }
+    )
   }
 
   async getStatus(){

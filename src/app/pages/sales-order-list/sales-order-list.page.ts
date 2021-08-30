@@ -56,6 +56,7 @@ export class SalesOrderListPage implements OnInit {
       data => {
         if (data.length > 0) {
           this.soList = data;
+          console.log(this.soList);
         } else {
           this.soList = [];
         }
@@ -81,8 +82,8 @@ export class SalesOrderListPage implements OnInit {
       SODate: new Date(),
       ManualNumber: "",
       DocumentReference: "",
-      CustomerId: 1,
-      CustomerName: "",
+      CustomerId: 292,
+      CustomerName: "Customer A",
       TermId: 1,
       DiscountId: 9,
       DiscountRate: 0,
@@ -113,6 +114,7 @@ export class SalesOrderListPage implements OnInit {
       queryParams: {
         salesOrderData: JSON.stringify(so),
         action: "Add",
+        destination: "Cloud Storage"
       },
       skipLocationChange: true
     });
@@ -277,8 +279,8 @@ export class SalesOrderListPage implements OnInit {
   ngOnInit() {
     let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
     let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
-    this.firstDay = new Date(_startDate).toISOString();
-    this.lastDay = new Date(_endDay).toISOString();
+    this.firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toISOString();
+    this.lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toISOString();
     setTimeout(() => {
       this.getSODateFilter();
     }, 500);

@@ -7,6 +7,7 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SalesOrder } from 'src/app/models/sales-order.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -22,6 +23,7 @@ export class SalesOrderDetailPage implements OnInit {
     private sysStorageService: SysStorageService,
     private storage: Storage,
     private toastService: ToastService,
+
   ) {
 
   }
@@ -130,8 +132,10 @@ export class SalesOrderDetailPage implements OnInit {
 
   // event method
   receiveItemEvent(items: any) {
-    let _items = items;
+    let _items = items.soItems;
+    let _amount = items.amount;
     this.sOItems = _items;
+    this.salesOrder.Amount = _amount;
     console.log(this.sOItems);
   }
   receiveSODetailEvent(so_detail: any) {
@@ -155,9 +159,9 @@ export class SalesOrderDetailPage implements OnInit {
   }
   back() {
     let _destination = this.destination;
-    if(_destination == "Cloud Storage"){
+    if (_destination == "Cloud Storage") {
       this.router.navigate(['dashboard/sales-order-list']);
-    } else{
+    } else {
       this.router.navigate(['dashboard/sales-order-list-local']);
     }
   }
@@ -177,25 +181,26 @@ export class SalesOrderDetailPage implements OnInit {
 
         let destination = params['destination'];
         this.destination = destination;
+
+        let action = params['action'];
+        if (action != null) this.action = action;
+
         if (destination == "Local Storage") {
-          
-          let action = params['action'];
-          if (action != null) this.action = action;
 
           let so = JSON.parse(params['salesOrderData']);
-          console.log(so);
-          this.salesOrderLocalModel = so;
-          this.salesOrder = this.salesOrderLocalModel.SalesOrder;
-          console.log(this.salesOrder);
+          if (so != null) {
+            this.salesOrderLocalModel = so;
+            this.salesOrder = this.salesOrderLocalModel.SalesOrder;
+            console.log("so detail:", this.salesOrder)
+          }
           setTimeout(() => {
             this.isShown = true;
             this.salesOrderHidden = false;
             this.soItemHidden = true;
           }, 500);
+
         } else {
 
-          let action = params['action'];
-          if (action != null) this.action = action;
           let so = JSON.parse(params['salesOrderData']);
           if (so != null) {
             this.salesOrder = so;
@@ -208,7 +213,6 @@ export class SalesOrderDetailPage implements OnInit {
             this.salesOrder.ExchangeCurrencyManualCode = so.ExchangeCurrencyManualCode;
             this.salesOrder.SONumber = so.SONumber;
             this.salesOrder.SODate = so.SODate;
-            this.soDate = new Date(this.salesOrder.SODate).toISOString();
             this.salesOrder.ManualNumber = so.ManualNumber;
             this.salesOrder.DocumentReference = so.DocumentReference;
             this.salesOrder.CustomerId = so.CustomerId;
@@ -217,7 +221,6 @@ export class SalesOrderDetailPage implements OnInit {
             this.salesOrder.DiscountId = so.DiscountId;
             this.salesOrder.DiscountRate = so.DiscountRate;
             this.salesOrder.DateNeeded = so.DateNeeded;
-            this.neededDate = new Date(this.salesOrder.DateNeeded).toISOString();
             this.salesOrder.Remarks = so.Remarks;
             this.salesOrder.SoldByUserId = so.SoldByUserId;
             this.salesOrder.SoldByUserFullname = so.SoldByUserFullname;
@@ -246,8 +249,7 @@ export class SalesOrderDetailPage implements OnInit {
           }
         }
 
-
-
+       
       }
     });
   }

@@ -93,7 +93,7 @@ export class SysStorageService {
     });
   }
 
-  deleteUser(id: number) {
+  deleteSO(id: number) {
     return this.storage.get(SO_KEY).then((so_list: SalesOrder[]) => {
       if (!so_list || so_list.length === 0) {
         return null;

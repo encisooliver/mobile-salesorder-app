@@ -1,3 +1,4 @@
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -23,26 +24,30 @@ export class SoDetailsComponent implements OnInit {
     private storage: Storage,
     private trnSalesOrderService: TrnSalesOrderService,
     private toastService: ToastService,
+    private datepipe: DatePipe,
+    private decimalPipe: DecimalPipe
   ) {
   }
 
   id: number = 0;
   so: string = "";
-  items: string = "";
   attachment: string = "";
   isShown: boolean = false;
+
   currencies: any = [];
   terms: any = [];
   status: any = [];
   activeUsers: any = [];
-  CustomerUsers: any = [];
+  customerUsers: any = [];
+
   soDate: String = "";
   neededDate: String = "";
-
+  salesOrderAmount: string = "0.00";
   getCustomerUsers() {
     this.trnSalesOrderService.getLockedArticleCustomerList(this.token).subscribe(
       data => {
-        this.CustomerUsers = data;
+        console.log(data);
+        this.customerUsers = data;
         this.getActiveuser();
       }
     );
@@ -77,6 +82,7 @@ export class SoDetailsComponent implements OnInit {
       data => {
         this.status = data;
         this.isShown = true;
+        this.clickEmitEvent();
       }
     );
   }
@@ -92,13 +98,47 @@ export class SoDetailsComponent implements OnInit {
       }
     );
   }
+  customerChange() {
+    let _selectedCustomer: any = this.customerUsers.filter(data => data.ArticleId === this.sOModel.CustomerId);
+    let _customerName: string = _selectedCustomer[0].Customer;
+    this.sOModel.CustomerName = _customerName;
+    console.log(_customerName);
 
+    this.soDetailChange();
+  }
+  currencyChange() {
+    let _selectedCurrency: any = this.currencies.filter(data => data.ExchangeCurrencyId === this.sOModel.CurrencyId);
+    let _currencyCode: string = _selectedCurrency[0].ExchangeCurrencyManualCode;
+    this.sOModel.ExchangeCurrency = _currencyCode;
+    this.sOModel.CurrencyManualCode = _currencyCode;
+    this.soDetailChange();
+  }
+
+  soDetailChange() {
+    this.clickEmitEvent();
+  }
   clickEmitEvent() {
+    this.sOModel.SODate = this.convertDate(this.soDate);
+    this.sOModel.DateNeeded = this.convertDate(this.neededDate);
+    this.salesOrderAmount = this.decimalPipe.transform(this.sOModel.Amount, "1.2-2");
+
     let so = this.sOModel;
     this.sOEventEmitter.emit(so);
   }
 
+  convertDate(date: any) {
+    let _date = new Date(date);
+    let year = _date.getFullYear();
+    let month = _date.getMonth() + 1;
+    let dt = _date.getDate();
+
+    return new Date(year + '/' + month + '/' + dt);
+  }
+
   ngOnInit() {
+    this.soDate = new Date(this.sOModel.SODate).toISOString();
+    this.neededDate = new Date(this.sOModel.DateNeeded).toISOString();
+    this.salesOrderAmount = this.decimalPipe.transform(this.sOModel.Amount, "1.2-2");
     this.storage.get("access_token").then(
       result => {
         let token = result;

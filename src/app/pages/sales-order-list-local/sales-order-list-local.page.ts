@@ -7,6 +7,8 @@ import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { DatePipe } from '@angular/common';
+import { SalesOrder } from 'src/app/models/sales-order.model';
 @Component({
   selector: 'app-sales-order-list-local',
   templateUrl: './sales-order-list-local.page.html',
@@ -24,6 +26,7 @@ export class SalesOrderListLocalPage implements OnInit {
     private modalController: ModalController,
     private alertCtrl: AlertController,
     private sysStorageService: SysStorageService,
+    private datepipe: DatePipe,
   ) {
 
     this.storage.get("access_token").then(
@@ -44,6 +47,14 @@ export class SalesOrderListLocalPage implements OnInit {
     )
   }
 
+  ionViewWillEnter() {
+    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
+    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
+    this.firstDay = new Date(_startDate).toISOString();
+    this.lastDay = new Date(_endDay).toISOString();
+    this.getSO();
+  }
+
   date = new Date();
   firstDay: string = "";
   lastDay: string = "";
@@ -51,7 +62,7 @@ export class SalesOrderListLocalPage implements OnInit {
   soList: any[] = [];
   isContentShow: boolean = false;
 
-  getSODateFilter() {
+  getSO() {
     this.sysStorageService.getSOs().then(
       data => {
         console.log(data);
@@ -110,12 +121,17 @@ export class SalesOrderListLocalPage implements OnInit {
       UpdatedDateTime: "",
       SOItems: []
     }
+    let sales_order: SalesOrder = {
+      Id: 0,
+      SalesOrder: so
+    }
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {
-        salesOrderData: JSON.stringify(so),
+        salesOrderData: JSON.stringify(sales_order),
         action: "Add",
+        destination: "Local Storage"
       },
-      skipLocationChange: true
+      // skipLocationChange: true
     });
 
     // this.trnSalesOrderService.addSalesOrder().subscribe(
@@ -135,59 +151,13 @@ export class SalesOrderListLocalPage implements OnInit {
   }
 
   editSO(sales_order: any) {
-    console.log(sales_order);
-    // let so: TrnSalesOrderModel = {
-    //   Id: sales_order.id,
-    //   BranchManualCode: sales_order.BranchManualCode,
-    //   BranchName: sales_order.BranchName,
-    //   CurrencyId: sales_order.CurrencyId,
-    //   CurrencyManualCode: sales_order.CurrencyManualCode,
-    //   ExchangeRate: sales_order.ExchangeRate,
-    //   ExchangeCurrency: sales_order.ExchangeCurrency,
-    //   ExchangeCurrencyManualCode: sales_order.ExchangeCurrencyManualCode,
-    //   SONumber: sales_order.SONumber,
-
-    //   SODate: sales_order.SODate,
-    //   ManualNumber: sales_order.ManualNumber,
-    //   DocumentReference: sales_order.DocumentReference,
-    //   CustomerId: sales_order.CustomerId,
-    //   CustomerName: sales_order.CustomerName,
-    //   TermId: sales_order.TermId,
-    //   DiscountId: sales_order.DiscountId,
-    //   DiscountRate: sales_order.DiscountRate,
-    //   DateNeeded: sales_order.DateNeeded,
-    //   Remarks: sales_order.Remarks,
-
-    //   Amount: sales_order.Amount,
-    //   Status: sales_order.Status,
-
-    //   SoldByUserId: sales_order.SoldByUserId,
-    //   SoldByUserFullname: sales_order.SoldByUserFullname,
-    //   PreparedByUserId: sales_order.PreparedByUser,
-    //   PreparedByUserFullname: sales_order.PreparedByUserFullname,
-    //   CheckedByUserId: sales_order.CheckedByUserId,
-    //   CheckedByUserFullname: sales_order.CheckedByUserFullname,
-    //   ApprovedByUserId: sales_order.ApprovedByUserId,
-    //   ApprovedByUserFullname: sales_order.ApprovedByUserFullname,
-    //   IsCancelled: sales_order.IsCancelled,
-    //   IsPrinted: sales_order.IsPrinted,
-    //   IsLocked: sales_order.IsLocked,
-    //   CreatedByUserFullname: sales_order.CreatedByUserFullname,
-    //   CreatedDateTime: sales_order.CreatedDateTime,
-    //   UpdatedByUserFullname: sales_order.UpdatedByUserFullname,
-    //   UpdatedDateTime: sales_order.UpdatedDateTime,
-    //   SOItems: sales_order.SOItems,
-    // }
-
-    // console.log(so);
-
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {
         salesOrderData: JSON.stringify(sales_order),
         action: "Edit",
         destination: "Local Storage"
       },
-      skipLocationChange: true
+      // skipLocationChange: true
     });
   }
 
@@ -206,7 +176,7 @@ export class SalesOrderListLocalPage implements OnInit {
     modal.onDidDismiss().then((id) => {
       if (id !== null) {
         // this.modelData = modelData.data;
-        this.getSODateFilter();
+        this.getSO();
       }
     });
 
@@ -215,7 +185,7 @@ export class SalesOrderListLocalPage implements OnInit {
 
 
   dateChange() {
-    this.getSODateFilter();
+    this.getSO();
   }
 
   async showConfirm(sOModel) {
@@ -226,16 +196,15 @@ export class SalesOrderListLocalPage implements OnInit {
         text: 'Confirm',
         role: 'Confirm',
         handler: () => {
-          this.trnSalesOrderService.deleteSalesOrder(sOModel.Id).subscribe(
-            data => {
-              if (data[0] == true) {
-                this.toastService.success('Sales order was successfully deleted!');
-                // this.router.navigate(['dashboard/sales-order-list']);
-                this.getSODateFilter();
-              } else {
-                // this.toastr.error(this.setLabel('');
-              }
 
+          this.sysStorageService.deleteSO(sOModel.Id).then(
+            data => {
+              console.log(data);
+              if (data.length > 0) {
+                this.soList = data;
+              } else {
+                this.soList = [];
+              }
             }
           );
         }
@@ -249,15 +218,11 @@ export class SalesOrderListLocalPage implements OnInit {
     });
     await confirm.present();
   }
-
+  formatDate(date) {
+    return this.datepipe.transform(date, "mm/dd/yyyy")
+  }
   ngOnInit() {
-    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
-    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
-    this.firstDay = new Date(_startDate).toISOString();
-    this.lastDay = new Date(_endDay).toISOString();
-    setTimeout(() => {
-      this.getSODateFilter();
-    }, 500);
+
   }
 
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -19,6 +19,6 @@ import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales
     SalesOrderListLocalPageRoutingModule
   ],
   declarations: [SalesOrderListLocalPage],
-  providers: [AppSettings, SysStorageService, TrnSalesOrderService]
+  providers: [AppSettings, SysStorageService, TrnSalesOrderService, DatePipe]
 })
 export class SalesOrderListLocalPageModule { }

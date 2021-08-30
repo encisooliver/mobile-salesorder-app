@@ -17,7 +17,7 @@ import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 })
 export class SoItemsComponent implements OnInit {
   @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-  @Output() itemsEventEmitter: EventEmitter<TrnSalesOrderItemModel[]> = new EventEmitter<TrnSalesOrderItemModel[]>();
+  @Output() itemsEventEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private router: Router,
@@ -142,6 +142,7 @@ export class SoItemsComponent implements OnInit {
   clickEmitEvent() {
     let items = this.soItems;
     let soItems: TrnSalesOrderItemModel[] = [];
+    let amount: number = 0;
     if (items.length > 0) {
       items.forEach(item => {
         let so_item: TrnSalesOrderItemModel = {
@@ -171,12 +172,15 @@ export class SoItemsComponent implements OnInit {
           WTAXAmount: item.WTAXAmount,
           LineTimeStamp: item.LineTimeStamp
         }
+        let _amount = amount + so_item.Amount;
+        amount = _amount;
         console.log(so_item);
         soItems.push(so_item);
       });
-      this.itemsEventEmitter.emit(soItems);
+
+      this.itemsEventEmitter.emit({ soItems: soItems, amount: amount });
     } else {
-      this.itemsEventEmitter.emit(soItems);
+      this.itemsEventEmitter.emit({ soItems: soItems, amount: 0 });
     }
   }
   ngOnInit() {

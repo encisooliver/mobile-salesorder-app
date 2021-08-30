@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -23,7 +23,7 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
     FormsModule,
     IonicModule,
     SalesOrderDetailPageRoutingModule,
-    
+
   ],
   declarations: [
     SalesOrderDetailPage,
@@ -34,12 +34,13 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
     SoItemDetailComponent,
   ],
   providers: [
-    AppSettings, 
-    TrnSalesOrderService, 
+    AppSettings,
+    TrnSalesOrderService,
     MstArticleItemService,
     TrnSalesOrderItemService,
     DecimalPipe,
-    SysStorageService
+    SysStorageService,
+    DatePipe
   ]
 })
-export class SalesOrderDetailPageModule {}
+export class SalesOrderDetailPageModule { }

@@ -1,9 +1,7 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Sales Order</ion-title>
-    <ion-icon name="return-down-back-outline" slot="start" size="large" style="margin-left: 10px; margin-right: 30px"
-      color="primary" (click)="back()"></ion-icon>
-    <ion-button slot="end" ion-button color="light" (click)="saveSOToLocal()">Save</ion-button>
+    <ion-title>SALES ORDER</ion-title>
+    <ion-label slot="end" style="padding-right: 15px;" (click)="saveSOToLocal()">SAVE</ion-label>
   </ion-toolbar>
 </ion-header>
 
@@ -23,12 +21,12 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar color="light">
+  <ion-toolbar class="footer-toolbar">
     <ion-grid>
       <ion-row>
         <ion-col class="ion-activatable ripple-parent" (click)="showsalesOrder()">
           <ion-label>
-            <ion-icon name="reorder-three-outline"></ion-icon>
+            <ion-icon ios="list-outline'" md="list-sharp"></ion-icon>
           </ion-label>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-col>
