@@ -113,10 +113,15 @@ export class SoInventoryItemListComponent implements OnInit {
     return await modal.present();
   }
   async close() {
-    await this.modalCtrl.dismiss(this.soItems);
+    if (this.soItems.length > 0) {
+      this.modalCtrl.dismiss(this.soItems);
+    }
+    else {
+      this.modalCtrl.dismiss(null);
+    }
   }
   ngOnInit() {
-    if(this.sOItemsData != null){
+    if (this.sOItemsData != null) {
       this.soItems = this.sOItemsData;
     }
     this.storage.get("branchId").then(

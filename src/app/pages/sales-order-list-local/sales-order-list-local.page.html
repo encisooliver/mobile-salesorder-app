@@ -1,6 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>SO PARKING</ion-title>
+    <ion-row style="color:#2699FB;">
+      <ion-col size="3" style="padding-left: 0px;">
+      </ion-col>
+      <ion-col size="6" style=" color:#2699FB;text-align: center;">
+        SO PARKING
+      </ion-col>
+      <ion-col size="3" style="color:#2699FB;">
+        <ion-label style="padding-right: 15px;" (click)="importAllSO()">Import</ion-label>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
@@ -23,14 +32,15 @@
             <ion-label>{{so.SalesOrder.CustomerName}}</ion-label>
           </ion-col>
           <ion-col size="6" style="text-align: right;">
-            <ion-label style="font-size: 18px;color: #2699FB;">{{so.SalesOrder.ExchangeCurrency + " " + so.SalesOrder.Amount}}</ion-label>
+            <ion-label style="font-size: 18px;color: #2699FB;">{{so.SalesOrder.ExchangeCurrency + " " +
+              so.SalesOrder.Amount}}</ion-label>
           </ion-col>
         </ion-row>
       </ion-card-content>
-    
-      <ion-footer >
+
+      <ion-footer>
         <ion-row>
-          <ion-col >
+          <ion-col>
             <ion-button type="button" class="ion-no-margin edit-btn" expand="full" (click)="editSO(so)">
               <ion-text>View</ion-text>
             </ion-button>

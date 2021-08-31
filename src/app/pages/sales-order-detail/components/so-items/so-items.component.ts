@@ -92,9 +92,7 @@ export class SoItemsComponent implements OnInit {
       if (data != null) {
         let items = data.data;
         this.soItems = items;
-        setTimeout(() => {
-          this.clickEmitEvent();
-        }, 100);
+        this.clickEmitEvent();
       }
     });
   }

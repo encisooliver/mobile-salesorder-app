@@ -7,7 +7,7 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
 import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.model';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SalesOrder } from 'src/app/models/sales-order.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -23,7 +23,7 @@ export class SalesOrderDetailPage implements OnInit {
     private sysStorageService: SysStorageService,
     private storage: Storage,
     private toastService: ToastService,
-
+    private decimalPipe: DecimalPipe
   ) {
 
   }
@@ -31,6 +31,7 @@ export class SalesOrderDetailPage implements OnInit {
   token: string = "";
 
   salesOrder: TrnSalesOrderModel = new TrnSalesOrderModel();
+  soAmount: string = "0.00"
   sOItems: TrnSalesOrderItemModel[] = [];
   salesOrderLocalModel: SalesOrder = {
     Id: 0,
@@ -104,13 +105,14 @@ export class SalesOrderDetailPage implements OnInit {
     this.salesOrder.SOItems = this.sOItems;
     this.salesOrderLocalModel.SalesOrder = this.salesOrder;
 
-    if(this.action == "Add"){
+    if (this.action == "Add") {
       this.trnSalesOrderService._addSalesOrder(this.salesOrder).subscribe(
         data => {
           if (data[0] == true) {
             this.salesOrder.Id = data[1].Id;
             this.salesOrderLocalModel.SalesOrder = this.salesOrder;
             this.action == "Update";
+            this.back();
             this.toastService.success('Sales order was successfully updated!');
           } else {
             this.saveSOToLocal();
@@ -118,10 +120,11 @@ export class SalesOrderDetailPage implements OnInit {
         }
       );
     }
-    else{
+    else {
       this.trnSalesOrderService.saveSalesOrder(this.salesOrder).subscribe(
         data => {
           if (data[0] == true) {
+            this.back();
             this.toastService.success('Sales order was successfully updated!');
           } else {
             this.saveSOToLocal();
@@ -136,12 +139,13 @@ export class SalesOrderDetailPage implements OnInit {
     this.salesOrderLocalModel.SalesOrder = this.salesOrder;
     if (this.salesOrderLocalModel.Id == 0) {
       this.sysStorageService.addSO(this.salesOrderLocalModel).then(data => {
-        console.log(data);
         this.salesOrderLocalModel = data;
+        this.back();
       });
     } else {
       this.sysStorageService.updateSO(this.salesOrderLocalModel).then(data => {
         this.salesOrderLocalModel = data;
+        this.back();
       });
     }
   }
@@ -150,9 +154,11 @@ export class SalesOrderDetailPage implements OnInit {
   receiveItemEvent(items: any) {
     let _items = items.soItems;
     let _amount = items.amount;
-    this.sOItems = _items;
-    this.salesOrder.Amount = _amount;
-    console.log(this.sOItems);
+    setTimeout(() => {
+      this.sOItems = _items;
+      this.salesOrder.Amount = _amount;
+      this.soAmount = this.decimalPipe.transform(this.salesOrder.Amount, "1.2-2");
+    }, 100);
   }
   receiveSODetailEvent(so_detail: any) {
     let _salesOrder = so_detail;
@@ -207,7 +213,7 @@ export class SalesOrderDetailPage implements OnInit {
           if (so != null) {
             this.salesOrderLocalModel = so;
             this.salesOrder = this.salesOrderLocalModel.SalesOrder;
-            console.log("so detail:", this.salesOrder)
+            this.soAmount = this.decimalPipe.transform(this.salesOrder.Amount, "1.2-2");
           }
           setTimeout(() => {
             this.isShown = true;
@@ -247,6 +253,7 @@ export class SalesOrderDetailPage implements OnInit {
             this.salesOrder.ApprovedByUserId = so.ApprovedByUserId;
             this.salesOrder.ApprovedByUserFullname = so.ApprovedByUserFullname;
             this.salesOrder.Amount = so.Amount;
+            this.soAmount = this.decimalPipe.transform(this.salesOrder.Amount, "1.2-2");
             this.salesOrder.Status = so.Status;
             this.salesOrder.IsCancelled = so.IsCancelled;
             this.salesOrder.IsPrinted = so.IsPrinted;
@@ -265,7 +272,7 @@ export class SalesOrderDetailPage implements OnInit {
           }
         }
 
-       
+
       }
     });
   }

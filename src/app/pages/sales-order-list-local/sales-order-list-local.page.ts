@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { ToastService } from './../../shared/toast/toast.service';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
-import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 import { DatePipe } from '@angular/common';
 import { SalesOrder } from 'src/app/models/sales-order.model';
+import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
 @Component({
   selector: 'app-sales-order-list-local',
   templateUrl: './sales-order-list-local.page.html',
@@ -133,21 +133,6 @@ export class SalesOrderListLocalPage implements OnInit {
       },
       // skipLocationChange: true
     });
-
-    // this.trnSalesOrderService.addSalesOrder().subscribe(
-    //   data => {
-
-    //     if (data[0] == true) {
-    //       this.toastService.success('Sales order was successfully added!');
-    //       setTimeout(() => {
-    //         this.router.navigate(['dashboard/sales-order-detail/' + data[1]]);
-    //       }, 500);
-    //     } else {
-    //       // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-    //     }
-
-    //   }
-    // );
   }
 
   editSO(sales_order: any) {
@@ -159,6 +144,61 @@ export class SalesOrderListLocalPage implements OnInit {
       },
       // skipLocationChange: true
     });
+  }
+
+  counter: number = 0;
+  dataCount: number = 0;
+
+  async importAllSO() {
+    this.dataCount = this.soList.length;
+    this.counter = 0;
+    this.uploadSO(this.soList[this.counter]);
+  }
+
+  async uploadSO(_os: SalesOrder) {
+    if (_os.SalesOrder.Id == 0) {
+      console.log(_os);
+      await this.trnSalesOrderService._addSalesOrder(_os.SalesOrder).subscribe(
+        async data => {
+          if (data[0] == true) {
+             this.sysStorageService.deleteSO(_os.Id).then(
+              data => {
+                this.counter++;
+                if (this.counter < this.soList.length) {
+                  this.uploadSO(this.soList[this.counter]);
+                } else {
+                  this.getSO();
+                  this.toastService.success('Successfully uploaded');
+                }
+              }
+            );
+          } else {
+            this.toastService.success('Connection Lost');
+          }
+        }
+      );
+    }
+    else {
+      await this.trnSalesOrderService.saveSalesOrder(_os.SalesOrder).subscribe(
+        async data => {
+          if (data[0] == true) {
+            await this.sysStorageService.deleteSO(_os.Id).then(
+              data => {
+                this.counter++;
+                if (this.counter < this.soList.length) {
+                  this.uploadSO(this.soList[this.counter]);
+                } else {
+                  this.getSO();
+                  this.toastService.success('Successfully uploaded');
+                }
+              }
+            );
+          } else {
+            this.toastService.success('Connection Lost');
+          }
+        }
+      );
+    }
   }
 
   async openModal(sOModel) {

@@ -21,7 +21,7 @@
   <div>
     <ng-container *ngIf="isShown">
       <div [hidden]="salesOrderHidden">
-        <app-so-details [sOModel]="salesOrder" (sOEventEmitter)="receiveSODetailEvent($event)"></app-so-details>
+        <app-so-details [soAmount]="soAmount" [sOModel]="salesOrder" (sOEventEmitter)="receiveSODetailEvent($event)"></app-so-details>
       </div>
       <div [hidden]="soItemHidden">
         <app-so-items [sOModel]="salesOrder" (itemsEventEmitter)="receiveItemEvent($event)"></app-so-items>

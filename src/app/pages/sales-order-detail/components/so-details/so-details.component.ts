@@ -16,6 +16,7 @@ export class SoDetailsComponent implements OnInit {
   sales_id: number = 0;
   token: string = "";
   @Input() sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Input() soAmount: string = "0.00";
   @Output() sOEventEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
@@ -138,7 +139,6 @@ export class SoDetailsComponent implements OnInit {
   ngOnInit() {
     this.soDate = new Date(this.sOModel.SODate).toISOString();
     this.neededDate = new Date(this.sOModel.DateNeeded).toISOString();
-    this.salesOrderAmount = this.decimalPipe.transform(this.sOModel.Amount, "1.2-2");
     this.storage.get("access_token").then(
       result => {
         let token = result;

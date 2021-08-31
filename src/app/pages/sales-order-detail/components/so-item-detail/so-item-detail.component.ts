@@ -197,7 +197,7 @@ export class SoItemDetailComponent implements OnInit {
             // this.toastService.success(this.setLabel('Sales order item was successfully saved!'), this.setLabel('Save Successful'));
             this.toastService.success('Sales order was successfully added!');
             console.log(data);
-            this.modalController.dismiss();
+            this.modalController.dismiss(null);
 
           } else {
             // this.toastr.error(this.setLabel(data[1]), this.setLabel('Save Failed'));
@@ -216,7 +216,7 @@ export class SoItemDetailComponent implements OnInit {
             // this.toastr.success(this.setLabel('Sales order item was successfully updated!'), this.setLabel('Update Successful'));
             // this.activitySalesOrderItemDetailDialog.close(200);
             this.toastService.success('Sales order was successfully updated!');
-            this.modalController.dismiss();
+            this.modalController.dismiss(null);
           } else {
             // this.toastr.error(this.setLabel(data[1]), this.setLabel('Update Failed'));
             // this.isButtonSalesOrderItemDisabled = false;
@@ -461,8 +461,8 @@ export class SoItemDetailComponent implements OnInit {
     this.salesOrderItemWTAXAmount = this.decimalPipe.transform(WTAXAmount, "1.2-2");
   }
 
-  dismiss() {
-    this.modalController.dismiss();
+  back() {
+    this.modalController.dismiss(null);
   }
 
 
