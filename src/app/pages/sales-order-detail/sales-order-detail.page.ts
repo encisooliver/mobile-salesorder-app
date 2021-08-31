@@ -104,15 +104,31 @@ export class SalesOrderDetailPage implements OnInit {
     this.salesOrder.SOItems = this.sOItems;
     this.salesOrderLocalModel.SalesOrder = this.salesOrder;
 
-    this.trnSalesOrderService.saveSalesOrder(this.salesOrder).subscribe(
-      data => {
-        if (data[0] == true) {
-          this.toastService.success('Sales order was successfully updated!');
-        } else {
-          // this.toastr.error(data[1], this.setLabel('Add Failed'));
+    if(this.action == "Add"){
+      this.trnSalesOrderService._addSalesOrder(this.salesOrder).subscribe(
+        data => {
+          if (data[0] == true) {
+            this.salesOrder.Id = data[1].Id;
+            this.salesOrderLocalModel.SalesOrder = this.salesOrder;
+            this.action == "Update";
+            this.toastService.success('Sales order was successfully updated!');
+          } else {
+            this.saveSOToLocal();
+          }
         }
-      }
-    );
+      );
+    }
+    else{
+      this.trnSalesOrderService.saveSalesOrder(this.salesOrder).subscribe(
+        data => {
+          if (data[0] == true) {
+            this.toastService.success('Sales order was successfully updated!');
+          } else {
+            this.saveSOToLocal();
+          }
+        }
+      );
+    }
   }
 
   saveSOToLocal() {

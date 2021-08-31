@@ -336,6 +336,22 @@ export class TrnSalesOrderService {
     });
   }
 
+  public _addSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, any]> {
+    return new Observable<[boolean, any]>((observer) => {
+      this.httpClient.post(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/add", JSON.stringify(trnSalesOrderModel), this.options).subscribe(
+        response => {
+          let id = response;
+          observer.next([true, id]);
+          observer.complete();
+        },
+        error => {
+          observer.next([false, error.error]);
+          observer.complete();
+        }
+      );
+    });
+  }
+
   public saveSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {
       this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/save/" + trnSalesOrderModel.Id, JSON.stringify(trnSalesOrderModel), this.options).subscribe(
