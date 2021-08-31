@@ -75,7 +75,6 @@ export class DashboardPage implements OnInit {
     this.storage.remove('branchId');
     this.storage.remove('branch');
     this.storage.remove('sales_id');
-    this.storage.remove('sales_order');
     this.router.navigate(['/'])
   }
 

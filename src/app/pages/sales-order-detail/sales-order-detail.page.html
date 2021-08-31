@@ -1,8 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>SALES ORDER</ion-title>
-    <ion-label slot="end" style="padding-right: 15px;" (click)="saveSOToLocal()">SAVE</ion-label>
-  </ion-toolbar>
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-row style="color:#2699FB;">
+        <ion-col size="3" style="padding-left: 0px;">
+          <ion-icon name="arrow-back-outline" size="x-larger" (click)="back()"></ion-icon>
+        </ion-col>
+        <ion-col size="6" style=" color:#2699FB;text-align: center;">
+          SALES ORDER
+        </ion-col>
+        <ion-col size="3" style="color:#2699FB;">
+          <ion-label style="padding-right: 15px;" (click)="saveSOToLocal()">SAVE</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
 </ion-header>
 
 <ion-content>
