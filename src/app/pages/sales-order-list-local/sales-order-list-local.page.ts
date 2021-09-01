@@ -9,6 +9,7 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
 import { DatePipe } from '@angular/common';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 @Component({
   selector: 'app-sales-order-list-local',
   templateUrl: './sales-order-list-local.page.html',
@@ -27,6 +28,7 @@ export class SalesOrderListLocalPage implements OnInit {
     private alertCtrl: AlertController,
     private sysStorageService: SysStorageService,
     private datepipe: DatePipe,
+    private salesOrderService: SalesOrderService
   ) {
 
     this.storage.get("access_token").then(

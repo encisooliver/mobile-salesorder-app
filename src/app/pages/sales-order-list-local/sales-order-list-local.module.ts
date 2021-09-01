@@ -10,6 +10,7 @@ import { SalesOrderListLocalPage } from './sales-order-list-local.page';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 import { AppSettings } from 'src/app/settings/app-settings';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales
     SalesOrderListLocalPageRoutingModule
   ],
   declarations: [SalesOrderListLocalPage],
-  providers: [AppSettings, SysStorageService, TrnSalesOrderService, DatePipe]
+  providers: [AppSettings, SysStorageService, TrnSalesOrderService, DatePipe, SalesOrderService]
 })
 export class SalesOrderListLocalPageModule { }

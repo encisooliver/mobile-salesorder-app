@@ -8,7 +8,7 @@ import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.mode
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
-
+import {SalesOrderService} from 'src/app/services/sales-order/sales-order.service'
 @Component({
   selector: 'app-sales-order-detail',
   templateUrl: './sales-order-detail.page.html',
@@ -23,7 +23,8 @@ export class SalesOrderDetailPage implements OnInit {
     private sysStorageService: SysStorageService,
     private storage: Storage,
     private toastService: ToastService,
-    private decimalPipe: DecimalPipe
+    private decimalPipe: DecimalPipe,
+    private salesOrderService: SalesOrderService
   ) {
 
   }
@@ -106,27 +107,31 @@ export class SalesOrderDetailPage implements OnInit {
     this.salesOrderLocalModel.SalesOrder = this.salesOrder;
 
     if (this.action == "Add") {
-      this.trnSalesOrderService._addSalesOrder(this.salesOrder).subscribe(
+      this.salesOrderService.addSalesOrder(this.salesOrder).subscribe(
         data => {
           if (data[0] == true) {
             this.salesOrder.Id = data[1].Id;
             this.salesOrderLocalModel.SalesOrder = this.salesOrder;
             this.action == "Update";
-            this.back();
             this.toastService.success('Sales order was successfully updated!');
+            this.back();
           } else {
+            this.destination = "Local Storage";
+            this.toastService.success('Network problem, SO Parking!');
             this.saveSOToLocal();
           }
         }
       );
     }
     else {
-      this.trnSalesOrderService.saveSalesOrder(this.salesOrder).subscribe(
+      this.salesOrderService.saveSalesOrder(this.salesOrder).subscribe(
         data => {
           if (data[0] == true) {
-            this.back();
             this.toastService.success('Sales order was successfully updated!');
+            this.back();
           } else {
+            this.destination = "Local Storage";
+            this.toastService.success('Network problem, SO Parking!');
             this.saveSOToLocal();
           }
         }
@@ -224,6 +229,7 @@ export class SalesOrderDetailPage implements OnInit {
         } else {
 
           let so = JSON.parse(params['salesOrderData']);
+          console.log(so);
           if (so != null) {
             this.salesOrder = so;
             this.salesOrder.Id = so.Id;

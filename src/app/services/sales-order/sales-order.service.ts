@@ -42,10 +42,10 @@ export class SalesOrderService {
     return new Observable<any[]>((observer) => {
       let salesOrderListObservableArray = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byDateRange/" + startDate + "/" + endDate, options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileSalesOrderAPI/list/byDateRange/" + startDate + "/" + endDate, options).subscribe(
         response => {
           let results = response;
-
+          console.log(response);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               salesOrderListObservableArray.push({
@@ -102,7 +102,7 @@ export class SalesOrderService {
 
   public addSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, any]> {
     return new Observable<[boolean, any]>((observer) => {
-      this.httpClient.post(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/add", JSON.stringify(trnSalesOrderModel), this.options).subscribe(
+      this.httpClient.post(this.defaultAPIURLHost + "/api/EasyfisMobileSalesOrderAPI/add", JSON.stringify(trnSalesOrderModel), this.options).subscribe(
         response => {
           let id = response;
           observer.next([true, id]);
@@ -118,7 +118,7 @@ export class SalesOrderService {
 
   public saveSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {
-      this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/save/" + trnSalesOrderModel.Id, JSON.stringify(trnSalesOrderModel), this.options).subscribe(
+      this.httpClient.put(this.defaultAPIURLHost + "/api/EasyfisMobileSalesOrderAPI/save/" + trnSalesOrderModel.Id, JSON.stringify(trnSalesOrderModel), this.options).subscribe(
         response => {
           observer.next([true, ""]);
           observer.complete();

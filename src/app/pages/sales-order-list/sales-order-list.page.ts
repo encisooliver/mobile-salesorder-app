@@ -6,6 +6,7 @@ import { ToastService } from './../../shared/toast/toast.service';
 import { Storage } from '@ionic/storage-angular';
 import { TrnSalesOrderModel } from 'src/app/models/trn-sales-order.model';
 import { DeleteModalPage } from 'src/app/shared/components/delete-modal/delete-modal.page';
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 
 @Component({
   selector: 'app-sales-order-list',
@@ -22,21 +23,23 @@ export class SalesOrderListPage implements OnInit {
     private storage: Storage,
     private modalController: ModalController,
     private alertCtrl: AlertController,
+    private salesOrderService: SalesOrderService
   ) {
 
+   
+  }
+
+  ionViewWillEnter() {
+    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
+    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
+    this.firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toISOString();
+    this.lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toISOString();
     this.storage.get("access_token").then(
       result => {
         let token = result;
         if (token) {
           this.token = token;
-        }
-      }
-    )
-    this.storage.get("access_token").then(
-      result => {
-        let token = result;
-        if (token) {
-          this.token = token;
+          this.getSODateFilter();
         }
       }
     )
@@ -52,7 +55,7 @@ export class SalesOrderListPage implements OnInit {
   getSODateFilter() {
     let dateStart = new Date(this.firstDay).toLocaleDateString("fr-CA");
     let endStart = new Date(this.lastDay).toLocaleDateString("fr-CA");
-    this.trnSalesOrderService.getSOListByDate(this.token, dateStart, endStart).subscribe(
+    this.salesOrderService.getSOListByDate(this.token, dateStart, endStart).subscribe(
       data => {
         if (data.length > 0) {
           this.soList = data;
@@ -136,8 +139,9 @@ export class SalesOrderListPage implements OnInit {
   }
 
   editSO(sales_order: any) {
+    console.log(sales_order);
     let so: TrnSalesOrderModel = {
-      Id: sales_order.id,
+      Id: sales_order.Id,
       BranchManualCode: sales_order.BranchManualCode,
       BranchName: sales_order.BranchName,
       CurrencyId: sales_order.CurrencyId,
@@ -190,32 +194,6 @@ export class SalesOrderListPage implements OnInit {
       skipLocationChange: true
     });
   }
-
-  // deleteSO(id): void {
-
-  //   this.trnSalesOrderService.deleteSalesOrder(id).subscribe(
-  //     data => {
-
-  //       if (data[0] == true) {
-  //         this.toastService.success('Sales order was successfully deleted!');
-  //         this.modalController.dismiss(close);
-  //         this.router.navigate(['dashboard/sales-order-list']);
-  //         setTimeout(() => {
-  //           // let tempId = this.soListPage.getSoList().find(x =>{ // refresh list
-  //           //   return x.Id===id;
-  //           // });
-  //           // let index = this.soListPage.getSoList().indexOf(tempId);
-  //           // this.soListPage.getSoList().splice(index,1)[0];
-  //           // this.router.navigate(['dashboard/sales-order-list']);
-
-  //         }, 500);
-  //       } else {
-  //         // this.toastr.error(this.setLabel(data[1]), this.setLabel('Add Failed'));
-  //       }
-
-  //     }
-  //   );
-  // }
 
   async openModal(sOModel) {
 
@@ -277,13 +255,7 @@ export class SalesOrderListPage implements OnInit {
   }
 
   ngOnInit() {
-    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
-    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
-    this.firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toISOString();
-    this.lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toISOString();
-    setTimeout(() => {
-      this.getSODateFilter();
-    }, 500);
+    
   }
 }
 

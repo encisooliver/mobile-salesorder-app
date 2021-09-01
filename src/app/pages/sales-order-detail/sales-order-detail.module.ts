@@ -17,6 +17,7 @@ import { SoInventoryItemListComponent } from './components/so-inventory-item-lis
 import { SoItemDetailComponent } from './components/so-item-detail/so-item-detail.component';
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -40,7 +41,8 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
     TrnSalesOrderItemService,
     DecimalPipe,
     SysStorageService,
-    DatePipe
+    DatePipe,
+    SalesOrderService
   ]
 })
 export class SalesOrderDetailPageModule { }
