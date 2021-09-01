@@ -6,7 +6,7 @@
   <ion-item>
     <ion-label position="floating">Currency</ion-label>
     <ion-select [(ngModel)]="sOModel.CurrencyId" (ionChange)="currencyChange()">
-      <ion-select-option *ngFor="let c of currencies;" [value]="c.ExchangeCurrencyId">{{c.ExchangeCurrency}}
+      <ion-select-option *ngFor="let c of currencies;" [value]="c.Id">{{c.Currency}}
       </ion-select-option>
     </ion-select>
   </ion-item>
@@ -24,6 +24,11 @@
     </ion-datetime>
   </ion-item>
   <ion-item>
+    <ion-label position="floating">Date Needed</ion-label>
+    <ion-datetime (ionChange)="soDetailChange()" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="neededDate">
+    </ion-datetime>
+  </ion-item>
+  <ion-item>
     <ion-label position="floating">Customer</ion-label>
     <ion-select [(ngModel)]="sOModel.CustomerId" (ionChange)="customerChange()">
       <ion-select-option *ngFor="let cs of customerUsers;" [value]="cs.ArticleId">{{cs.Customer}}</ion-select-option>
@@ -36,10 +41,12 @@
     </ion-select>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Date Needed</ion-label>
-    <ion-datetime (ionChange)="soDetailChange()" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="neededDate">
-    </ion-datetime>
+    <ion-label position="floating">Discount</ion-label>
+    <ion-select [(ngModel)]="sOModel.DiscountId" (ionChange)="discountChange()">
+      <ion-select-option *ngFor="let d of discounts;" [value]="d.Id">{{d.Discount}}</ion-select-option>
+    </ion-select>
   </ion-item>
+  
   <ion-item>
     <ion-label position="floating">Status</ion-label>
     <ion-select [(ngModel)]="sOModel.Status" (ionChange)="soDetailChange()">

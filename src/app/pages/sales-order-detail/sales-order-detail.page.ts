@@ -8,7 +8,7 @@ import { TrnSalesOrderItemModel } from 'src/app/models/trn-sales-order-item.mode
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import {SalesOrderService} from 'src/app/services/sales-order/sales-order.service'
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service'
 @Component({
   selector: 'app-sales-order-detail',
   templateUrl: './sales-order-detail.page.html',
@@ -105,37 +105,40 @@ export class SalesOrderDetailPage implements OnInit {
   saveSO(): void {
     this.salesOrder.SOItems = this.sOItems;
     this.salesOrderLocalModel.SalesOrder = this.salesOrder;
-
-    if (this.action == "Add") {
-      this.salesOrderService.addSalesOrder(this.salesOrder).subscribe(
-        data => {
-          if (data[0] == true) {
-            this.salesOrder.Id = data[1].Id;
-            this.salesOrderLocalModel.SalesOrder = this.salesOrder;
-            this.action == "Update";
-            this.toastService.success('Sales order was successfully updated!');
-            this.back();
-          } else {
-            this.destination = "Local Storage";
-            this.toastService.success('Network problem, SO Parking!');
-            this.saveSOToLocal();
+    if (this.destination == "Cloud Storage") {
+      if (this.action == "Add") {
+        this.salesOrderService.addSalesOrder(this.salesOrder).subscribe(
+          data => {
+            if (data[0] == true) {
+              this.salesOrder.Id = data[1].Id;
+              this.salesOrderLocalModel.SalesOrder = this.salesOrder;
+              this.action == "Update";
+              this.toastService.success('Sales order was successfully updated!');
+              this.back();
+            } else {
+              this.destination = "Local Storage";
+              this.toastService.success('Network problem, SO Parking!');
+              this.saveSOToLocal();
+            }
           }
-        }
-      );
-    }
-    else {
-      this.salesOrderService.saveSalesOrder(this.salesOrder).subscribe(
-        data => {
-          if (data[0] == true) {
-            this.toastService.success('Sales order was successfully updated!');
-            this.back();
-          } else {
-            this.destination = "Local Storage";
-            this.toastService.success('Network problem, SO Parking!');
-            this.saveSOToLocal();
+        );
+      }
+      else {
+        this.salesOrderService.saveSalesOrder(this.salesOrder).subscribe(
+          data => {
+            if (data[0] == true) {
+              this.toastService.success('Sales order was successfully updated!');
+              this.back();
+            } else {
+              this.destination = "Local Storage";
+              this.toastService.success('Network problem, SO Parking!');
+              this.saveSOToLocal();
+            }
           }
-        }
-      );
+        );
+      }
+    } else {
+      this.saveSOToLocal();
     }
   }
 
@@ -161,7 +164,11 @@ export class SalesOrderDetailPage implements OnInit {
     let _amount = items.amount;
     setTimeout(() => {
       this.sOItems = _items;
+      this.sOItems = _items;
+      this.salesOrder.SOItems = _items;
       this.salesOrder.Amount = _amount;
+      console.log(this.salesOrder);
+      console.log(this.salesOrder);
       this.soAmount = this.decimalPipe.transform(this.salesOrder.Amount, "1.2-2");
     }, 100);
   }
@@ -210,8 +217,9 @@ export class SalesOrderDetailPage implements OnInit {
         this.destination = destination;
 
         let action = params['action'];
-        if (action != null) this.action = action;
+        console.log(action);
 
+        if (action != null) this.action = action;
         if (destination == "Local Storage") {
 
           let so = JSON.parse(params['salesOrderData']);

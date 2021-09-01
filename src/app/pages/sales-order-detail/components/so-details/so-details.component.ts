@@ -29,6 +29,8 @@ export class SoDetailsComponent implements OnInit {
     private decimalPipe: DecimalPipe
   ) {
   }
+  setup: any;
+
 
   id: number = 0;
   so: string = "";
@@ -37,6 +39,7 @@ export class SoDetailsComponent implements OnInit {
 
   currencies: any = [];
   terms: any = [];
+  discounts: any = [];
   status: any = [];
   activeUsers: any = [];
   customerUsers: any = [];
@@ -44,11 +47,30 @@ export class SoDetailsComponent implements OnInit {
   soDate: String = "";
   neededDate: String = "";
   salesOrderAmount: string = "0.00";
+  getSetup(): void {
+    this.storage.get("setup").then(
+      result => {
+        let data = result;
+        if (data) {
+          this.customerUsers = data.Customer;
+          this.currencies = data.Currency;
+          this.terms = data.Term;
+          this.discounts = data.Discount;
+          this.status = data.CodeTable;
+          this.isShown = true;
+        }
+        this.isShown = true;
+        this.clickEmitEvent();
+        // this.getCustomerUsers();
+      }
+    )
+
+  }
   getCustomerUsers() {
     this.trnSalesOrderService.getLockedArticleCustomerList(this.token).subscribe(
       data => {
         console.log(data);
-        this.customerUsers = data;
+        // this.customerUsers = data;
         this.getActiveuser();
       }
     );
@@ -56,7 +78,7 @@ export class SoDetailsComponent implements OnInit {
   getActiveuser() {
     this.trnSalesOrderService.getActiveUserList().subscribe(
       data => {
-        this.activeUsers = data;
+        // this.activeUsers = data;
         this.getCurrency();
       }
     );
@@ -64,7 +86,7 @@ export class SoDetailsComponent implements OnInit {
   getCurrency() {
     this.trnSalesOrderService.getCurrencyExchange().subscribe(
       data => {
-        this.currencies = data;
+        // this.currencies = data;
         this.getTerms();
       }
     );
@@ -72,7 +94,7 @@ export class SoDetailsComponent implements OnInit {
   getTerms() {
     this.trnSalesOrderService.getTermList().subscribe(
       data => {
-        this.terms = data;
+        // this.terms = data;
         this.getStatus();
       }
     );
@@ -81,7 +103,7 @@ export class SoDetailsComponent implements OnInit {
   getStatus() {
     this.trnSalesOrderService.getCodeTableListByCategory("SALES ORDER STATUS").subscribe(
       data => {
-        this.status = data;
+        // this.status = data;
         this.isShown = true;
         this.clickEmitEvent();
       }
@@ -99,8 +121,13 @@ export class SoDetailsComponent implements OnInit {
       }
     );
   }
+  discountChange(){
+    let _selectedDiscount: any = this.customerUsers.filter(data => data.ArticleId === this.sOModel.CustomerId);
+    let _discount: number = _selectedDiscount[0].DiscountRate;
+    this.sOModel.DiscountRate = _discount;
+  }
   customerChange() {
-    let _selectedCustomer: any = this.customerUsers.filter(data => data.ArticleId === this.sOModel.CustomerId);
+    let _selectedCustomer: any = this.discounts.filter(data => data.Id === this.sOModel.DiscountId);
     let _customerName: string = _selectedCustomer[0].Customer;
     this.sOModel.CustomerName = _customerName;
     console.log(_customerName);
@@ -144,7 +171,7 @@ export class SoDetailsComponent implements OnInit {
         let token = result;
         if (token) {
           this.token = token;
-          this.getCustomerUsers();
+          this.getSetup();
         }
       }
     )

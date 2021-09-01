@@ -160,7 +160,7 @@ export class SalesOrderListLocalPage implements OnInit {
   async uploadSO(_os: SalesOrder) {
     if (_os.SalesOrder.Id == 0) {
       console.log(_os);
-      await this.trnSalesOrderService._addSalesOrder(_os.SalesOrder).subscribe(
+      await this.salesOrderService.addSalesOrder(_os.SalesOrder).subscribe(
         async data => {
           if (data[0] == true) {
              this.sysStorageService.deleteSO(_os.Id).then(
@@ -181,7 +181,7 @@ export class SalesOrderListLocalPage implements OnInit {
       );
     }
     else {
-      await this.trnSalesOrderService.saveSalesOrder(_os.SalesOrder).subscribe(
+      await this.salesOrderService.saveSalesOrder(_os.SalesOrder).subscribe(
         async data => {
           if (data[0] == true) {
             await this.sysStorageService.deleteSO(_os.Id).then(

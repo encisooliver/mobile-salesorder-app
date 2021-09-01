@@ -53,6 +53,20 @@ export class SoItemDetailComponent implements OnInit {
   listItemPrice: any = [];
   isShown: boolean = false;
 
+  getSetup(): void {
+    this.storage.get("setup").then(
+      result => {
+        let data = result;
+        if (data) {
+          this.listTax = data.Tax;
+          this.listDiscount = data.Discount;
+        }
+        this.getArticleItemUnitList();
+      }
+    )
+   
+  }
+
   getArticleItemUnitList(): void {
     this.trnSalesOrderItemService.getArticleItemUnitList(this.itemData.ItemId, this.token).subscribe(
       data => {
@@ -65,8 +79,7 @@ export class SoItemDetailComponent implements OnInit {
     this.trnSalesOrderItemService.getArticleItemPriceList(this.itemData.ItemId, this.token).subscribe(
       data => {
         this.listItemPrice = data;
-        this.getDiscountList();
-
+        this.getDefaultTax();
       }
     );
   }
@@ -80,12 +93,20 @@ export class SoItemDetailComponent implements OnInit {
     );
   }
   getTaxList(): void {
-    this.trnSalesOrderItemService.getTaxList().subscribe(
-      data => {
-        this.listTax = data;
+    this.storage.get("setup").then(
+      result => {
+        let data = result;
+        if (data) {
+          this.listTax = data.Tax;
+        }
         this.getDefaultTax();
       }
-    );
+    )
+    // this.trnSalesOrderItemService.getTaxList().subscribe(
+    //   data => {
+    //     this.listTax = data;
+    //   }
+    // );
   }
   getDefaultTax(): void {
     this.trnSalesOrderItemService.getCompanyDetail(this.companyId).subscribe(
@@ -481,7 +502,7 @@ export class SoItemDetailComponent implements OnInit {
         let token = result;
         if (token) {
           this.token = token;
-          this.getArticleItemUnitList();
+          this.getSetup();
         }
       }
     )

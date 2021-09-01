@@ -25,8 +25,6 @@ export class SalesOrderListPage implements OnInit {
     private alertCtrl: AlertController,
     private salesOrderService: SalesOrderService
   ) {
-
-   
   }
 
   ionViewWillEnter() {
@@ -53,19 +51,24 @@ export class SalesOrderListPage implements OnInit {
   isContentShow: boolean = false;
 
   getSODateFilter() {
+    this.soList = [];
     let dateStart = new Date(this.firstDay).toLocaleDateString("fr-CA");
     let endStart = new Date(this.lastDay).toLocaleDateString("fr-CA");
     this.salesOrderService.getSOListByDate(this.token, dateStart, endStart).subscribe(
       data => {
-        if (data.length > 0) {
-          this.soList = data;
-          console.log(this.soList);
-        } else {
-          this.soList = [];
+        let result = data;
+        console.log(result);
+        if (result.length > 0) {
+          this.soList = result;
         }
         setTimeout(() => {
           this.isContentShow = true;
         }, 500);
+      }
+    );
+    this.salesOrderService.getSetup(this.token).subscribe(
+      data => {
+        
       }
     );
   }
@@ -139,7 +142,6 @@ export class SalesOrderListPage implements OnInit {
   }
 
   editSO(sales_order: any) {
-    console.log(sales_order);
     let so: TrnSalesOrderModel = {
       Id: sales_order.Id,
       BranchManualCode: sales_order.BranchManualCode,
@@ -182,8 +184,6 @@ export class SalesOrderListPage implements OnInit {
       UpdatedDateTime: sales_order.UpdatedDateTime,
       SOItems: sales_order.SOItems,
     }
-
-    console.log(so);
 
     this.router.navigate(['/dashboard/sales-order-detail'], {
       queryParams: {

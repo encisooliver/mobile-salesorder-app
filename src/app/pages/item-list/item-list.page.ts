@@ -73,13 +73,62 @@ export class ItemListPage implements OnInit {
           }
         }, 500);
 
-        console.log(this.items);
+        this.getSetupItem();
+      }
+    );
+  }
 
+  getSetupItem(){
+    this.mstArticleItemService.getItemList(this.token).subscribe(
+      data => {
+        let items = [];
+        setTimeout(() => {
+          if (data["length"] > 0) {
+            for (let i = 0; i <= data["length"] - 1; i++) {
+              items.push({
+                Id: data[i].Id,
+                ArticleId: data[i].ArticleId,
+                ArticleItem: data[i].ArticleItem,
+                BranchId: data[i].BranchId,
+                Branch: data[i].Branch,
+                InventoryCode: data[i].InventoryCode,
+                Quantity: data[i].Quantity,
+                Cost: data[i].Cost
+              });
+            }
+          }
+        }, 500);
+
+        this.storage.set("items", items);
       }
     );
   }
 
   ngOnInit() {
+    this.mstArticleItemService.getItemList(this.token).subscribe(
+      data => {
+        let items = [];
+        setTimeout(() => {
+          if (data["length"] > 0) {
+            for (let i = 0; i <= data["length"] - 1; i++) {
+              items.push({
+                Id: data[i].Id,
+                ArticleId: data[i].ArticleId,
+                ArticleItem: data[i].ArticleItem,
+                BranchId: data[i].BranchId,
+                Branch: data[i].Branch,
+                InventoryCode: data[i].InventoryCode,
+                Quantity: data[i].Quantity,
+                Cost: data[i].Cost
+              });
+            }
+          }
+        }, 500);
+
+        this.storage.set("items", items);
+        this.getArticleItemList();
+      }
+    );
     setTimeout(() => {
       this.getArticleItemList();
     }, 500);
