@@ -89,7 +89,7 @@ export class SoItemsComponent implements OnInit {
 
     await modal.present();
     await modal.onDidDismiss().then(data => {
-      if (data != null) {
+      if (data.data != null) {
         let items = data.data;
         this.soItems = items;
         this.clickEmitEvent();

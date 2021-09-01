@@ -25,22 +25,7 @@ export class SalesOrderListPage implements OnInit {
     private alertCtrl: AlertController,
     private salesOrderService: SalesOrderService
   ) {
-  }
-
-  ionViewWillEnter() {
-    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
-    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
-    this.firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toISOString();
-    this.lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toISOString();
-    this.storage.get("access_token").then(
-      result => {
-        let token = result;
-        if (token) {
-          this.token = token;
-          this.getSODateFilter();
-        }
-      }
-    )
+   
   }
 
   date = new Date();
@@ -64,11 +49,6 @@ export class SalesOrderListPage implements OnInit {
         setTimeout(() => {
           this.isContentShow = true;
         }, 500);
-      }
-    );
-    this.salesOrderService.getSetup(this.token).subscribe(
-      data => {
-        
       }
     );
   }
@@ -255,7 +235,19 @@ export class SalesOrderListPage implements OnInit {
   }
 
   ngOnInit() {
-    
+    let _startDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toLocaleDateString("fr-CA");
+    let _endDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toLocaleDateString("fr-CA");
+    this.firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1).toISOString();
+    this.lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).toISOString();
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        if (token) {
+          this.token = token;
+          this.getSODateFilter();
+        }
+      }
+    )
   }
 }
 

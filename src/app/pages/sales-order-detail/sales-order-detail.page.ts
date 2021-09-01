@@ -102,12 +102,13 @@ export class SalesOrderDetailPage implements OnInit {
     );
   }
 
-  saveSO(): void {
-    this.salesOrder.SOItems = this.sOItems;
-    this.salesOrderLocalModel.SalesOrder = this.salesOrder;
+  async saveSO() {
+    this.salesOrder.SOItems = await this.sOItems;
+    this.salesOrderLocalModel.SalesOrder = await this.salesOrder;
+
     if (this.destination == "Cloud Storage") {
       if (this.action == "Add") {
-        this.salesOrderService.addSalesOrder(this.salesOrder).subscribe(
+        await this.salesOrderService.addSalesOrder(this.salesOrder).subscribe(
           data => {
             if (data[0] == true) {
               this.salesOrder.Id = data[1].Id;
@@ -124,7 +125,7 @@ export class SalesOrderDetailPage implements OnInit {
         );
       }
       else {
-        this.salesOrderService.saveSalesOrder(this.salesOrder).subscribe(
+        await this.salesOrderService.saveSalesOrder(this.salesOrder).subscribe(
           data => {
             if (data[0] == true) {
               this.toastService.success('Sales order was successfully updated!');
@@ -138,7 +139,7 @@ export class SalesOrderDetailPage implements OnInit {
         );
       }
     } else {
-      this.saveSOToLocal();
+      await this.saveSOToLocal();
     }
   }
 

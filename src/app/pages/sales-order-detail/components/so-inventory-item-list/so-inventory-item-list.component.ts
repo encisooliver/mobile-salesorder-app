@@ -67,6 +67,7 @@ export class SoInventoryItemListComponent implements OnInit {
 
       }
     );
+    
   }
 
   async openModal(item) {
@@ -76,9 +77,11 @@ export class SoInventoryItemListComponent implements OnInit {
     trnSalesOrderItemModel.SOId = this.sOData.Id;
     trnSalesOrderItemModel.ItemId = item.ArticleId;
     trnSalesOrderItemModel.ItemManualCode = item.ArticleItem.Article.ManualCode;
-    trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.SKUCode;
-    trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.Article.BarCode;
+    // trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.Article.ManualCode;
+    // trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.Article.ManualCode;
     trnSalesOrderItemModel.ItemDescription = item.ArticleItem.Description;
+    trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.SKUCode;
+    trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.BarCode;
     trnSalesOrderItemModel.UnitId = item.ArticleItem.UnitId;
     trnSalesOrderItemModel.ItemInventoryId = null;
     trnSalesOrderItemModel.ItemInventoryCode = "";
@@ -117,7 +120,8 @@ export class SoInventoryItemListComponent implements OnInit {
       this.modalCtrl.dismiss(this.soItems);
     }
     else {
-      this.modalCtrl.dismiss(null);
+      this.soItems = [];
+      this.modalCtrl.dismiss(this.soItems);
     }
   }
   ngOnInit() {

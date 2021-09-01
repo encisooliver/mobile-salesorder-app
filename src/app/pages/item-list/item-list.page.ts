@@ -81,54 +81,55 @@ export class ItemListPage implements OnInit {
   getSetupItem(){
     this.mstArticleItemService.getItemList(this.token).subscribe(
       data => {
-        let items = [];
-        setTimeout(() => {
-          if (data["length"] > 0) {
-            for (let i = 0; i <= data["length"] - 1; i++) {
-              items.push({
-                Id: data[i].Id,
-                ArticleId: data[i].ArticleId,
-                ArticleItem: data[i].ArticleItem,
-                BranchId: data[i].BranchId,
-                Branch: data[i].Branch,
-                InventoryCode: data[i].InventoryCode,
-                Quantity: data[i].Quantity,
-                Cost: data[i].Cost
-              });
-            }
-          }
-        }, 500);
+        let result = data;
+        this.storage.set("items", result);
+        // setTimeout(() => {
+        //   if (result["length"] > 0) {
+        //     for (let i = 0; i <= data["length"] - 1; i++) {
+        //       items.push({
+        //         Id: data[i].Id,
+        //         ArticleId: data[i].ArticleId,
+        //         ArticleItem: data[i].ArticleItem,
+        //         BranchId: data[i].BranchId,
+        //         Branch: data[i].Branch,
+        //         InventoryCode: data[i].InventoryCode,
+        //         Quantity: data[i].Quantity,
+        //         Cost: data[i].Cost
+        //       });
+        //     }
+        //   }
+        // }, 500);
 
-        this.storage.set("items", items);
+        // this.storage.set("items", items);
       }
     );
   }
 
   ngOnInit() {
-    this.mstArticleItemService.getItemList(this.token).subscribe(
-      data => {
-        let items = [];
-        setTimeout(() => {
-          if (data["length"] > 0) {
-            for (let i = 0; i <= data["length"] - 1; i++) {
-              items.push({
-                Id: data[i].Id,
-                ArticleId: data[i].ArticleId,
-                ArticleItem: data[i].ArticleItem,
-                BranchId: data[i].BranchId,
-                Branch: data[i].Branch,
-                InventoryCode: data[i].InventoryCode,
-                Quantity: data[i].Quantity,
-                Cost: data[i].Cost
-              });
-            }
-          }
-        }, 500);
+    // this.mstArticleItemService.getItemList(this.token).subscribe(
+    //   data => {
+    //     let items = [];
+    //     setTimeout(() => {
+    //       if (data["length"] > 0) {
+    //         for (let i = 0; i <= data["length"] - 1; i++) {
+    //           items.push({
+    //             Id: data[i].Id,
+    //             ArticleId: data[i].ArticleId,
+    //             ArticleItem: data[i].ArticleItem,
+    //             BranchId: data[i].BranchId,
+    //             Branch: data[i].Branch,
+    //             InventoryCode: data[i].InventoryCode,
+    //             Quantity: data[i].Quantity,
+    //             Cost: data[i].Cost
+    //           });
+    //         }
+    //       }
+    //     }, 500);
 
-        this.storage.set("items", items);
-        this.getArticleItemList();
-      }
-    );
+    //     this.storage.set("items", items);
+    //     this.getArticleItemList();
+    //   }
+    // );
     setTimeout(() => {
       this.getArticleItemList();
     }, 500);
