@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { SalesInvoice } from 'src/app/models/sales-invoice.model';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 const SO_KEY = "sales_order";
+const SI_KEY = "sales_invoice";
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +31,7 @@ export class SysStorageService {
     return this._storage.get(key);
   }
 
+  // SALES SALES ORDER
   addSO(so: SalesOrder): Promise<SalesOrder> {
     let new_so: SalesOrder = {
       Id: 0,
@@ -107,6 +110,87 @@ export class SysStorageService {
       }
 
       return this.storage.set(SO_KEY, toKeep);
+    });
+  }
+  
+  // SALES INVOICE
+  addSI(so: SalesInvoice): Promise<SalesInvoice> {
+    let new_si: SalesInvoice = {
+      Id: 0,
+      SalesInvoice: so.SalesInvoice
+    }
+    console.log(new_si);
+    return this.storage.get(SI_KEY).then((si_list: SalesInvoice[]) => {
+      console.log(si_list);
+      if (si_list) {
+        let newId = si_list.length + 1;
+        new_si.Id = newId;
+        this.storage.set(SI_KEY, si_list);
+        return new_si;
+      } else {
+        let newId = 1;
+        new_si.Id = newId;
+        this.storage.set(SI_KEY, [new_si]);
+        return new_si;
+      }
+    });
+  }
+
+  getSIs(): Promise<SalesInvoice[]> {
+    return this.storage.get(SO_KEY);
+  }
+
+  getSIDetail(id: String): Promise<SalesInvoice> {
+    let so: SalesInvoice;
+    return this.storage.get(SO_KEY).then(
+      response => {
+        var si_list = response;
+
+        if (si_list["length"] > 0) {
+          for (var i = 0; i <= si_list["length"] - 1; i++) {
+            if (si_list[i].Id == id) {
+              so = si_list[i];
+              break;
+            }
+          }
+        }
+
+        return so;
+      });
+  }
+
+  updateSI(si: SalesInvoice): Promise<SalesInvoice> {
+    return this.storage.get(SO_KEY).then((si_list: SalesInvoice[]) => {
+      if (!si_list || si_list.length === 0) {
+        return null;
+      }
+      let SIs: SalesInvoice[] = [];
+      for (let i of si_list) {
+        if (i.Id === si.Id) {
+          SIs.push(si);
+        } else {
+          SIs.push(i);
+        }
+      }
+
+      return this.storage.set(SI_KEY, SIs);
+    });
+  }
+
+  deleteSI(id: number) {
+    return this.storage.get(SI_KEY).then((si_list: SalesInvoice[]) => {
+      if (!si_list || si_list.length === 0) {
+        return null;
+      }
+      let toKeep: SalesInvoice[] = [];
+
+      for (let si of si_list) {
+        if (si.Id !== id) {
+          toKeep.push(si);
+        }
+      }
+
+      return this.storage.set(SI_KEY, toKeep);
     });
   }
 }
