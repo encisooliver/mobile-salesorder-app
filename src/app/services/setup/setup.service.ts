@@ -31,6 +31,28 @@ export class SetupService {
     )
   }
 
+  public getSetup(token: string): Observable<any[]> {
+    let options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
+    return new Observable<any[]>((observer) => {
+      let salesOrderListObservableArray = [];
+
+      this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileAPI/easyfismobile/", options).subscribe(
+        response => {
+          let results = response;
+          this.storage.set('setup', results);
+          console.log(response);
+          observer.next(salesOrderListObservableArray);
+          observer.complete();
+        }
+      );
+    });
+  }
+  
   public getCurrencyExchange(): Observable<any[]> {
   
     return new Observable<any[]>((observer) => {

@@ -39,25 +39,37 @@ ion-card{
         color: #FFFFFF;
     }
 }
-.delete-btn{
-    --background:#F1F9FF;
-    --border-color: #007FEB !important;
-    --border-radius: 5px !important;
-    ion-text{
-        color:#EB0076;
-    }
-}
-.delete-btn, .edit-btn{
-    --border-radius: 5px !important;
-}
+// .delete-btn{
+//     --background:#F1F9FF;
+//     --border-color: #007FEB !important;
+//     --border-radius: 2px !important;
+//     ion-text{
+//         color:#EB0076;
+//     }
+// }
+
 
 
 ion-footer{
     ion-row{
         ion-col{
-            ion-button{
-                --border-radius: 20px !important;
+
+            .delete-btn, .edit-btn{
+                --border-radius: 5px !important;
+                width: 100%;
             }
+
+            .delete-btn{
+                --background:#F1F9FF;
+                --border-color: #2699FB !important;
+                ion-text{
+                    color:#EB0076;
+                }
+            }
+
+            // ion-button{
+                
+            // }
         }
     }
 }

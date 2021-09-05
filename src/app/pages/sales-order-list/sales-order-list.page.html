@@ -54,13 +54,13 @@
       <ion-footer>
         <ion-row>
           <ion-col>
-            <ion-button type="button" class="ion-no-margin edit-btn" expand="full" (click)="editSO(so)">
+            <ion-button type="button" class="ion-no-margin edit-btn" (click)="editSO(so)">
               <ion-text color="primary">View</ion-text>
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button type="button" class="ion-no-margin delete-btn" style="--border-color: #007FEB;" expand="full"
-              (click)="showConfirm(so)">
+            <ion-button type="button" class="ion-no-margin delete-btn" fill="outline"
+              (click)="confirmDelete(so)">
               <ion-text>Delete</ion-text>
             </ion-button>
           </ion-col>

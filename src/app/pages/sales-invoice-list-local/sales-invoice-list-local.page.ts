@@ -231,7 +231,7 @@ export class SalesInvoiceListLocalPage implements OnInit {
     this.getSO();
   }
 
-  async showConfirm(sOModel) {
+  async confirmDelete(sOModel) {
     const confirm = await this.alertCtrl.create({
       header: 'Confirmation',
       message: 'Do you want to delete this?',
