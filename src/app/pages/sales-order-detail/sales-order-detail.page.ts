@@ -9,6 +9,11 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 import { SalesOrder } from 'src/app/models/sales-order.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service'
+
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
   selector: 'app-sales-order-detail',
   templateUrl: './sales-order-detail.page.html',
@@ -291,6 +296,30 @@ export class SalesOrderDetailPage implements OnInit {
       }
     });
   }
+
+  pdfObj = null;
+
+  pdf() {
+    const docDef = {
+      pageSize: 'A4',
+      pageOrientation: 'portrait',
+      pageMargin: [20, 10, 40, 60],
+      content: [
+        'First paragraph'
+      //   {
+      //   table: {
+      //     body: [
+      //       'First paragraph'
+      //     ]
+      //   }
+      // }
+      ]
+    }
+
+    this.pdfObj = pdfMake.createPdf(docDef);
+    this.pdfObj.download('demo.pdf')
+  }
+  
   ngDestroy(): void {
     this.sub.unsubscribe();
   }

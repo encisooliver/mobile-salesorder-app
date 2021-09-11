@@ -50,9 +50,8 @@
           <ion-ripple-effect></ion-ripple-effect>
         </ion-col>
         <ion-col>
-          <ion-label id="col-badge">
-            <ion-icon name="cart-outline"></ion-icon>
-            <ion-badge id="item-badge" *ngIf="salesOrder.SOItems.length > 0">{{salesOrder.SOItems.length}}</ion-badge>
+          <ion-label id="col-badge" (click)="pdf()">
+            <ion-icon name="print"></ion-icon>
           </ion-label>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-col>
