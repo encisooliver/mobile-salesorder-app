@@ -10,6 +10,7 @@ import { SetupPage } from './setup.page';
 import { AppSettings } from 'src/app/settings/app-settings';
 import { SetupService } from 'src/app/services/setup/setup.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Storage } from '@ionic/storage-angular';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
     SetupPageRoutingModule
   ],
   declarations: [SetupPage],
-  providers: [AppSettings, SetupService, ToastService]
+  providers: [AppSettings, SetupService, ToastService, Storage]
 })
 export class SetupPageModule {}
