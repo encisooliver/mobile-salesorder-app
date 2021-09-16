@@ -13,6 +13,17 @@ import { SalesOrderService } from 'src/app/services/sales-order/sales-order.serv
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+// import { FileOpener } from '@ionic-native/file-opener/ngx';
+// import { Platform } from '@ionic/angular';
+// import { async } from '@angular/core/testing';
+// import { Directory } from '@capacitor/filesystem';
+// import {Plugins} from '@capacitor/core';
+// import { File } from '@ionic-native/File/ngx';
+// import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+// import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer/ngx';
+// import { PrinterService } from 'src/app/services/printer/printer.service';
+// const {Filesystem, Share} = Plugins;
+// import {BluetoothSerial} from '@ionic-native/bluetooth-serial/ngx';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -20,19 +31,121 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
   styleUrls: ['./sales-order-detail.page.scss'],
 })
 export class SalesOrderDetailPage implements OnInit {
+  sales_id: number = 0;
+  FileOpener
+  bluetoothList: any = [];
+  selectedPrinter: string = "";
+  public working: string;
 
+  @Input() sOData: TrnSalesOrderModel[] = [];
+  isShown = true;
+  salesOrderHidden = false;
+  soItemHidden = true;
+  sub: any;
   constructor(
     private router: Router,
+    // private print:PrinterService,
     private route: ActivatedRoute,
     private trnSalesOrderService: TrnSalesOrderService,
-    private sysStorageService: SysStorageService,
     private storage: Storage,
     private toastService: ToastService,
     private decimalPipe: DecimalPipe,
-    private salesOrderService: SalesOrderService
+    private salesOrderService: SalesOrderService,
+    private sysStorageService: SysStorageService,
+    // private fileOpener: FileOpener,
+    // private plt: Platform,
+    // private file: File,
+    // private ft: FileTransfer,
+    // private document: DocumentViewer,
+    // private bluetoothSerial: BluetoothSerial,
   ) {
-
+    this.listPrinter();
   }
+  //This will list all of your bluetooth devices
+  listPrinter() {
+    // this.print.searchBluetoothPrinter()
+    //   .then(resp => {
+
+    //     //List of bluetooth device list
+    //     this.bluetoothList = resp;
+    //   });
+  }
+  //This will store selected bluetooth device mac address
+  selectPrinter(macAddress) {
+    //Selected printer macAddress stored here
+    this.selectedPrinter = macAddress;
+  }
+  trnSalesOrderModel = new TrnSalesOrderModel()
+  //This will print
+  printStuff() {
+
+    //The text that you want to print
+    this.selectedPrinter = this.selectedPrinter == "" || this.selectedPrinter == null ? "66:22:50:29:94:21" : this.selectedPrinter;
+    console.log(this.selectedPrinter)
+    console.log(this.salesOrder.SONumber);
+    this.soDate = new Date(this.salesOrder.SODate).toISOString();
+    this.neededDate = new Date(this.salesOrder.DateNeeded).toISOString();
+    let myText =
+      "--------------------------------\n"
+      + "         Sales Details\n"
+      + "--------------------------------"
+      + "SO Number:   " + this.salesOrder.SONumber
+      + "\nSO Date:   " + this.soDate
+      + "\nCustomer:   " + this.salesOrder.CustomerName
+      + "\nTerm:   " + this.salesOrder.TermId
+      + "\nDiscount:   " + this.salesOrder.SOItems[0].DiscountAmount
+      + "\n--------------------------------"
+      + "         Sales Invoice"
+      + "\n--------------------------------"
+      + "\nCustomer:   " + this.salesOrder.CustomerName
+      + "\nBusiness Style:   "
+      + "\nAddress:   "
+      + "\nContact Person:   "
+      + "\nContact No:   "
+      + "\nTIN:   "
+      + "\nTerm:   " + this.salesOrder.TermId
+      + "\nRemarks:   " + this.salesOrder.Remarks
+      + "\nSO No:   " + this.salesOrder.SONumber
+      + "\nBranch:   " + this.salesOrder.BranchName
+      + "\nDate:   " + this.soDate
+      + "\nDate Needed:   " + this.neededDate
+      + "\nManual No:   " + this.salesOrder.ManualNumber
+      + "\nDocument Ref:   "
+      + "\nSales:   "
+      //     let quantity,  amount =0;
+      //     let item, unit = '';
+      //  for(let i = 0 ; i<this.salesOrder.SOItems.length;i++){
+      //   quantity += this.salesOrder.SOItems[i].VATId;
+      //   amount += this.salesOrder.SOItems[i].Price;
+      //   item += this.salesOrder.SOItems[i].ItemDescription;
+      //   unit += this.salesOrder.SOItems[i].UnitId;
+      //  }
+      + "\n--------------------------------"
+      + "          Item Detail\n"
+      + "--------------------------------"
+      + "Item:   " + this.salesOrder.SOItems[0].ItemDescription
+      + "\nQuantity:   " + this.salesOrder.SOItems[0].Quantity
+      + "\nUnit:   " + this.salesOrder.SOItems[0].UnitId
+      + "\nAmount:   \n" + this.salesOrder.SOItems[0].Price
+    //  let vat_sales, exempt_sales, rated =0;
+    //  for(let i = 0 ; i<this.salesOrder.SOItems.length;i++){
+    //    vat_sales += this.salesOrder.SOItems[i].VATId;
+    //    exempt_sales += this.salesOrder.IsCancelled;
+    //  }
+    //  + "\nVATable Sales: " + this.salesOrder.SOItems[0].
+    //  + "\nVAT Exempt Sales: "
+    //  + "\nZero Rated Sales: "
+    //  + "\nVAT Amount: "
+    //  + "\nTotal Sales (VAT Inclusive):"
+    //  + "\nLess VAT: "
+    //  + "\nAmount Net of VAT:"
+    //  + "\nLess SC/PWD Discount:"
+    //  + "\nTOTAL AMOUNT DUE:"
+
+    console.log(myText);
+    // this.print.sendToBluetoothPrinter(this.selectedPrinter,myText);
+  }
+
   action: string = "";
   token: string = "";
 
@@ -44,69 +157,8 @@ export class SalesOrderDetailPage implements OnInit {
     SalesOrder: new TrnSalesOrderModel(),
   };
   destination: string = "Cloud Storage"
-
   soDate: String = "";
   neededDate: String = "";
-  isShown: boolean = false;
-  salesOrderHidden: boolean = false;
-  soItemHidden: boolean = true;
-  sub: any;
-
-  getSO() {
-    let id = this.route.snapshot.params['id'];
-    console.log(id);
-    this.trnSalesOrderService.getSalesOrderDetail(id, this.token).subscribe(
-      data => {
-        if (data != null) {
-          this.salesOrder.Id = data.Id;
-          this.salesOrder.BranchManualCode = data.BranchManualCode;
-          this.salesOrder.BranchName = data.BranchName;
-          this.salesOrder.CurrencyId = data.CurrencyId;
-          this.salesOrder.ExchangeRate = data.ExchangeRate;
-          this.salesOrder.ExchangeCurrency = data.ExchangeCurrency;
-          this.salesOrder.ExchangeCurrencyManualCode = data.ExchangeCurrencyManualCode;
-          this.salesOrder.SONumber = data.SONumber;
-          this.salesOrder.SODate = data.SODate;
-          this.soDate = new Date(this.salesOrder.SODate).toISOString();
-          this.salesOrder.ManualNumber = data.ManualNumber;
-          this.salesOrder.DocumentReference = data.DocumentReference;
-          this.salesOrder.CustomerId = data.CustomerId;
-          this.salesOrder.CustomerName = data.CustomerName;
-          this.salesOrder.TermId = data.TermId;
-          this.salesOrder.DiscountId = data.DiscountId;
-          this.salesOrder.DiscountRate = data.DiscountRate;
-          this.salesOrder.DateNeeded = data.DateNeeded;
-          this.neededDate = new Date(this.salesOrder.DateNeeded).toISOString();
-          this.salesOrder.Remarks = data.Remarks;
-          this.salesOrder.SoldByUserId = data.SoldByUserId;
-          this.salesOrder.SoldByUserFullname = data.SoldByUserFullname;
-          this.salesOrder.PreparedByUserId = data.PreparedByUserId;
-          this.salesOrder.PreparedByUserFullname = data.PreparedByUserFullname;
-          this.salesOrder.CheckedByUserId = data.CheckedByUserId;
-          this.salesOrder.CheckedByUserFullname = data.CheckedByUserFullname;
-          this.salesOrder.ApprovedByUserId = data.ApprovedByUserId;
-          this.salesOrder.ApprovedByUserFullname = data.ApprovedByUserFullname;
-          this.salesOrder.Amount = data.Amount;
-          this.salesOrder.Status = data.Status;
-          this.salesOrder.IsCancelled = data.IsCancelled;
-          this.salesOrder.IsPrinted = data.IsPrinted;
-          this.salesOrder.IsLocked = data.IsLocked;
-          this.salesOrder.CreatedByUserFullname = data.CreatedByUserFullname;
-          this.salesOrder.CreatedDateTime = data.CreatedDateTime;
-          this.salesOrder.UpdatedByUserFullname = data.UpdatedByUserFullname;
-          this.salesOrder.UpdatedDateTime = data.UpdatedDateTime;
-          console.log(this.salesOrder);
-          setTimeout(() => {
-            this.isShown = true;
-            this.salesOrderHidden = false;
-            this.soItemHidden = true;
-          }, 500);
-        }
-
-      }
-    );
-  }
-
   async saveSO() {
     this.salesOrder.SOItems = await this.sOItems;
     this.salesOrderLocalModel.SalesOrder = await this.salesOrder;
@@ -295,31 +347,255 @@ export class SalesOrderDetailPage implements OnInit {
 
       }
     });
+    // this.loadLocalAssetToBase64();
+
   }
+  // pdfObj = null;
 
-  pdfObj = null;
+  // pdf() {
+  //   const docDef = {
+  //     pageSize: 'A4',
+  //     pageOrientation: 'portrait',
+  //     pageMargin: [20, 10, 40, 60],
+  //     content: [
+  //       {
+  //         text: [
+  //           {text: 'Easy Company\n', bold: true, fontSize: 14 },
+  //           {text: 'Japan', bold: true, fontSize: 10},
 
-  pdf() {
-    const docDef = {
-      pageSize: 'A4',
-      pageOrientation: 'portrait',
-      pageMargin: [20, 10, 40, 60],
-      content: [
-        'First paragraph'
-      //   {
-      //   table: {
-      //     body: [
-      //       'First paragraph'
-      //     ]
-      //   }
-      // }
-      ]
-    }
+  //         ]
+  //       },
+  //       {
+  //         table : {
+  //             headerRows : 1,
+  //             widths: [515],
+  //             body : [
+  //                     [''],
+  //                     ['']
+  //                     ]
+  //         },
+  //         layout : 'headerLineOnly'
+  //       },
+  //       {
+  //         text: 'Sales Invoice', alignment: 'center' 
+  //       },
+  //       {
+  //         table : {
+  //             headerRows : 1,
+  //             widths: [515],
+  //             body : [
+  //                     [''],
+  //                     ['']
+  //                     ]
+  //         },
+  //         layout : 'headerLineOnly'
+  //       },
+  //       {
+  //         columns: [      
+  //           {
+  //             // text: 'Customer: \nBusiness Style: \nAddress: \nContact Person: \nContact No: \nTIN: \n\nTerm: \n\nRemarks:',
+  //             text: [
+  // 							{text: 'Customer:\n', bold: true, fontSize: 10, alignment: 'left',margin: [20, 0, 40, 0]},
+  // 							{text: 'Business Style:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'Address:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'Contact Person:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'Contact No:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'TIN:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'Term:\n', bold: true, fontSize: 10, alignment: 'left',margin: 0},
+  //               {text: 'Remarks:\n', bold: true, fontSize: 10, alignment: 'left'},
+  //             ]
+  //           },
+  //           {
+  //             // text: 'No: \nBranch: \nDate \nDate Needed: \nManual No: \nDocument Ref: \n\nSales:'
+  //             text: [
+  // 							{text: 'No:\n', bold: true, fontSize: 10 },
+  // 							{text: 'Branch:\n', bold: true, fontSize: 10},
+  //               {text: 'Date:\n', bold: true, fontSize: 10},
+  //               {text: 'Date Needed:\n', bold: true, fontSize: 10},
+  //               {text: 'Manual No:\n', bold: true, fontSize: 10},
+  //               {text: 'Document Ref:\n', bold: true, fontSize: 10},
+  //               {text: 'Sales:\n', bold: true, fontSize: 10},
+  //             ]
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         table : {
+  //             headerRows : 1,
+  //             widths: [515],
+  //             body : [
+  //                     [''],
+  //                     ['']
+  //                     ]
+  //         },
+  //         layout : 'headerLineOnly'
+  //       },
+  //       {
+  //         style: 'tableExample',
+  //         table: {
+  //           headerRows: 1,
+  //           body: [
+  //             [{text: 'QTY.', style: 'tableHeader'}, {text: 'Unit', style: 'tableHeader'}, {text: 'Item', style: 'tableHeader'}
+  //             , {text: 'Particulars', style: 'tableHeader'} , {text: 'Price', style: 'tableHeader'} , {text: 'Amount', style: 'tableHeader'}],
+  //             ['Sample value 1', 'Sample value 2', 'Sample value 3' , 'Sample value 4' , 'Sample value 5' , 'Sample value 6'],
+  //           ]
+  //         },
+  //         layout: 'lightHorizontalLines'
+  //       },
+  //       {
+  //         table : {
+  //             headerRows : 1,
+  //             widths: [515],
+  //             body : [
+  //                     [''],
+  //                     ['']
+  //                     ]
+  //         },
+  //         layout : 'headerLineOnly'
+  //       },
+  //       {
+  //         text: 'TOTAL:', alignment: 'right', margin: [ 0, 0, 120, 0 ] 
+  //       },
+  //       {
+  //         table : {
+  //             headerRows : 1,
+  //             widths: [515],
+  //             body : [
+  //                     [''],
+  //                     ['']
+  //                     ]
+  //         },
+  //         layout : 'headerLineOnly'
+  //       },
+  //     ]
 
-    this.pdfObj = pdfMake.createPdf(docDef);
-    this.pdfObj.download('demo.pdf')
-  }
-  
+  //   }
+
+  //   this.pdfObj = pdfMake.createPdf(docDef)
+  //   const storage = this.file.dataDirectory;
+  //   const pdfFile = "demo.pdf";
+
+  //   this.file.checkFile(storage,pdfFile).then((res) =>{
+  //     const result =  Filesystem.writeFile({
+  //               storage,
+  //               data: res,
+  //               directory: Directory.Documents,
+  //               recursive: true
+  //             });
+  //             console.log("File generated" + JSON.stringify(res));
+  //             this.fileOpener.open(this.file.dataDirectory + pdfFile, 'application/pdf');
+  //   });
+
+  //   if(this.plt.is("android")){
+  //     this.pdfObj.getBase64(async (data) =>{
+  //       try{
+  //         let path = 'www/assets';
+
+  //         const result = await Filesystem.writeFile({
+  //           path,
+  //           data: data,
+  //           directory: Directory.Documents,
+  //           recursive: true
+  //         });
+  //         this.fileOpener.open('${result.url}', 'application/pdf');
+  //         console.log(result);
+  //         console.log("result");
+  //       }catch(e){
+  //         console.log("Unable to write")
+  //       }
+  //     });
+  //   }else{
+  //     this.pdfObj.download('demo.pdf');
+  //   }
+  // }
+  // makePdf() {
+  //   let self = this;
+  //   pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  //   var docDefinition = {
+  //   content: [
+  //   {
+  //   columns: [
+  //   {
+  //   },
+  //   [
+  //   { text: 'BITCOIN', style: 'header' },
+  //   { text: 'Cryptocurrency Payment System', style: 'sub_header' },
+  //   { text: 'WEBSITE: https://bitcoin.org/', style: 'url' },
+  //   ]
+  //   ]
+  //   }
+  //   ],
+  //   styles: {
+  //   header: {
+  //   bold: true,
+  //   fontSize: 20,
+  //   alignment: 'right'
+  //   },
+  //   sub_header: {
+  //   fontSize: 18,
+  //   alignment: 'right'
+  //   },
+  //   url: {
+  //   fontSize: 16,
+  //   alignment: 'right'
+  //   }
+  //   },
+  //   pageSize: 'A4',
+  //   pageOrientation: 'portrait'
+  //   };
+  //   pdfMake.createPdf(docDefinition).getBuffer(function (buffer) {
+  //   let utf8 = new Uint8Array(buffer);
+  //   let binaryArray = utf8.buffer;
+  //   self.saveToDevice(binaryArray,"Bitcoin.pdf")
+  //   });
+  //   }
+  //   saveToDevice(data:any,savefile:any){
+  //   let self = this;
+  //   self.file.writeFile(self.file.externalDataDirectory, savefile, data, {replace:true});
+  //   const toast = self.toastCtrl.create({
+  //   message: 'File saved to your device',
+  //   duration: 3000,
+  //   position: 'top'
+  //   });
+  //   toast.present();
+  //   }
+  // downloadPDF(){
+  //   const transfer = this.ft.create();
+  //   // let downloadURL = 'http://www.africau.edu/images/default/sample.pdf';
+  //     const url = 'http://www.africau.edu/images/default/sample.pdf';
+  //     transfer.download(url, this.file.dataDirectory + 'file.pdf').then((entry) => {
+  //       console.log('download complete: ' + entry.toURL());
+  //     }, (error) => {
+  //       // handle error
+  //     });
+  //   // let path = this.file.dataDirectory;
+  //   // const transfer = this.ft.create();
+
+  //   // transfer.download(downloadURL, '${path}myfile.pdf').then(entry => {
+  //   //   let pdf = entry.toUrl();
+  //   //   if(this.plt.is('android')){
+
+  //   //     this.document.viewDocument(pdf, 'application/pdf', {});
+  //   //   }else{
+  //   //     this.fileOpener.open(pdf, 'application/pdf');
+  //   //   }
+  //   // });
+  // }
+
+  // openPDF(){
+  //   let filePath = this.file.applicationDirectory + 'www/assets';
+  //   if(this.plt.is('android')){
+  //     let fakeName = Date.now();
+  //     this.file.copyFile(filePath, 'mobiledemo.pdf', this.file.dataDirectory, '${fakeName}.pdf').then(result =>{
+  //       this.fileOpener.open(result.nativeURL, 'application/pdf');
+  //     });
+  //   }else{
+  //     const options: DocumentViewerOptions = {
+  //       title: 'My PDF'
+  //     }
+  //     this.document.viewDocument('${filePath}/mobiledemo.pdf', 'application/pdf', options);
+  //   }
+  // }
   ngDestroy(): void {
     this.sub.unsubscribe();
   }
