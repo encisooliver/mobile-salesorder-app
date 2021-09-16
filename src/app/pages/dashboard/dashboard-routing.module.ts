@@ -53,6 +53,10 @@ const routes: Routes = [
         path: 'sales-invoice-list-local',
         loadChildren: () => import('../../pages/sales-invoice-list-local/sales-invoice-list-local.module').then( m => m.SalesInvoiceListLocalPageModule)
       },
+      {
+        path: 'setup',
+        loadChildren: () => import('../../pages/setup/setup.module').then( m => m.SetupPageModule)
+      },
     ]
   }
 ];

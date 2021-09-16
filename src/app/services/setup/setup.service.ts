@@ -39,14 +39,16 @@ export class SetupService {
       })
     }
     return new Observable<any[]>((observer) => {
-      let salesOrderListObservableArray = [];
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileAPI/easyfismobile/", options).subscribe(
         response => {
           let results = response;
           this.storage.set('setup', results);
-          console.log(response);
-          observer.next(salesOrderListObservableArray);
+          observer.next([true, "success"]);
+          observer.complete();
+        },
+        error => {
+          observer.next([false, error.error]);
           observer.complete();
         }
       );
