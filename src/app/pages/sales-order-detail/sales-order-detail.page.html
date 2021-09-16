@@ -1,8 +1,28 @@
+<<<<<<< Updated upstream
 <ion-tabs>
   <ion-tab-bar slot="sales-order">
     <ion-tab-button tab="so">
       <ion-icon name="reorder-three-outline"></ion-icon>
       <ion-label>Detail</ion-label>
+=======
+<!-- <ion-content>
+  <ion-card>
+  <ion-list>
+    <ion-item *ngFor="let item of bluetoothList" (click)="selectPrinter(item.id)">
+        {{item.name}} {{item.id}}
+    </ion-item>
+    </ion-list>
+  </ion-card>
+    <div>
+        Selected Printer: {{selectedPrinter}}
+    </div>
+    <ion-button expand="full" color="danger" *ngIf='selectedPrinter' (click)="printStuff()">
+    PRINT!
+    </ion-button>
+  </ion-content> -->
+
+<ion-header>
+>>>>>>> Stashed changes
 
     </ion-tab-button>
     <!-- event trigger - event listener -->
@@ -15,9 +35,54 @@
       </ion-badge>
     </ion-tab-button>
 
+<<<<<<< Updated upstream
     <ion-tab-button tab="so-attachment">
       <ion-icon name="attach-outline"></ion-icon>
       <ion-label>Attachment</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
+=======
+<ion-content>
+  <div>
+    <ng-container *ngIf="isShown">
+      <div [hidden]="salesOrderHidden">
+        <app-so-details [soAmount]="soAmount" [sOModel]="salesOrder" (sOEventEmitter)="receiveSODetailEvent($event)"></app-so-details>
+      </div>
+      <div [hidden]="soItemHidden">
+        <app-so-items [sOModel]="salesOrder" (itemsEventEmitter)="receiveItemEvent($event)"></app-so-items>
+      </div>
+    </ng-container>
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="footer-toolbar">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-activatable ripple-parent" (click)="showsalesOrder()">
+          <ion-label>
+            <ion-icon ios="list-outline'" md="list-sharp"></ion-icon>
+          </ion-label>
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+        <ion-col class="ion-activatable ripple-parent " (click)="showSOItem()">
+          <ion-label id="col-badge">
+            <ion-icon name="cart-outline"></ion-icon>
+            <ion-badge id="item-badge" *ngIf="salesOrder.SOItems.length > 0">{{salesOrder.SOItems.length}}</ion-badge>
+          </ion-label>
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+        <ion-col class="ion-activatable ripple-parent"  (click)="printStuff()">
+          <ion-label id="col-badge" >
+            <ion-icon name="print"></ion-icon>
+          </ion-label>
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>
+>>>>>>> Stashed changes
