@@ -31,26 +31,26 @@ export class SetupPage implements OnInit {
   ) {
   }
 
-  setup(): void {
-    this.setupService.getSetup(this.token).subscribe(
-      data => {
-        let result = data;
-        if(result[0]==true){
-          this.toastService.success('Setup successfully');
-        }
-      }
-    );
-  }
+  // setup(): void {
+  //   this.setupService.getSetup(this.token).subscribe(
+  //     data => {
+  //       let result = data;
+  //       if(result[0]==true){
+  //         this.toastService.success('Setup successfully');
+  //       }
+  //     }
+  //   );
+  // }
 
   ngOnInit() {
-    this.storage.get("access_token").then(
-      result => {
-        let token = result;
-        if (token) {
-          this.token = token;
-          this.setup();
-        }
-      }
-    );
+    // this.storage.get("access_token").then(
+    //   result => {
+    //     let token = result;
+    //     if (token) {
+    //       this.token = token;
+    //       this.setup();
+    //     }
+    //   }
+    // );
   }
 }
