@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-article-item.service';
 import { Storage } from '@ionic/storage-angular';
@@ -16,34 +16,13 @@ export class SoInventoryItemListComponent implements OnInit {
 
   token: string = "";
   branchId: number = 0;
-  sOModel: TrnSalesOrderModel = new TrnSalesOrderModel();
-
+  @Input() sOData: TrnSalesOrderModel = new TrnSalesOrderModel();
+  @Input() sOItemsData: TrnSalesOrderItemModel[] = [];
   constructor(
     private mstArticleItemService: MstArticleItemService,
     private storage: Storage,
     private modalCtrl: ModalController
   ) {
-    this.storage.get("access_token").then(
-      result => {
-        let token = result;
-        console.log(token);
-        if (token) {
-          this.token = token;
-        }
-      }
-    )
-
-    this.storage.get("branchId").then(
-      result => {
-        let branchId = result;
-        console.log(branchId);
-        if (branchId) {
-          this.branchId = branchId;
-        }
-      }
-    )
-
-   
   }
 
   articleItemListPageIndex: number = 15;
@@ -56,20 +35,7 @@ export class SoInventoryItemListComponent implements OnInit {
 
   isButtonAddArticleItemDisabled: boolean = false;
   items: any[] = [];
-
-  getSODetail(){
-    this.storage.get("sales_order").then(
-      result => {
-        let sales_order = result;
-        console.log("List Detail");
-        if (sales_order) {
-          this.sOModel = JSON.parse(sales_order);
-          console.log(sales_order);
-        }
-        this.getArticleItemList();
-      }
-    )
-  }
+  soItems: TrnSalesOrderItemModel[] = [];
   getArticleItemList(): void {
 
     let column = this.searchItemColumn;
@@ -101,26 +67,29 @@ export class SoInventoryItemListComponent implements OnInit {
 
       }
     );
+    
   }
-  
+
   async openModal(item) {
     console.log(item);
     let trnSalesOrderItemModel: TrnSalesOrderItemModel = new TrnSalesOrderItemModel();
     trnSalesOrderItemModel.Id = 0;
-    trnSalesOrderItemModel.SOId = this.sOModel.Id;
+    trnSalesOrderItemModel.SOId = this.sOData.Id;
     trnSalesOrderItemModel.ItemId = item.ArticleId;
     trnSalesOrderItemModel.ItemManualCode = item.ArticleItem.Article.ManualCode;
-    trnSalesOrderItemModel.ItemSKUCode =  item.ArticleItem.SKUCode;
-    trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.Article.BarCode;
+    // trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.Article.ManualCode;
+    // trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.Article.ManualCode;
     trnSalesOrderItemModel.ItemDescription = item.ArticleItem.Description;
-    trnSalesOrderItemModel.UnitId =item.ArticleItem.UnitId;
+    trnSalesOrderItemModel.ItemSKUCode = item.ArticleItem.SKUCode;
+    trnSalesOrderItemModel.ItemBarCode = item.ArticleItem.BarCode;
+    trnSalesOrderItemModel.UnitId = item.ArticleItem.UnitId;
     trnSalesOrderItemModel.ItemInventoryId = null;
     trnSalesOrderItemModel.ItemInventoryCode = "";
     trnSalesOrderItemModel.Particulars = "";
     trnSalesOrderItemModel.Quantity = 1;
     trnSalesOrderItemModel.Price = item.ArticleItem.Price;
-    trnSalesOrderItemModel.DiscountId = this.sOModel.DiscountId;
-    trnSalesOrderItemModel.DiscountRate = 0;
+    trnSalesOrderItemModel.DiscountId = this.sOData.DiscountId;
+    trnSalesOrderItemModel.DiscountRate = this.sOData.DiscountRate;
     trnSalesOrderItemModel.DiscountAmount = 0;
     trnSalesOrderItemModel.NetPrice = item.ArticleItem.Price;
     trnSalesOrderItemModel.Amount = item.ArticleItem.Price;
@@ -131,26 +100,52 @@ export class SoInventoryItemListComponent implements OnInit {
 
       component: SoItemDetailComponent,
       componentProps: {
-        itemData: trnSalesOrderItemModel
+        soData: this.sOData,
+        itemData: trnSalesOrderItemModel,
+        action: "Add"
       }
     });
 
-    modal.onDidDismiss().then((id) => {
-      if (id !== null) {
-        // this.modelData = modelData.data;
-        // console.log(id.data.name);
-        // this.getSODateFilter();
+    modal.onDidDismiss().then((data) => {
+      if (data !== null) {
+        let newItem = data.data;
+        this.soItems.push(newItem);
       }
     });
 
     return await modal.present();
   }
   async close() {
-    await this.modalCtrl.dismiss({ status: 200 });
+    if (this.soItems.length > 0) {
+      this.modalCtrl.dismiss(this.soItems);
+    }
+    else {
+      this.soItems = [];
+      this.modalCtrl.dismiss(this.soItems);
+    }
   }
   ngOnInit() {
-    setTimeout(() => {
-      this.getSODetail();
-    }, 500);
+    if (this.sOItemsData != null) {
+      this.soItems = this.sOItemsData;
+    }
+    this.storage.get("branchId").then(
+      result => {
+        let branchId = result;
+        console.log(branchId);
+        if (branchId) {
+          this.branchId = branchId;
+        }
+      }
+    )
+    this.storage.get("access_token").then(
+      result => {
+        let token = result;
+        console.log(token);
+        if (token) {
+          this.token = token;
+          this.getArticleItemList();
+        }
+      }
+    )
   }
 }

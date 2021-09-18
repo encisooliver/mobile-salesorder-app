@@ -1,0 +1,31 @@
+export class TrnSalesInvoiceItemModel {
+    Id: number = 0;
+    SIId: number = 0;
+    ItemId: number = 0;
+    ItemManualCode: string = "";
+    ItemSKUCode: string = "";
+    ItemBarCode: string = "";
+    ItemDescription: string = "";
+    ItemIsInventory: boolean = false;
+    ItemInventoryId: number = 0;
+    ItemInventoryCode: string = "";
+    ItemJobTypeId: number = 0;
+    ItemJobTypeName: string = "Pick Job Type";
+    Particulars: string = "";
+    Quantity: number = 0;
+    UnitId: number = 0;
+    Price: number = 0;
+    DiscountId: number = 0;
+    DiscountRate: number = 0;
+    DiscountAmount: number = 0;
+    NetPrice: number = 0;
+    Amount: number = 0;
+    VATId: number = 0;
+    VATRate: number = 0;
+    VATAmount: number = 0;
+    WTAXId: number = 0;
+    WTAXRate: number = 0;
+    WTAXAmount: number = 0;
+    LineTimeStamp: string = "";
+    SOId: number = 0;
+}

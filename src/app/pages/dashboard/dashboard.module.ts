@@ -8,7 +8,8 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 import { DashboardPage } from './dashboard.page';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { Storage } from '@ionic/storage-angular';
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,5 +18,6 @@ import { BrowserModule } from '@angular/platform-browser';
     DashboardPageRoutingModule,
   ],
   declarations: [DashboardPage],
+  providers: [SysStorageService, Storage]
 })
-export class DashboardPageModule {}
+export class DashboardPageModule { }

@@ -9,7 +9,7 @@ import { SalesOrderListPageRoutingModule } from './sales-order-list-routing.modu
 import { SalesOrderListPage } from './sales-order-list.page';
 import { AppSettings } from 'src/app/settings/app-settings';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
-
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 
 @NgModule({
   imports: [
@@ -19,6 +19,6 @@ import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales
     SalesOrderListPageRoutingModule
   ],
   declarations: [SalesOrderListPage],
-  providers: [AppSettings, TrnSalesOrderService]
+  providers: [AppSettings, TrnSalesOrderService, SalesOrderService]
 })
 export class SalesOrderListPageModule {}

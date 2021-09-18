@@ -1,80 +1,57 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Sales Order</ion-title>
-    <ion-button slot="end"size="small" color="success" (click)="editedSO()">Save</ion-button>
-  </ion-toolbar>
-</ion-header>
-<!-- [compareWith]="compareFn" -->
-<ion-content>
-  <div *ngIf="isShown">
-    <ion-item>
-      <ion-label position="floating">Currency</ion-label>
-      <ion-select [(ngModel)]="sOModel.CurrencyId">
-        <ion-select-option *ngFor="let c of currencies;" [value]="c.ExchangeCurrencyId">{{c.ExchangeCurrency}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Exchange Rate:</ion-label>
-      <ion-input [(ngModel)]="sOModel.ExchangeRate"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Branch</ion-label>
-      <ion-input [(ngModel)]="sOModel.BranchName"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">SO No.</ion-label>
-      <ion-input [(ngModel)]="sOModel.SONumber"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">SO Date</ion-label>
-      <ion-datetime  display-format="YYYY/MM/DD" id="dat" [(ngModel)]="soDate"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Customer</ion-label>
-      <ion-select [(ngModel)]="sOModel.CustomerId">
-        <ion-select-option *ngFor="let cs of CustomerUsers;" [value]="cs.ArticleId">{{cs.Customer}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Term</ion-label>
-      <ion-select [(ngModel)]="sOModel.TermId">
-        <ion-select-option *ngFor="let t of terms;" [value]="t.Id">{{t.Term}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Date Needed</ion-label>
-      <ion-datetime  display-format="YYYY/MM/DD" id="dat" [(ngModel)]="neededDate">
-      </ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Status</ion-label>
-      <ion-select [(ngModel)]="sOModel.Status">
-        <ion-select-option *ngFor="let s of status;" [value]="s.Code">{{s.Code}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Sold by</ion-label>
-      <ion-select [(ngModel)]="sOModel.SoldByUserId">
-        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Approved by</ion-label>
-      <ion-select [(ngModel)]="sOModel.ApprovedByUserId">
-        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Checked by</ion-label>
-      <ion-select [(ngModel)]="sOModel.CheckedByUserId">
-        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Prepared by</ion-label>
-      <ion-select [(ngModel)]="sOModel.PreparedByUserId">
-        <ion-select-option *ngFor="let cs of activeUsers;" [value]="cs.Id">{{cs.Fullname}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
-</ion-content>
+<div *ngIf="isShown" class="item-detail">
+  <ion-item>
+    <ion-label position="floating">Amount</ion-label>
+    <ion-input disabled [ngModel]="soAmount"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Currency</ion-label>
+    <ion-select [(ngModel)]="sOModel.CurrencyId" (ionChange)="currencyChange()">
+      <ion-select-option *ngFor="let c of currencies;" [value]="c.Id">{{c.Currency}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <!-- <ion-item>
+    <ion-label position="floating">Exchange Rate:</ion-label>
+    <ion-input (ionChange)="soDetailChange()" [(ngModel)]="sOModel.ExchangeRate"></ion-input>
+  </ion-item> -->
+  <ion-item>
+    <ion-label position="floating">SO Number</ion-label>
+    <ion-input [(ngModel)]="sOModel.SONumber"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">SO Date</ion-label>
+    <ion-datetime (ionChange)="soDetailChange()" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="soDate">
+    </ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Date Needed</ion-label>
+    <ion-datetime (ionChange)="soDetailChange()" display-format="YYYY/MM/DD" id="dat" [(ngModel)]="neededDate">
+    </ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Customer</ion-label>
+    <ion-select [(ngModel)]="sOModel.CustomerId" (ionChange)="customerChange()">
+      <ion-select-option *ngFor="let cs of customerUsers;" [value]="cs.ArticleId">{{cs.Customer}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Term</ion-label>
+    <ion-select [(ngModel)]="sOModel.TermId" (ionChange)="soDetailChange()">
+      <ion-select-option *ngFor="let t of terms;" [value]="t.Id">{{t.Term}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Discount</ion-label>
+    <ion-select [(ngModel)]="sOModel.DiscountId" (ionChange)="discountChange()">
+      <ion-select-option *ngFor="let d of discounts;" [value]="d.Id">{{d.Discount}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="floating">Status</ion-label>
+    <ion-select [(ngModel)]="sOModel.Status" (ionChange)="soDetailChange()">
+      <ion-select-option *ngFor="let s of status;" [value]="s.Code">{{s.Code}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+</div>

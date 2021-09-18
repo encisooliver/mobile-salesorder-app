@@ -37,6 +37,26 @@ const routes: Routes = [
         path: 'item-detail',
         loadChildren: () => import('./../../pages/item-detail/item-detail.module').then( m => m.ItemDetailPageModule)
       },
+      {
+        path: 'sales-order-list-local',
+        loadChildren: () => import('./../../pages/sales-order-list-local/sales-order-list-local.module').then( m => m.SalesOrderListLocalPageModule)
+      },
+      {
+        path: 'sales-invoce-list',
+        loadChildren: () => import('../../pages/sales-invoce-list/sales-invoce-list.module').then( m => m.SalesInvoceListPageModule)
+      },
+      {
+        path: 'sales-invoice-detail',
+        loadChildren: () => import('../../pages/sales-invoice-detail/sales-invoice-detail.module').then( m => m.SalesInvoiceDetailPageModule)
+      },
+      {
+        path: 'sales-invoice-list-local',
+        loadChildren: () => import('../../pages/sales-invoice-list-local/sales-invoice-list-local.module').then( m => m.SalesInvoiceListLocalPageModule)
+      },
+      {
+        path: 'setup',
+        loadChildren: () => import('../../pages/setup/setup.module').then( m => m.SetupPageModule)
+      },
     ]
   }
 ];

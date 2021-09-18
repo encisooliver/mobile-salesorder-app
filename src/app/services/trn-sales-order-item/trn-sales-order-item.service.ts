@@ -21,7 +21,6 @@ export class TrnSalesOrderItemService {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log(token);
         if (token) {
           this.options = {
             headers: new HttpHeaders({
@@ -37,7 +36,7 @@ export class TrnSalesOrderItemService {
 
   public getSalesOrderItemListBySalesOrder(SOId: number): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      let salesOrderItemListObservableArray = [];
+      let salesOrderItemList = [];
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/list/" + SOId, this.options).subscribe(
         response => {
@@ -45,7 +44,7 @@ export class TrnSalesOrderItemService {
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderItemListObservableArray.push({
+              salesOrderItemList.push({
                 Id: results[i].Id,
                 SOId: results[i].SOId,
                 ItemId: results[i].ItemId,
@@ -92,7 +91,7 @@ export class TrnSalesOrderItemService {
             }
           }
 
-          observer.next(salesOrderItemListObservableArray);
+          observer.next(salesOrderItemList);
           observer.complete();
         }
       );
@@ -164,8 +163,6 @@ export class TrnSalesOrderItemService {
     return new Observable<[boolean, string]>((observer) => {
       this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderItemAPI/update/" + trnSalesOrderItemModel.Id, JSON.stringify(trnSalesOrderItemModel), this.options).subscribe(
         response => {
-          console.log(response);
-          console.log("dota");
           observer.next([true, ""]);
           observer.complete();
         },
@@ -199,7 +196,6 @@ export class TrnSalesOrderItemService {
         'Authorization': 'Bearer ' + token
       })
     }
-    console.log(token);
     return new Observable<any[]>((observer) => {
       let articleItemUnitListObservableArray = [];
 
@@ -333,7 +329,6 @@ export class TrnSalesOrderItemService {
       );
     });
   }
-
 
   public getCompanyDetail(id: number): Observable<any> {
     return new Observable<any>((observer) => {

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TrnSalesOrderService } from 'src/app/services/trn-sales-order/trn-sales-order.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
-import { SalesOrderListPage } from '../sales-order-list.page';
 
 @Component({
   selector: 'app-delete-modal',

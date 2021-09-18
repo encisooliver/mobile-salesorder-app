@@ -15,8 +15,8 @@ import { ToastService } from './shared/toast/toast.service';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
+    BrowserModule,
+    IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
     IonicStorageModule.forRoot()
@@ -24,4 +24,4 @@ import { ToastService } from './shared/toast/toast.service';
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AppRouterActivate, SysStorageService, ToastService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

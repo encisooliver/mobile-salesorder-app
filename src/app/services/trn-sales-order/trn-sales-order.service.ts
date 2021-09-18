@@ -18,8 +18,7 @@ export class TrnSalesOrderService {
     this.storage.get("access_token").then(
       result => {
         let token = result;
-        console.log( token );
-        if(token){
+        if (token) {
           this.options = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
@@ -44,7 +43,7 @@ export class TrnSalesOrderService {
       this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byDateRange/" + startDate + "/" + endDate, options).subscribe(
         response => {
           let results = response;
-
+          console.log(results);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               salesOrderListObservableArray.push({
@@ -76,97 +75,18 @@ export class TrnSalesOrderService {
     });
   }
 
-  public getSalesOrderListByCustomer(customerId: number): Observable<any[]> {
-    return new Observable<any[]>((observer) => {
-      let salesOrderListObservableArray = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byCustomer/" + customerId, this.options).subscribe(
-        response => {
-          let results = response;
-
-          if (results["length"] > 0) {
-            for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderListObservableArray.push({
-                Id: results[i].Id,
-                BranchId: results[i].BranchId,
-                BranchCode: results[i].Branch.BranchCode,
-                BranchManualCode: results[i].Branch.ManualCode,
-                BranchName: results[i].Branch.Branch,
-                ExchangeCurrency: results[i].Currency.Currency,
-                CurrencyManualCode: results[i].Currency.ManualCode,
-                SONumber: results[i].SONumber,
-                SODate: results[i].SODate,
-                ManualNumber: results[i].ManualNumber,
-                DocumentReference: results[i].DocumentReference,
-                CustomerId: results[i].CustomerId,
-                CustomerManualCode: results[i].Customer.Article.ManualCode,
-                CustomerName: results[i].Customer.Customer,
-                CustomerReceivableAccountId: results[i].Customer.ReceivableAccountId,
-                CustomerReceivableAccountCode: results[i].Customer.ReceivableAccount.AccountCode,
-                CustomerReceivableAccountManualCode: results[i].Customer.ReceivableAccount.ManualCode,
-                CustomerReceivableAccountName: results[i].Customer.ReceivableAccount.Account,
-                Remarks: results[i].Remarks,
-                Amount: results[i].Amount,
-                Status: results[i].Status
-              });
-            }
-          }
-
-          observer.next(salesOrderListObservableArray);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public getSalesOrderListByCustomerByCurrency(customerId: number, currencyId: number): Observable<any[]> {
-    return new Observable<any[]>((observer) => {
-      let salesOrderListObservableArray = [];
-
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/list/byCustomer/" + customerId + "/" + currencyId, this.options).subscribe(
-        response => {
-          let results = response;
-
-          if (results["length"] > 0) {
-            for (let i = 0; i <= results["length"] - 1; i++) {
-              salesOrderListObservableArray.push({
-                Id: results[i].Id,
-                BranchId: results[i].BranchId,
-                BranchCode: results[i].Branch.BranchCode,
-                BranchManualCode: results[i].Branch.ManualCode,
-                BranchName: results[i].Branch.Branch,
-                ExchangeCurrency: results[i].Currency.Currency,
-                CurrencyManualCode: results[i].Currency.ManualCode,
-                SONumber: results[i].SONumber,
-                SODate: results[i].SODate,
-                ManualNumber: results[i].ManualNumber,
-                DocumentReference: results[i].DocumentReference,
-                CustomerId: results[i].CustomerId,
-                CustomerManualCode: results[i].Customer.Article.ManualCode,
-                CustomerName: results[i].Customer.Customer,
-                CustomerReceivableAccountId: results[i].Customer.ReceivableAccountId,
-                CustomerReceivableAccountCode: results[i].Customer.ReceivableAccount.AccountCode,
-                CustomerReceivableAccountManualCode: results[i].Customer.ReceivableAccount.ManualCode,
-                CustomerReceivableAccountName: results[i].Customer.ReceivableAccount.Account,
-                Remarks: results[i].Remarks,
-                Amount: results[i].Amount,
-                Status: results[i].Status
-              });
-            }
-          }
-
-          observer.next(salesOrderListObservableArray);
-          observer.complete();
-        }
-      );
-    });
-  }
-
-  public getSalesOrderDetail(id: number): Observable<TrnSalesOrderModel> {
+  public getSalesOrderDetail(id: number, token: string): Observable<TrnSalesOrderModel> {
+    let options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }
     return new Observable<TrnSalesOrderModel>((observer) => {
       let trnSalesOrderModel: TrnSalesOrderModel = null;
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/detail/" + id, this.options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/detail/" + id, options).subscribe(
         response => {
           let results = response;
 
@@ -207,10 +127,9 @@ export class TrnSalesOrderService {
               CreatedByUserFullname: results["CreatedByUser"].Fullname,
               CreatedDateTime: results["CreatedDateTime"],
               UpdatedByUserFullname: results["UpdatedByUser"].Fullname,
-              UpdatedDateTime: results["UpdatedDateTime"]
+              UpdatedDateTime: results["UpdatedDateTime"],
+              SOItems: results["SOItems"],
             }
-            console.log("trnSalesOrderModel FROM API");
-            console.log(trnSalesOrderModel);
           }
 
           observer.next(trnSalesOrderModel);
@@ -221,15 +140,24 @@ export class TrnSalesOrderService {
   }
 
   public getCurrencyExchange(): Observable<any[]> {
-  
+
     return new Observable<any[]>((observer) => {
-      let currencyExchangeListObservableArray = [];
+      let currencyExchangeListObservableArray = [{
+        Id: 0,
+        CurrencyId: 1,
+        CurrencyManualCode: "PHP",
+        CurrencyName: "PHP",
+        ExchangeCurrencyId: 1,
+        ExchangeCurrency: "PHP",
+        ExchangeCurrencyManualCode: "PHP",
+        ExchangeDate: null,
+        ExchangeRate: null,
+      }];
 
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCurrencyExchangeAPI/list", this.options).subscribe(
         response => {
           let results = response;
-          console.log(response);
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
               currencyExchangeListObservableArray.push({
@@ -284,7 +212,7 @@ export class TrnSalesOrderService {
     });
   }
 
-//sold by services
+  //sold by services
   public getActiveUserList(): Observable<any[]> {
     return new Observable<any[]>((observer) => {
       let userListObservableArray = [];
@@ -306,8 +234,6 @@ export class TrnSalesOrderService {
                 IsActive: results[i].IsActive,
                 IsLocked: results[i].IsLocked
               });
-              console.log("API getActiveUserList");
-              console.log(userListObservableArray);
             }
           }
 
@@ -334,7 +260,7 @@ export class TrnSalesOrderService {
 
           if (results["length"] > 0) {
             for (let i = 0; i <= results["length"] - 1; i++) {
-             customerList.push({
+              customerList.push({
                 Id: results[i].Id,
                 ArticleId: results[i].ArticleId,
                 ArticleCode: results[i].Article.ArticleCode,
@@ -367,10 +293,10 @@ export class TrnSalesOrderService {
       );
     });
   }
-  
+
   public getCodeTableListByCategory(category: string): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      let codeTableListObservableArray =[];
+      let codeTableListObservableArray = [];
 
       this.httpClient.get(this.defaultAPIURLHost + "/api/MstCodeTableAPI/transactionList/" + category, this.options).subscribe(
         response => {
@@ -410,6 +336,22 @@ export class TrnSalesOrderService {
     });
   }
 
+  public _addSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, any]> {
+    return new Observable<[boolean, any]>((observer) => {
+      this.httpClient.post(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/add", JSON.stringify(trnSalesOrderModel), this.options).subscribe(
+        response => {
+          let id = response;
+          observer.next([true, id]);
+          observer.complete();
+        },
+        error => {
+          observer.next([false, error.error]);
+          observer.complete();
+        }
+      );
+    });
+  }
+
   public saveSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {
       this.httpClient.put(this.defaultAPIURLHost + "/api/TrnSalesOrderAPI/save/" + trnSalesOrderModel.Id, JSON.stringify(trnSalesOrderModel), this.options).subscribe(
@@ -424,10 +366,6 @@ export class TrnSalesOrderService {
       );
     });
   }
-  // public async EditEmployeeDetail() {
-  //   let currentEmployee = this.listEmployeeCollectionView.currentItem;
-  //   this.router.navigate(['/software/employee-detail/' + currentEmployee.Id]);
-  // }
 
   public lockSalesOrder(trnSalesOrderModel: TrnSalesOrderModel): Observable<[boolean, string]> {
     return new Observable<[boolean, string]>((observer) => {

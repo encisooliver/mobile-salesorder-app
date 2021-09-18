@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -16,15 +16,15 @@ import { MstArticleItemService } from 'src/app/services/mst-article-item/mst-art
 import { SoInventoryItemListComponent } from './components/so-inventory-item-list/so-inventory-item-list.component';
 import { SoItemDetailComponent } from './components/so-item-detail/so-item-detail.component';
 import { TrnSalesOrderItemService } from 'src/app/services/trn-sales-order-item/trn-sales-order-item.service';
-import { MyDirectiveDirective } from './sample.directive';
-
+import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { SalesOrderService } from 'src/app/services/sales-order/sales-order.service';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     SalesOrderDetailPageRoutingModule,
-    
+
   ],
   declarations: [
     SalesOrderDetailPage,
@@ -33,14 +33,16 @@ import { MyDirectiveDirective } from './sample.directive';
     SoItemsComponent,
     SoInventoryItemListComponent,
     SoItemDetailComponent,
-    MyDirectiveDirective
   ],
   providers: [
-    AppSettings, 
-    TrnSalesOrderService, 
+    AppSettings,
+    TrnSalesOrderService,
     MstArticleItemService,
     TrnSalesOrderItemService,
-    DecimalPipe
+    DecimalPipe,
+    SysStorageService,
+    DatePipe,
+    SalesOrderService
   ]
 })
-export class SalesOrderDetailPageModule {}
+export class SalesOrderDetailPageModule { }

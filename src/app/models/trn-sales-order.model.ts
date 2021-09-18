@@ -1,3 +1,5 @@
+import { TrnSalesOrderItemModel } from "./trn-sales-order-item.model";
+
 export class TrnSalesOrderModel {
     Id: number = 0;
     BranchManualCode: string = "";
@@ -35,4 +37,5 @@ export class TrnSalesOrderModel {
     CreatedDateTime: string = "";
     UpdatedByUserFullname: string = "";
     UpdatedDateTime: string = "";
+    SOItems: TrnSalesOrderItemModel[] = [];
 }
