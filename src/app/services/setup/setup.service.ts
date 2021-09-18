@@ -31,17 +31,12 @@ export class SetupService {
     )
   }
 
-  public getSetup(token: string): Observable<any[]> {
-    let options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      })
-    }
+  public getSetup(): Observable<any[]> {
+  
     return new Observable<any[]>((observer) => {
       let salesOrderListObservableArray = [];
 
-      this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileAPI/easyfismobile/", options).subscribe(
+      this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileAPI/easyfismobile/",  this.options).subscribe(
         response => {
           let results = response;
           this.storage.set('setup', results);

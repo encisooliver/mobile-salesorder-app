@@ -10,6 +10,8 @@ import { DashboardPage } from './dashboard.page';
 import { BrowserModule } from '@angular/platform-browser';
 import { Storage } from '@ionic/storage-angular';
 import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.service';
+import { SetupService } from 'src/app/services/setup/setup.service';
+import { AppSettings } from 'src/app/settings/app-settings';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,6 +20,6 @@ import { SysStorageService } from 'src/app/services/sys-storage/sys-storage.serv
     DashboardPageRoutingModule,
   ],
   declarations: [DashboardPage],
-  providers: [SysStorageService, Storage]
+  providers: [AppSettings,SysStorageService, Storage, SetupService]
 })
 export class DashboardPageModule { }

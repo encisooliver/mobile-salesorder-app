@@ -1,3 +1,15 @@
+<!-- 
+<ion-list>
+  <ion-item *ngFor="let item of bluetoothList" (click)="selectPrinter(item.id)">
+      {{item.name}} {{item.id}}
+  </ion-item>
+  </ion-list>
+  <div>
+      Selected Printer: {{selectedPrinter}}
+  </div>
+  <ion-button expand="full" color="danger" *ngIf='selectedPrinter' (click)="printStuff()">
+  PRINT!
+  </ion-button> -->
 <ion-header>
 
   <ion-header>
@@ -49,8 +61,9 @@
           </ion-label>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-col>
-        <ion-col>
-          <ion-label id="col-badge" (click)="pdf()">
+
+        <ion-col class="ion-activatable ripple-parent"  (click)="printStuff()">
+          <ion-label id="col-badge" >
             <ion-icon name="print"></ion-icon>
           </ion-label>
           <ion-ripple-effect></ion-ripple-effect>
