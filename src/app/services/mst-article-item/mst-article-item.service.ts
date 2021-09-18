@@ -13,6 +13,7 @@ export class MstArticleItemService {
   constructor(
     private appSettings: AppSettings,
     private httpClient: HttpClient,
+    private storage: Storage
   ) {
   }
 
@@ -148,28 +149,16 @@ export class MstArticleItemService {
       })
     };
     return new Observable<any[]>((observer) => {
-      let itemListObservableArray = [];
-
       this.httpClient.get(this.defaultAPIURLHost + "/api/EasyfisMobileAPI/itemLists", option).subscribe(
         response => {
           let results = response;
           console.log(results);
-          if (results["length"] > 0) {
-            for (let i = 0; i <= results["length"] - 1; i++) {
-              itemListObservableArray.push({
-                Id: results[i].Id,
-                ArticleId: results[i].ArticleId,
-                ArticleItem: results[i].ArticleItem,
-                BranchId: results[i].BranchId,
-                Branch: results[i].Branch,
-                InventoryCode: results[i].InventoryCode,
-                Quantity: results[i].Quantity,
-                Cost: results[i].Cost
-              });
-            }
-          }
-
-          observer.next(itemListObservableArray);
+          this.storage.set('items', results);
+          observer.next([true, "Success"]);
+          observer.complete();
+        },
+        error => {
+          observer.next([false, error.error]);
           observer.complete();
         }
       );

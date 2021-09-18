@@ -1,6 +1,7 @@
 <ion-header>
   <ion-toolbar >
     <ion-title>ITEMS</ion-title>
+    <ion-button (click)="downloadItemList()">Download</ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -83,7 +84,7 @@
     <ion-card-content>
       <ion-row>
         <ion-col size="12" style="padding-left:0px; color:#2699FB;">
-          <strong>{{item.ArticleItem.Description}}</strong>
+          <strong>{{item.Description}}</strong>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -91,13 +92,13 @@
           <ion-row class="ion-no-padding">
             <ion-label class="item-label ion-no-padding">CODE</ion-label>
           </ion-row>
-          <ion-row class="ion-no-padding">{{item.ArticleItem.Article.ManualCode}}</ion-row>
+          <ion-row class="ion-no-padding">{{item.ArticleManualCode}}</ion-row>
         </ion-col>
         <ion-col size="6" class="ion-no-padding ion-no-padding">
           <ion-row class="ion-no-padding">
             <ion-label class="item-label">QTY</ion-label>
           </ion-row>
-          <ion-row class="ion-no-padding" style="color: #3EBE7E;">{{item.Quantity.toFixed(2)}}</ion-row>
+          <!-- <ion-row class="ion-no-padding" style="color: #3EBE7E;">{{item.Quantity.toFixed(2)}}</ion-row> -->
         </ion-col>
       </ion-row>
       <ion-row>
@@ -106,7 +107,7 @@
             <ion-label class="item-label ">UNIT</ion-label>
           </ion-row>
           <ion-row class="ion-no-padding">
-            <ion-label>{{item.ArticleItem.Unit.Unit}}</ion-label>
+            <ion-label>{{item.Unit}}</ion-label>
           </ion-row>
         </ion-col>
         <ion-col size="6" class="ion-no-padding">
@@ -117,7 +118,7 @@
         <ion-col size="6" class="ion-no-padding"></ion-col>
         <ion-col size="6" class="ion-no-padding">
           <ion-label style="margin-bottom: 5px;"><small>PRICE </small> </ion-label>
-          <ion-label class="item-price">{{ "PHP" + " " + item.ArticleItem.Price}}</ion-label>
+          <!-- <ion-label class="item-price">{{ "PHP" + " " + item.ArticleItem.Price}}</ion-label> -->
         </ion-col>
       </ion-row>
     </ion-card-content>

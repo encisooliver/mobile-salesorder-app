@@ -106,6 +106,11 @@ export class SalesOrderDetailPage implements OnInit {
  
        console.log(totalNumberofItems);
        console.log(totalNumberofItems.length);
+       let myText=" THREESIXTY PHARMCACY"
+       +"Operated by: Blue Ocean Holdings, Inc."
+       +"Basak LapuLapu Branch"
+       + "Basak, LapuLapu City"
+       +"Tel. No. 495-6161, 520-9272"
       //  let temp_water_total, water_price, temp_water_qty, temp_nestea_total, nestea_price, temp_nestea_qty = 0;
       //  let w_description, n_description = "";
       //  let itemsCount = [];
@@ -136,52 +141,52 @@ export class SalesOrderDetailPage implements OnInit {
       //   console.log(w_description);
       //   console.log(n_description);
       //   console.log(itemsCount.length);
-      let myText=
-       "      Easyfis Corporation       "
-     + "          Cebu City             " 
-     + "      TIN: 000-000-000-000      " 
-     + "       SN: 000000000000         " 
-     + "      MIN: 000000000000         " 
-     + " O F F I C I A L R E C E I P T  " 
-     + "         " + this.salesOrder.SONumber
-     + "\n         " + this.formatDate(this.salesOrder.SODate)
-     + "\n\n--------------------------------\n"
-     + "ITEM                    Amount  \n";
-     let itemsText: string = "";
-     let temp_total: number = 0;
-     let itemTotal: number = 0;
-     for(let i = 0 ; i<this.salesOrder.SOItems.length;i++){
-     temp_total += this.salesOrder.SOItems[i].Price;
-     itemTotal = this.salesOrder.SOItems[i].Price * this.salesOrder.SOItems[i].Quantity;
-     itemsText += "\n" +this.salesOrder.SOItems[i].ItemDescription + "\t\t\t" 
-      +itemTotal.toFixed(2)+
-      "\n"+this.salesOrder.SOItems[i].Quantity+
-      " "+this.salesOrder.SOItems[i].UnitId+
-      " @ "+this.salesOrder.SOItems[i].Price.toFixed(2);
-    }
-    myText  += itemsText;
+    //   let myText=
+    //    "      Easyfis Corporation       "
+    //  + "          Cebu City             " 
+    //  + "      TIN: 000-000-000-000      " 
+    //  + "       SN: 000000000000         " 
+    //  + "      MIN: 000000000000         " 
+    //  + " O F F I C I A L R E C E I P T  " 
+    //  + "         " + this.salesOrder.SONumber
+    //  + "\n         " + this.formatDate(this.salesOrder.SODate)
+    //  + "\n\n--------------------------------\n"
+    //  + "ITEM                    Amount  \n";
+    //  let itemsText: string = "";
+    //  let temp_total: number = 0;
+    //  let itemTotal: number = 0;
+    //  for(let i = 0 ; i<this.salesOrder.SOItems.length;i++){
+    //  temp_total += this.salesOrder.SOItems[i].Price;
+    //  itemTotal = this.salesOrder.SOItems[i].Price * this.salesOrder.SOItems[i].Quantity;
+    //  itemsText += "\n" +this.salesOrder.SOItems[i].ItemDescription + "\t\t\t" 
+    //   +itemTotal.toFixed(2)+
+    //   "\n"+this.salesOrder.SOItems[i].Quantity+
+    //   " "+this.salesOrder.SOItems[i].UnitId+
+    //   " @ "+this.salesOrder.SOItems[i].Price.toFixed(2);
+    // }
+    // myText  += itemsText;
 
-    let extra: string = "";
-    myText += "\n--------------------------------\n"
-     + "Total Sales: \t\t" +temp_total.toFixed(2)
-     + "\nTotal Discount:"
-     + "\nNet Sales:"
-     + "\nTotal No. of Item(s): \t\t   " + this.salesOrder.SOItems.length
-     + "\n--------------------------------"
-     + "\nCustomer: \t       " + this.salesOrder.CustomerName + "\n\n\n";
-    myText += extra
+    // let extra: string = "";
+    // myText += "\n--------------------------------\n"
+    //  + "Total Sales: \t\t" +temp_total.toFixed(2)
+    //  + "\nTotal Discount:"
+    //  + "\nNet Sales:"
+    //  + "\nTotal No. of Item(s): \t\t   " + this.salesOrder.SOItems.length
+    //  + "\n--------------------------------"
+    //  + "\nCustomer: \t       " + this.salesOrder.CustomerName + "\n\n\n";
+    // myText += extra
 
-    const confirm  = await this.alertCtrl.create({
-      header: 'Printing',
-      message: 'Please wait!',
-      buttons: [{
-        text: 'Confirm',
-        role: 'Confirm',
-        handler: () => {
-        }
-      }]
-    });
-     await confirm.present();
+    // const confirm  = await this.alertCtrl.create({
+    //   header: 'Printing',
+    //   message: 'Please wait!',
+    //   buttons: [{
+    //     text: 'Confirm',
+    //     role: 'Confirm',
+    //     handler: () => {
+    //     }
+    //   }]
+    // });
+    //  await confirm.present();
     //  + this.salesOrder.SOItems[0].ItemDescription + "\n  "
     //  + this.salesOrder.SOItems[0].Quantity + this.salesOrder.SOItems[0].UnitId;
     //  + " @ " +
